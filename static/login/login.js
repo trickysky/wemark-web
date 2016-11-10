@@ -11,7 +11,7 @@ $('.login').on('submit', function(e) {
     $this.addClass('ok');
     $state.html('欢迎回来!');
     setTimeout(function() {
-      window.location.href='../dashboard'
+      window.location.href='/report'
     }, 1000);
   }, 2000);
 });
