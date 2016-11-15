@@ -218,7 +218,7 @@ var dashboard = function () {
             });
         },
         initSpiderBalance: function () {
-            $('#spiderbalance').html("<iframe width=100% height=100% src='https://geohey.com/apps/dataviz/55f5f8c6105143bd989a7c42a4f12b19/share?ak=N2IxMTc3MTIyODRlNGJkNjkxYWVlNDQ4OWI1YWY0ZTk' frameborder=0></iframe>");
+            $('#spiderbalance').html("<iframe width=100% height=100% src='http://geohey.com/apps/dataviz/55f5f8c6105143bd989a7c42a4f12b19/share?ak=N2IxMTc3MTIyODRlNGJkNjkxYWVlNDQ4OWI1YWY0ZTk' frameborder=0></iframe>");
         },
         initDataRank: function () {
             if (typeof(AmCharts) === 'undefined' || $('#datarank').size() === 0) {
