@@ -13,7 +13,7 @@ def test(request):
 def set_index():
 	base_data = {}
 	base_data['app_name'] = u'报表'
-	base_data['icon_name'] = 'icon-home'
+	base_data['icon_name'] = u'icon-bar-chart'
 	base_data['page_name'] = u'数据报表'
 	base_data['page_desc'] = u'图表-地图'
 	base_data['dashboards'] = get_dashboard().values()
