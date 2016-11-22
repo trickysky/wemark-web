@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^login/', include('login.urls')),
     url(r'^report/', include('report.urls')),
+    url(r'^manage/', include('managesite.urls')),
 ]
