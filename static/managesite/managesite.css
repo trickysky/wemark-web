@@ -17,3 +17,8 @@
 #newOrderModal .list-item > label {
     margin-right: 30px;
 }
+
+#newOrderModal .modal-body .unit {
+    padding-left: 0;
+    line-height: 34px;
+}
