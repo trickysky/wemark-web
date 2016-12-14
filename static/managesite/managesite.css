@@ -22,3 +22,7 @@
     padding-left: 0;
     line-height: 34px;
 }
+
+.disabled-font {
+    color: rgb(170, 170, 170);
+}

@@ -16,12 +16,12 @@
 
 {% block content %}
     <div>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newOrderModal">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_order_modal">
             <i class="fa fa-plus" aria-hidden="true"></i> 新建
         </button>
     </div>
 
-    <div class="modal fade" id="newOrderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="new_order_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -30,70 +30,66 @@
                     <h4 class="modal-title" id="myModalLabel">新建生产批次</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" role="form">
-                        <div class="form-group">
-                            <label class="col-xs-2 control-label">时间</label>
-                            <div class="col-xs-10">
-                                <input id="datePicker" size="16" type="text" value="" readonly class="form-control">
+                    <div id="step1-body">
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label class="col-xs-2 control-label">时间</label>
+                                <div class="col-xs-3">
+                                    <input id="date_picker" size="16" type="text" value="" readonly class="form-control">
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            {% include "managesite/brief/select_actions.html" with label_name="产品条码" options=barcode_options %}
-                        </div>
-                        <div class="form-group">
-                            {% include "managesite/brief/select_actions.html" with label_name="激活工厂" options=factory_options %}
-                        </div>
-                        <div class="form-group">
-                            <label class="col-xs-2 control-label">生产数量</label>
-                            <div class="col-xs-2">
-                                <input class="form-control" type="number">
+                            <div class="form-group">
+                                {% include "managesite/brief/select_actions.html" with label_name="产品条码" options=barcode_options %}
                             </div>
-                            <span class="col-xs-2 unit">万箱</span>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-xs-2 control-label">每箱</label>
-                            <div class="col-xs-2">
-                                <input class="form-control" type="number">
+                            <div class="form-group">
+                                {% include "managesite/brief/select_actions.html" with label_name="激活工厂" options=factory_options %}
                             </div>
-                            <span class="col-xs-2 unit">瓶</span>
-                        </div>
+                            <div class="form-group">
+                                <label class="col-xs-2 control-label">生产数量</label>
+                                <div class="col-xs-2">
+                                    <label>
+                                        <input class="form-control" type="number">
+                                    </label>
+                                </div>
+                                <span class="col-xs-2 unit">万箱</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-2 control-label">每箱</label>
+                                <div class="col-xs-2">
+                                    <label>
+                                        <input class="form-control" type="number">
+                                    </label>
+                                </div>
+                                <span class="col-xs-2 unit">瓶</span>
+                            </div>
 
-                        <div class="form-group">
-                            <label class="col-xs-2 control-label code_factory">
-                                <input id="inner_code_factory" type="checkbox">
-                                内码赋码工厂</label>
-                            <div class="col-xs-10">
-                                <select class="selectpicker" data-live-search="true" data-size="5">
-                                    <option>-</option>
-                                    <option>内码赋码工厂1</option>
-                                    <option>内码赋码工厂2</option>
-                                </select>
-                            </div>
-                        </div>
+                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="内码赋码工厂" options=inner_code_factory_options %}
+                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="外码赋码工厂" options=outer_code_factory_options %}
+                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="箱码赋码工厂" options=box_code_factory_options %}
 
-                        <div class="form-group">
-                            <label class="col-xs-2 control-label">备注</label>
-                            <div class="col-xs-2">
-                                <input class="form-control">
+                            <div class="form-group">
+                                <label class="col-xs-2 control-label">产品信息</label>
+                                <div class="col-xs-8">
+                                    <label>
+                                        <input class="form-control">
+                                    </label>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-xs-2 control-label">选择搜索</label>
-                            <div class="col-xs-10">
-                                <select class="selectpicker" data-live-search="true" data-size="5">
-                                    <option>-</option>
-                                    <option>Hot Dog, Fries and a Soda</option>
-                                    <option>Burger, Shake and a Smile</option>
-                                    <option>Sugar, Spice and all things nice</option>
-                                </select>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
+                    <div id="step2-body" class="hidden">
+                        asdf
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary">生成</button>
+                    <div id="step1-foot">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button id="make_order_btn" type="button" class="btn btn-primary">生成</button>
+                    </div>
+                    <div id="step2-foot" class="hidden">
+                        <button id="back_btn" type="button" class="btn btn-default">返回修改</button>
+                        <button id="confirm_btn" type="button" class="btn btn-primary">确认提交</button>
+                    </div>
                 </div>
             </div>
         </div>
