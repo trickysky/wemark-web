@@ -2,7 +2,6 @@
  * Created by tk on 2016/11/26.
  */
 
-$("#new_order_modal").modal('show');
 $("#date_picker").datetimepicker({
     format: "yyyy年mm月dd日",
     showMeridian: true,
@@ -30,6 +29,10 @@ $("#make_order_btn").bind("click", function () {
     $("#step2-body").removeClass("hidden");
     $("#step2-foot").removeClass("hidden");
     $("#step1-foot").addClass("hidden");
+    var datetime = $("#date_picker").val();
+    if (datetime) {
+        $("#batch_date").find(".batch-value").text(datetime);
+    }
 });
 
 $("#back_btn").bind("click", function () {

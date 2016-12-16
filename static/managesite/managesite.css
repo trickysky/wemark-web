@@ -10,19 +10,31 @@
     display: inline;
 }
 
-#newOrderModal .list-item {
+#new_order_modal .list-item {
     margin-top: 20px;
 }
 
-#newOrderModal .list-item > label {
+#new_order_modal .list-item > label {
     margin-right: 30px;
 }
 
-#newOrderModal .modal-body .unit {
+#new_order_modal .modal-body .unit {
     padding-left: 0;
     line-height: 34px;
 }
 
 .disabled-font {
     color: rgb(170, 170, 170);
+}
+
+#step2-body .batch-value {
+    margin-top: 8px;
+}
+
+#order_list {
+    padding-top: 10px;
+}
+
+.label-success {
+    background-color: #5cb85c;
 }
