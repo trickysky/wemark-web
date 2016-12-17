@@ -1,9 +1,9 @@
 <label class="col-xs-2 control-label">{{ label_name }}</label>
 <div class="col-xs-10">
-    <select class="selectpicker" data-live-search="true" data-size="5">
+    <select id="{{ label_id }}" class="selectpicker" data-live-search="true" data-size="5">
         <option>-</option>
         {% for option in options %}
-            <option>{{ option }}</option>
+            <option value="{{ option.value }}">{{ option.text }}</option>
         {% endfor %}
     </select>
 </div>

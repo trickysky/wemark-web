@@ -39,28 +39,37 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                {% include "managesite/brief/select_actions.html" with label_name="产品条码" options=barcode_options %}
+                                {% include "managesite/brief/select_actions.html" with label_name="产品条码" label_id="barcode" options=barcode_options %}
                             </div>
                             <div class="form-group">
-                                {% include "managesite/brief/select_actions.html" with label_name="激活工厂" options=factory_options %}
+                                {% include "managesite/brief/select_actions.html" with label_name="激活工厂" label_id="factory" options=factory_options %}
                             </div>
                             <div class="form-group">
                                 <label class="col-xs-2 control-label">生产数量</label>
                                 <div class="col-xs-2">
                                     <label>
-                                        <input class="form-control" type="number">
+                                        <input id="box_count" class="form-control" type="number">
                                     </label>
                                 </div>
-                                <span class="col-xs-2 unit">万箱</span>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-xs-2 control-label">每箱</label>
+                                <span class="col-xs-1 unit">万箱</span>
+                                <span class="col-xs-1 unit"> X </span>
                                 <div class="col-xs-2">
                                     <label>
-                                        <input class="form-control" type="number">
+                                        <input id="bottle_count" value="24" class="form-control" type="number">
                                     </label>
                                 </div>
-                                <span class="col-xs-2 unit">瓶</span>
+                                <span class="col-xs-1 unit">瓶/箱</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-2 control-label">
+                                    <input id="total_count_checkbox" type="checkbox">
+                                    总瓶数</label>
+                                <div class="col-xs-2">
+                                    <label>
+                                        <input id="total_count" disabled class="form-control" type="number">
+                                    </label>
+                                </div>
+                                <span class="col-xs-2 unit">万瓶</span>
                             </div>
 
                             {% include "managesite/brief/checkbox_select_actions.html" with label_name="内码赋码工厂" options=inner_code_factory_options %}
@@ -70,9 +79,7 @@
                             <div class="form-group">
                                 <label class="col-xs-2 control-label">产品信息</label>
                                 <div class="col-xs-8">
-                                    <label>
-                                        <input class="form-control">
-                                    </label>
+                                    <input class="form-control">
                                 </div>
                             </div>
                         </form>
@@ -81,7 +88,19 @@
                         <form class="form-horizontal" role="form">
                             <div id="batch_date" class="form-group">
                                 <label class="col-xs-2 control-label">时间</label>
-                                <label class="col-xs-8 batch-value">未设置</label>
+                                <label class="col-xs-8 batch-value red-font">未设置</label>
+                            </div>
+                            <div id="batch_barcode" class="form-group">
+                                <label class="col-xs-2 control-label">产品条码</label>
+                                <label class="col-xs-8 batch-value red-font">未设置</label>
+                            </div>
+                            <div id="batch_factory" class="form-group">
+                                <label class="col-xs-2 control-label">激活工厂</label>
+                                <label class="col-xs-8 batch-value red-font">未设置</label>
+                            </div>
+                            <div id="batch_count" class="form-group">
+                                <label class="col-xs-2 control-label">生产数量</label>
+                                <label class="col-xs-8 batch-value red-font">未设置</label>
                             </div>
                         </form>
                     </div>

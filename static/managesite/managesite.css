@@ -27,6 +27,10 @@
     color: rgb(170, 170, 170);
 }
 
+.red-font {
+    color: #FF0000 !important;
+}
+
 #step2-body .batch-value {
     margin-top: 8px;
 }
