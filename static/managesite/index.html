@@ -72,9 +72,9 @@
                                 <span class="col-xs-2 unit">万瓶</span>
                             </div>
 
-                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="内码赋码工厂" options=inner_code_factory_options %}
-                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="外码赋码工厂" options=outer_code_factory_options %}
-                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="箱码赋码工厂" options=box_code_factory_options %}
+                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="内码赋码工厂" label_id="inner_code" options=inner_code_factory_options %}
+                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="外码赋码工厂" label_id="outer_code" options=outer_code_factory_options %}
+                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="箱码赋码工厂" label_id="box_code" options=box_code_factory_options %}
 
                             <div class="form-group">
                                 <label class="col-xs-2 control-label">产品信息</label>
@@ -100,6 +100,18 @@
                             </div>
                             <div id="batch_count" class="form-group">
                                 <label class="col-xs-2 control-label">生产数量</label>
+                                <label class="col-xs-8 batch-value red-font">未设置</label>
+                            </div>
+                            <div id="batch_inner_code" class="form-group">
+                                <label class="col-xs-2 control-label">内码赋码工厂</label>
+                                <label class="col-xs-8 batch-value red-font">未设置</label>
+                            </div>
+                            <div id="batch_outer_code" class="form-group">
+                                <label class="col-xs-2 control-label">外码赋码工厂</label>
+                                <label class="col-xs-8 batch-value red-font">未设置</label>
+                            </div>
+                            <div id="batch_box_code" class="form-group">
+                                <label class="col-xs-2 control-label">箱码赋码工厂</label>
                                 <label class="col-xs-8 batch-value red-font">未设置</label>
                             </div>
                         </form>

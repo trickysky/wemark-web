@@ -55,7 +55,7 @@ $("#total_count_checkbox").change(function () {
 
 
 $("#make_order_btn").bind("click", function () {
-    $("#step1-body").hide(800);
+    $("#step1-body").hide();
     $("#step2-body").removeClass("hidden");
     $("#step2-foot").removeClass("hidden");
     $("#step1-foot").addClass("hidden");
