@@ -120,6 +120,45 @@ $("#make_order_btn").bind("click", function () {
             $batch_count_value.addClass("red-font");
         }
     }
+
+    // 内码赋码工厂
+    var $batch_inner_code = $("#batch_inner_code").find(".batch-value");
+    var $inner_code = $("#inner_code");
+    if ($inner_code.find(".code_factory").hasClass("disabled-font")) {
+        $batch_inner_code.text("未设置");
+        $batch_inner_code.addClass("red-font");
+    }
+    else {
+        var inner_code = $inner_code.find("option:selected").text();
+        $batch_inner_code.text(inner_code);
+        $batch_inner_code.removeClass("red-font");
+    }
+
+    // 外码赋码工厂
+    var $batch_outer_code = $("#batch_outer_code").find(".batch-value");
+    var $outer_code = $("#outer_code");
+    if ($outer_code.find(".code_factory").hasClass("disabled-font")) {
+        $batch_outer_code.text("未设置");
+        $batch_outer_code.addClass("red-font");
+    }
+    else {
+        var outer_code = $outer_code.find("option:selected").text();
+        $batch_outer_code.text(outer_code);
+        $batch_outer_code.removeClass("red-font");
+    }
+
+    // 箱码赋码工厂
+    var $batch_box_code = $("#batch_box_code").find(".batch-value");
+    var $box_code = $("#box_code");
+    if ($box_code.find(".code_factory").hasClass("disabled-font")) {
+        $batch_box_code.text("未设置");
+        $batch_box_code.addClass("red-font");
+    }
+    else {
+        var box_code = $box_code.find("option:selected").text();
+        $batch_box_code.text(box_code);
+        $batch_box_code.removeClass("red-font");
+    }
 });
 
 $("#back_btn").bind("click", function () {
@@ -127,4 +166,11 @@ $("#back_btn").bind("click", function () {
     $("#step1-body").show();
     $("#step1-foot").removeClass("hidden");
     $("#step2-foot").addClass("hidden");
+});
+
+var $confirm_btn = $("#confirm_btn");
+$confirm_btn.bind("click", function () {
+    $confirm_btn.html('发送中<i class="fa fa-spinner fa-spin fa-fw"></i>');
+    $confirm_btn.attr("disabled", true);
+    $("#back_btn").attr("disabled", true);
 });

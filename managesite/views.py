@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding=UTF-8 -*-
 from django.shortcuts import render
+import requests
+
 
 # Create your views here.
 
@@ -14,15 +16,15 @@ def set_index():
 		{'text': 'barcode_option2', 'value': 'barcode_value_2'},
 		{'text': 'barcode_option3', 'value': 'barcode_value_3'}
 	]
-	base_data['factory_options'] = [
-		{'text': 'factory_option1', 'value': 'factory_value_1'},
-		{'text': 'factory_option2', 'value': 'factory_value_2'},
-		{'text': 'factory_option3', 'value': 'factory_value_3'}
-	]
-	base_data['inner_code_factory_options'] = ['inner_code_factory_option1', 'inner_code_factory_option2', 'inner_code_factory_option3']
-	base_data['outer_code_factory_options'] = ['outer_code_factory_option1', 'outer_code_factory_option2', 'outer_code_factory_option3']
-	base_data['box_code_factory_options'] = ['box_code_factory_option1', 'box_code_factory_option2', 'box_code_factory_option3']
+
+	base_data['factory_options'] = []
+	factories = requests.get("http://api.wemarklinks.net:81/factory").json()
+	if factories and factories['code'] == 0:
+		for factory in factories['data']:
+			base_data['factory_options'].append({'text': factory['factoryName'], 'value': factory['id']})
+
 	return base_data
+
 
 def index(request):
 	return render(request, 'managesite/index.html', set_index())

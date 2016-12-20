@@ -72,14 +72,14 @@
                                 <span class="col-xs-2 unit">万瓶</span>
                             </div>
 
-                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="内码赋码工厂" label_id="inner_code" options=inner_code_factory_options %}
-                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="外码赋码工厂" label_id="outer_code" options=outer_code_factory_options %}
-                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="箱码赋码工厂" label_id="box_code" options=box_code_factory_options %}
+                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="内码赋码工厂" label_id="inner_code" options=factory_options %}
+                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="外码赋码工厂" label_id="outer_code" options=factory_options %}
+                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="箱码赋码工厂" label_id="box_code" options=factory_options %}
 
                             <div class="form-group">
                                 <label class="col-xs-2 control-label">产品信息</label>
                                 <div class="col-xs-8">
-                                    <input class="form-control">
+                                    <textarea class="form-control" rows="8"></textarea>
                                 </div>
                             </div>
                         </form>
