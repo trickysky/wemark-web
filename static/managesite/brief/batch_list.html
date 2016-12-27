@@ -4,7 +4,7 @@
             <div class="col-xs-8">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        {{ batch_title }}
+                        百威啤酒
                     </a>
                 </h4>
             </div>
@@ -15,29 +15,30 @@
         <div class="panel-body">
             <ul class="list-group">
                 <li class="list-group-item">公司名称: 百威啤酒</li>
-                <li class="list-group-item">产品条码: 1234567890123</li>
-                <li class="list-group-item">生产数量: 100万箱 / 2400万瓶</li>
-                <li class="list-group-item">内码赋码工厂: 紫泉工厂
+                <li class="list-group-item">过期时间: {{ expired_time }}</li>
+                <li class="list-group-item">产品条码: {{ barcode }}</li>
+                <li class="list-group-item">生产数量: {{ unit_count }}万瓶</li>
+                <li class="list-group-item">内码赋码工厂: {{ inner_code_factory|default:'无' }}
+                    {% if inner_code_factory %}
                     <span class="label label-success"> 已发送 <i class="fa fa-check" aria-hidden="true"></i></span>
+                    {% endif %}
                 </li>
-                <li class="list-group-item">外码赋码工厂: 紫泉工厂
+                <li class="list-group-item">外码赋码工厂: {{ outer_code_factory|default:'无' }}
+                    {% if outer_code_factory %}
                     <a>
                         <span class="label label-default"> 未发送 <i class="fa fa-paper-plane" aria-hidden="true"></i></span>
                     </a>
+                    {% endif %}
                 </li>
-                <li class="list-group-item">箱码赋码工厂: 恒祥包装
+                <li class="list-group-item">箱码赋码工厂: {{ case_code_factory|default:'无' }}
+                    {% if case_code_factory %}
                     <a>
                         <span class="label label-default"> 未发送 <i class="fa fa-paper-plane" aria-hidden="true"></i></span>
                     </a>
+                    {% endif %}
                 </li>
-                <li class="list-group-item">激活工厂: 百威宁波工厂</li>
-                <li class="list-group-item">瓶盖logo: 百威01</li>
-                <li class="list-group-item">头标: 无</li>
-                <li class="list-group-item">颈标: 百威A1</li>
-                <li class="list-group-item">腹标: 百威夏季畅饮front</li>
-                <li class="list-group-item">背标: 百威夏季畅饮back</li>
-                <li class="list-group-item">单元包装: 百威通用瓶330ml</li>
-                <li class="list-group-item">纸箱: 百威夏季畅饮24小</li>
+                <li class="list-group-item">激活工厂: {{ factory_id }}</li>
+                <li class="list-group-item">产品信息: {{ prod_info }}</li>
             </ul>
         </div>
     </div>

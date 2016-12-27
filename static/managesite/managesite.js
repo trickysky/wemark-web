@@ -184,11 +184,14 @@ var $confirm_btn = $("#confirm_btn");
 $confirm_btn.bind("click", function () {
     var datetime = $("#date_picker").datetimepicker("getDate").getTime();
     var barcode = $("#barcode").find("option:selected").val();
+    if (barcode == "-") {
+        barcode = undefined;
+    }
     var factory_id = parseInt($("#factory").find("option:selected").val());
-    var box_count = parseInt($("#box_count").val());
+    var box_count = parseInt($("#box_count").val()) * 10000;
     var bottle_count = parseInt($("#bottle_count").val());
     var $total_count = $("#total_count");
-    var total_count = parseInt($total_count.val());
+    var total_count = parseInt($total_count.val()) * 10000;
     if (!$total_count.attr("disabled")) {
         box_count = undefined;
         bottle_count = undefined;
@@ -229,14 +232,21 @@ $confirm_btn.bind("click", function () {
                 'case_count': box_count,
                 'case_size': bottle_count,
                 'unit_count': total_count,
-                'barcode': 'query_test',
+                'barcode': 'query_test-3',
                 'expired_time': datetime,
                 'product_info': prod_info
             },
             success: function (data) {
                 if (data['code']==0) {
                     console.log('post success');
+                    location.reload();
                 }
+            },
+            error: function (xml, e) {
+                $confirm_btn.html('确认提交');
+                $confirm_btn.attr("disabled", false);
+                $("#back_btn").attr("disabled", false);
+                console.log(e);
             }
         });
     }
