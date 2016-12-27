@@ -33,7 +33,7 @@
                     <div id="step1-body">
                         <form class="form-horizontal" role="form">
                             <div class="form-group">
-                                <label class="col-xs-2 control-label">时间</label>
+                                <label class="col-xs-2 control-label">产品过期时间</label>
                                 <div class="col-xs-3">
                                     <input id="date_picker" size="16" type="text" value="" readonly class="form-control">
                                 </div>
@@ -79,7 +79,7 @@
                             <div class="form-group">
                                 <label class="col-xs-2 control-label">产品信息</label>
                                 <div class="col-xs-8">
-                                    <textarea class="form-control" rows="8"></textarea>
+                                    <textarea id="prod_info" class="form-control" rows="8"></textarea>
                                 </div>
                             </div>
                         </form>
@@ -87,7 +87,7 @@
                     <div id="step2-body" class="hidden">
                         <form class="form-horizontal" role="form">
                             <div id="batch_date" class="form-group">
-                                <label class="col-xs-2 control-label">时间</label>
+                                <label class="col-xs-2 control-label">产品过期时间</label>
                                 <label class="col-xs-8 batch-value red-font">未设置</label>
                             </div>
                             <div id="batch_barcode" class="form-group">
@@ -112,6 +112,10 @@
                             </div>
                             <div id="batch_box_code" class="form-group">
                                 <label class="col-xs-2 control-label">箱码赋码工厂</label>
+                                <label class="col-xs-8 batch-value red-font">未设置</label>
+                            </div>
+                            <div id="batch_prod_info" class="form-group">
+                                <label class="col-xs-2 control-label">产品信息</label>
                                 <label class="col-xs-8 batch-value red-font">未设置</label>
                             </div>
                         </form>

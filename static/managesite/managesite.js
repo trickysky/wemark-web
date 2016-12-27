@@ -159,6 +159,18 @@ $("#make_order_btn").bind("click", function () {
         $batch_box_code.text(box_code);
         $batch_box_code.removeClass("red-font");
     }
+
+    //产品信息
+    var $prod_info = $("#prod_info");
+    var prod_info = $prod_info.val();
+    var $batch_prod_info_value = $("#batch_prod_info").find(".batch-value");
+    if (prod_info) {
+        $batch_prod_info_value.text(prod_info);
+        $batch_prod_info_value.removeClass("red-font");
+    } else {
+        $batch_prod_info_value.text("未设置");
+        $batch_prod_info_value.addClass("red-font");
+    }
 });
 
 $("#back_btn").bind("click", function () {
@@ -170,7 +182,63 @@ $("#back_btn").bind("click", function () {
 
 var $confirm_btn = $("#confirm_btn");
 $confirm_btn.bind("click", function () {
-    $confirm_btn.html('发送中<i class="fa fa-spinner fa-spin fa-fw"></i>');
-    $confirm_btn.attr("disabled", true);
-    $("#back_btn").attr("disabled", true);
+    var datetime = $("#date_picker").datetimepicker("getDate").getTime();
+    var barcode = $("#barcode").find("option:selected").val();
+    var factory_id = parseInt($("#factory").find("option:selected").val());
+    var box_count = parseInt($("#box_count").val());
+    var bottle_count = parseInt($("#bottle_count").val());
+    var $total_count = $("#total_count");
+    var total_count = parseInt($total_count.val());
+    if (!$total_count.attr("disabled")) {
+        box_count = undefined;
+        bottle_count = undefined;
+    }
+
+    var $inner_code = $("#inner_code");
+    var inner_code_factory_id;
+    if (!$inner_code.find(".code_factory").hasClass("disabled-font")) {
+        inner_code_factory_id = parseInt($inner_code.find("option:selected").val());
+    }
+
+    var $outer_code = $("#outer_code");
+    var outer_code_factory_id;
+    if (!$outer_code.find(".code_factory").hasClass("disabled-font")) {
+        outer_code_factory_id = parseInt($outer_code.find("option:selected").val());
+    }
+
+    var $box_code = $("#box_code");
+    var box_code_factory_id;
+    if (!$box_code.find(".code_factory").hasClass("disabled-font")) {
+        box_code_factory_id = parseInt($box_code.find("option:selected").val());
+    }
+    var prod_info = $("#prod_info").val();
+
+    if (factory_id && total_count && datetime && barcode) {
+        $confirm_btn.html('发送中<i class="fa fa-spouter fa-spin fa-fw"></i>');
+        $confirm_btn.attr("disabled", true);
+        $("#back_btn").attr("disabled", true);
+        $.ajax({
+            type: "POST",
+            dateType: "json",
+            url: "s/batch",
+            data: {
+                'factory_id': factory_id,
+                'incode_factory': inner_code_factory_id,
+                'outcode_factory': outer_code_factory_id,
+                'casecode_factory': box_code_factory_id,
+                'case_count': box_count,
+                'case_size': bottle_count,
+                'unit_count': total_count,
+                'barcode': 'query_test',
+                'expired_time': datetime,
+                'product_info': prod_info
+            },
+            success: function (data) {
+                if (data['code']==0) {
+                    console.log('post success');
+                }
+            }
+        });
+    }
+
 });

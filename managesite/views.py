@@ -2,6 +2,7 @@
 # -*- coding=UTF-8 -*-
 from django.shortcuts import render
 import requests
+from django.http import JsonResponse
 
 
 # Create your views here.
@@ -28,3 +29,10 @@ def set_index():
 
 def index(request):
 	return render(request, 'managesite/index.html', set_index())
+
+
+def batch(request):
+	if request.method == 'POST':
+		return JsonResponse({'method': 'POST'})
+	else:
+		return JsonResponse({'method': 'GET'})

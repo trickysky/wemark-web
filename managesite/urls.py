@@ -9,4 +9,5 @@ from . import views
 
 urlpatterns = [
 	url(r'^$', views.index),
+	url(r'^s/batch', views.batch),
 ]
