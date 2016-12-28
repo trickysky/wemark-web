@@ -1,23 +1,28 @@
 <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingOne">
+    <div class="panel-heading" role="tab" id="heading-{{ batch_id }}">
         <div class="row">
             <div class="col-xs-8">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        百威啤酒
+                    <a data-toggle="collapse" href="#collapse-{{ batch_id }}" aria-expanded="true" aria-controls="collapse-{{ batch_id }}">
+                        百威啤酒 {{ expired_time }} {{ unit_count }}瓶
                     </a>
                 </h4>
             </div>
-            <div class="col-xs-4 text-right"><span class="label label-primary">批次生产中</span></div>
+            {% if status == -1 %}
+                <div class="col-xs-4 text-right"><span class="label label-primary">生产中</span></div>
+            {% elif status == 2 %}
+                <div class="col-xs-4 text-right"><span class="label label-success">准备就绪</span></div>
+            {% endif %}
+
         </div>
     </div>
-    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+    <div id="collapse-{{ batch_id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-{{ batch_id }}">
         <div class="panel-body">
             <ul class="list-group">
                 <li class="list-group-item">公司名称: 百威啤酒</li>
                 <li class="list-group-item">过期时间: {{ expired_time }}</li>
                 <li class="list-group-item">产品条码: {{ barcode }}</li>
-                <li class="list-group-item">生产数量: {{ unit_count }}万瓶</li>
+                <li class="list-group-item">生产数量: {{ unit_count }}瓶</li>
                 <li class="list-group-item">内码赋码工厂: {{ inner_code_factory|default:'无' }}
                     {% if inner_code_factory %}
                     <span class="label label-success"> 已发送 <i class="fa fa-check" aria-hidden="true"></i></span>

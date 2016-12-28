@@ -136,7 +136,9 @@
     </div>
 
     <div class="panel-group" id="order_list" role="tablist" aria-multiselectable="true">
-        {% include "managesite/brief/batch_list.html" with batch_title="abcdefg_120 500w 百威纯生 500ml"%}
+        {% for batch in batch_list %}
+        {% include "managesite/brief/batch_list.html" with batch_id=batch.batch_id status=batch.status expired_time=batch.expired_time barcode=batch.barcode unit_count=batch.unit_count inner_code_factory=batch.inner_code_factory outer_code_factory=batch.outer_code_factory case_code_factory=batch.case_code_factory factory_id=batch.factory_id prod_info=batch.prod_info %}
+        {% endfor %}
     </div>
 
 
