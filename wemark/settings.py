@@ -58,6 +58,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'wemark.urls'
 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "common_static"),
+    'static/',
+)
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
