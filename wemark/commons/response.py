@@ -31,3 +31,8 @@ class ResponseEntity(object):
 class ResponseType(object):
     RET_OK = (0, 'ok')
     RET_BAD_REQUEST = (-1, 'bad request')
+
+
+class Schema(object):
+    HTTP = 'http'
+    HTTPS = 'https'
