@@ -1,13 +1,13 @@
 # coding=utf8
 # Create your views here.
+from collections import defaultdict
+
 from django.shortcuts import render
 
-from collections import defaultdict
 from services.award import AwardService
-from services.scan_code import ScanCodeService
 from services.batch import BatchService
-
-from report.commons.response import ResponseEntity
+from services.scan_code import ScanCodeService
+from wemark.commons.response import ResponseEntity
 
 award_service = AwardService()
 scan_code_service = ScanCodeService()

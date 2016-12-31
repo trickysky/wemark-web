@@ -1,6 +1,6 @@
-from report.commons import utils
-from report.commons import constants
+from wemark.commons import utils
 from report.services.cacheable import Cacheable
+from wemark.commons import constants
 
 
 class AwardService(Cacheable):

@@ -1,7 +1,8 @@
 import sys
-from report.commons import constants
-from report.commons import utils
+
+from wemark.commons import utils
 from report.services.cacheable import Cacheable
+from wemark.commons import constants
 
 
 class BatchService(Cacheable):
@@ -18,7 +19,7 @@ class BatchService(Cacheable):
     def fetch(self, start_created_time, end_created_time=utils.current_timestamp_in_millis(), incode_factory=None,
               outcode_factory=None, casecode_factory=None, case_count=None, min_case_count=0,
               max_case_count=sys.maxint, unit_count=None, min_unit_count=0, max_unit_count=sys.maxint,
-              status=constants.BATCH_PROCESSING_STATUS):
+              status=constants.BATCH_DONE_STATUS):
         pass
 
     def get_error_message(self):

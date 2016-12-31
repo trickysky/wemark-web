@@ -1,7 +1,8 @@
 import sys
-from report.commons import constants
-from report.commons import utils
+
+from wemark.commons import utils
 from report.services.cacheable import Cacheable
+from wemark.commons import constants
 
 
 class ScanCodeService(Cacheable):
