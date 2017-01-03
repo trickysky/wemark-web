@@ -1,13 +1,33 @@
-<tr>
+<tr id="factory-{{ factory_id }}">
+    <td>
+        <a class="update-factory">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+        </a>
+        <a class="drop-factory">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+        </a>
+    </td>
     <td>{{ factory_id }}</td>
     <td>{{ factory_name }}</td>
-    {% if factory_type == 1 %}
-    <td>瓶盖厂</td>
+    {% if factory_type == 0 %}
+        <td>啤酒厂</td>
+    {% elif factory_type == 1 %}
+        <td>瓶盖厂</td>
+    {% elif factory_type == 2 %}
+        <td>纸箱厂</td>
+    {% elif factory_type == 3 %}
+        <td>标签厂</td>
+    {% elif factory_type == 4 %}
+        <td>纪念品</td>
+    {% else %}
+        <td>未知工厂类型</td>
     {% endif %}
     <td>{{ factory_ip }}</td>
     <td>{{ factory_region }}</td>
     {% if factory_type == 1 %}
-    <td>正常</td>
+        <td>正常</td>
+    {% else %}
+        <td>未知状态</td>
     {% endif %}
     <td>{{ factory_owner }}</td>
     <td>{{ factory_owner_phone }}</td>

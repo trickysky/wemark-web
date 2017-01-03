@@ -123,6 +123,7 @@
             <table class="table table-hover">
                 <thead>
                 <tr>
+                    <th>操作</th>
                     <th>序号</th>
                     <th>工厂名称</th>
                     <th>工厂类型</th>
@@ -135,10 +136,9 @@
                 </tr>
                 </thead>
                 <tbody>
-                    {% include "edit_info/brief/factory.html" with factory_id=1 factory_name='北京啤酒制盖厂' factory_type=1 factory_ip='123.45.67.89' factory_region='BJ' factory_status='1' factory_owner='millan' factory_owner_phone='12345678990' factory_owner_email='qq@mail' %}
-                    {% include "edit_info/brief/factory.html" with factory_id=2 factory_name='北京啤酒制盖厂' factory_type=1 factory_ip='123.45.67.89' factory_region='BJ' factory_status='1' factory_owner='millan' factory_owner_phone='12345678990' factory_owner_email='qq@mail' %}
-                    {% include "edit_info/brief/factory.html" with factory_id=3 factory_name='北京啤酒制盖厂' factory_type=1 factory_ip='123.45.67.89' factory_region='BJ' factory_status='1' factory_owner='millan' factory_owner_phone='12345678990' factory_owner_email='qq@mail' %}
-                    {% include "edit_info/brief/factory.html" with factory_id=4 factory_name='北京啤酒制盖厂' factory_type=1 factory_ip='123.45.67.89' factory_region='BJ' factory_status='1' factory_owner='millan' factory_owner_phone='12345678990' factory_owner_email='qq@mail' %}
+                    {% for factory in factory_list %}
+                        {% include "edit_info/brief/factory.html" with factory_id=factory.factory_id factory_name=factory.factory_name factory_type=factory.factory_type factory_ip=factory.factory_ip factory_region=factory.factory_region factory_status=factory.factory_status factory_owner=factory.factory_owner factory_owner_phone=factory.factory_owner_phone factory_owner_email=factory.factory_owner_email %}
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

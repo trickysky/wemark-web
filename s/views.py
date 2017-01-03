@@ -1,8 +1,7 @@
 import requests
 from django.http import JsonResponse
-
+from wemark_config import SERVER_HOST
 # Create your views here.
-server_url = 'http://api.wemarklinks.net:81'
 
 
 def batch(request):
@@ -18,5 +17,5 @@ def factory(request):
 
 
 def get_factory():
-	return requests.get('%s/factory' % server_url).json()
+	return requests.get('%s/factory' % SERVER_HOST).json()
 
