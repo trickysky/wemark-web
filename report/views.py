@@ -4,10 +4,10 @@ from collections import defaultdict
 
 from django.shortcuts import render
 
-from services.award import AwardService
-from services.batch import BatchService
-from services.scan_code import ScanCodeService
 from wemark.commons.response import ResponseEntity
+from services import AwardService
+from services import BatchService
+from services import ScanCodeService
 
 award_service = AwardService()
 scan_code_service = ScanCodeService()

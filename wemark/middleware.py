@@ -1,27 +1,23 @@
+from django.http import HttpResponseRedirect
+from django.utils.deprecation import MiddlewareMixin
 from django.http import HttpRequest
-from django.http import HttpResponse
 
-class AuthenticationMiddleware(object):
-    def process_request(self, request):
+from oauth2.commons.security import Subject
+
+
+class AuthenticationMiddleware(MiddlewareMixin):
+    EXCEPTIONS = ['/oauth2/callback', ]
+
+    @staticmethod
+    def process_request(request):
         """
-        global interception
         :type request: HttpRequest
         """
-        pass
-
-    def process_response(self, request, response):
-        """
-        global interception
-        :param request: HttpRequest
-        :type response: HttpResponse
-        """
-        pass
-
-    def process_view(self, request):
-        pass
-
-    def process_exception(self, request, response):
-        pass
-
-    def process_template_response(self, request, response):
-        pass
+        subject = Subject.get_instance(request.session)
+        if request.path not in AuthenticationMiddleware.EXCEPTIONS and not subject.is_authenticated():
+            redirect_uri = subject.redirect_to_authenticate()
+            if redirect_uri:
+                return HttpResponseRedirect(redirect_uri)
+            else:
+                return HttpResponseRedirect('/error')
+        return None
