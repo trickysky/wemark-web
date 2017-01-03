@@ -1,0 +1,15 @@
+<tr>
+    <td>{{ factory_id }}</td>
+    <td>{{ factory_name }}</td>
+    {% if factory_type == 1 %}
+    <td>瓶盖厂</td>
+    {% endif %}
+    <td>{{ factory_ip }}</td>
+    <td>{{ factory_region }}</td>
+    {% if factory_type == 1 %}
+    <td>正常</td>
+    {% endif %}
+    <td>{{ factory_owner }}</td>
+    <td>{{ factory_owner_phone }}</td>
+    <td>{{ factory_owner_email }}</td>
+</tr>

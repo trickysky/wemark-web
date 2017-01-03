@@ -60,7 +60,15 @@
                     <a href="/manage" class="nav-link nav-toggle">
                         <i class="icon-list"></i>
                         <span class="title">生产赋码</span>
-                        {% if app_name == "管理终端" %}
+                        {% if app_name == "生产赋码" %}
+                            <span class="selected"></span>
+                            <span class="arrow open"></span>
+                        {% endif %}
+                    </a>
+                    <a href="/edit" class="nav-link nav-toggle">
+                        <i class="icon-pencil"></i>
+                        <span class="title">信息录入</span>
+                        {% if app_name == "信息录入" %}
                             <span class="selected"></span>
                             <span class="arrow open"></span>
                         {% endif %}

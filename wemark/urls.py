@@ -21,4 +21,6 @@ urlpatterns = [
     url(r'^login/', include('login.urls')),
     url(r'^report/', include('report.urls')),
     url(r'^manage/', include('managesite.urls')),
+    url(r'^edit/', include('edit_info.urls')),
+    url(r'^s/', include('s.urls')),
 ]
