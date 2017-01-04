@@ -21,7 +21,7 @@ def set_index():
 		{'text': 'barcode_option3', 'value': 'barcode_value_3'}
 	]
 	base_data['factory_options'] = []
-	factories = requests.get("http://api.wemarklinks.net:81/factory").json()
+	factories = requests.get("http://api.wemarklinks.net:81/factory/info").json()
 	if factories and factories['code'] == 0:
 		for factory in factories['data']:
 			base_data['factory_options'].append({'text': factory['factoryName'], 'value': factory['id']})
@@ -60,7 +60,7 @@ def get_factory_by_id(factory_id):
 	if not factory_id:
 		return None
 	else:
-		response = requests.get('%s/factory/%s' % (server_url, factory_id)).json()
+		response = requests.get('%s/factory/info/%s' % (server_url, factory_id)).json()
 		if response['code'] == 0:
 			return response['data'].get('factoryName')
 		else:
