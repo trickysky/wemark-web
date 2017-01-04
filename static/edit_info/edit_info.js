@@ -63,3 +63,10 @@ $('.drop-factory').bind('click', function () {
         });
     }
 });
+
+
+$('.update-factory').bind('click', function () {
+    var factory_id = $(this).attr('factory_id');
+    console.log(factory_id);
+    $('#factory_info_modal').modal('show');
+});
