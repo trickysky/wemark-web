@@ -47,7 +47,7 @@ $('.drop-factory').bind('click', function () {
     if (factory_id) {
         $this.parent().html('<button type="button" class="btn btn-danger btn-xs confirm-delete-factory-btn">确认删除</button>');
         $('.confirm-delete-factory-btn').one('click', function () {
-            $(this).html('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>');
+            $(this).html('<i class="fa fa-spinner fa-pulse fa-fw"></i>');
             $.ajax({
                 type: 'DELETE',
                 url: "/s/factory/" + factory_id,
