@@ -13,7 +13,7 @@ $('#factory_info_modal').find('.confirm_btn').bind('click', function () {
     var factory_email = $('#factory_email').val();
     if (factory_name && factory_type && factory_ip && factory_region && factory_status && factory_owner && factory_phone && factory_email) {
         $('#factory_info_modal').find('.modal-footer button').attr('disabled', true);
-        $(this).html('发送中<i class="fa fa-spouter fa-spin fa-fw"></i>');
+        $(this).html('发送中<i class="fa fa-spinner fa-pulse fa-fw"></i>');
         $.ajax({
             type: 'POST',
             dateType: "json",
