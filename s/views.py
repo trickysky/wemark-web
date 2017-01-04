@@ -17,6 +17,11 @@ def factory(request):
 		return new_factory(request)
 
 
+def factory_delete(request, factory_id):
+	if request.method == 'DELETE':
+		return JsonResponse(requests.delete('%s/factory/info/%s' % (SERVER_HOST, factory_id)).json())
+
+
 def get_factory():
 	return requests.get('%s/factory/info' % SERVER_HOST).json()
 

@@ -217,7 +217,7 @@ $confirm_btn.bind("click", function () {
     var prod_info = $("#prod_info").val();
 
     if (factory_id && total_count && datetime && barcode) {
-        $confirm_btn.html('发送中<i class="fa fa-spouter fa-spin fa-fw"></i>');
+        $confirm_btn.html('发送中<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>');
         $confirm_btn.attr("disabled", true);
         $("#back_btn").attr("disabled", true);
         $.ajax({

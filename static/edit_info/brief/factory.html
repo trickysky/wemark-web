@@ -1,11 +1,11 @@
 <tr id="factory-{{ factory_id }}">
     <td>
-        <a class="update-factory" factory_id="{{ factory_id }}">
+        <button type="button" class="btn btn-info btn-xs update-factory" factory_id="{{ factory_id }}">
             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-        </a>
-        <a class="drop-factory" factory_id="{{ factory_id }}">
+        </button>
+        <button type="button" class="btn btn-danger btn-xs drop-factory" factory_id="{{ factory_id }}">
             <i class="fa fa-trash" aria-hidden="true"></i>
-        </a>
+        </button>
     </td>
     <td>{{ factory_id }}</td>
     <td>{{ factory_name }}</td>

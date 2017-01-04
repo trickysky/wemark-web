@@ -1,3 +1,7 @@
 #my_tab_content {
     padding-left: 20px;
 }
+
+.table>tbody>tr:first-child {
+    padding-right: 0;
+}

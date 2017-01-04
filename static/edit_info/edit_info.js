@@ -42,8 +42,24 @@ $('#factory_info_modal').find('.confirm_btn').bind('click', function () {
 });
 
 $('.drop-factory').bind('click', function () {
+    var $this = $(this);
     var factory_id = $(this).attr('factory_id');
     if (factory_id) {
-        $(this).parent().html('<button type="button" class="btn btn-primary btn-xs">确认删除</button>');
+        $this.parent().html('<button type="button" class="btn btn-danger btn-xs confirm-delete-factory-btn">确认删除</button>');
+        $('.confirm-delete-factory-btn').one('click', function () {
+            $(this).html('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>');
+            $.ajax({
+                type: 'DELETE',
+                url: "/s/factory/" + factory_id,
+                success: function (data) {
+                    if (data['code'] == 0) {
+                        $('#factory-' + factory_id).hide('slow');
+                    }
+                },
+                error: function (xml, e) {
+                    console.log('delete_factory error');
+                }
+            });
+        });
     }
 });
