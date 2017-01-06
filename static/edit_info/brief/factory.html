@@ -19,19 +19,21 @@
         <td class="td_factory_type">标签厂</td>
     {% elif factory_type == 4 %}
         <td class="td_factory_type">纪念商店</td>
+    {% elif factory_type == -1 %}
+        <td class="td_factory_type">本地下载</td>
     {% else %}
         <td class="td_factory_type">未知工厂类型</td>
     {% endif %}
-    <td class="td_factory_ip">{{ factory_ip }}</td>
-    <td class="td_factory_region">{{ factory_region }}</td>
+    <td class="td_factory_ip">{{ factory_ip|default:'' }}</td>
+    <td class="td_factory_region">{{ factory_region|default:'' }}</td>
     {% if factory_status == 1 %}
         <td class="td_factory_status">正常</td>
-    {% elif factory_type == 0 %}
+    {% elif factory_status == 0 %}
         <td class="td_factory_status">停产</td>
     {% else %}
         <td class="td_factory_status">异常状态</td>
     {% endif %}
-    <td class="td_factory_owner">{{ factory_owner }}</td>
-    <td class="td_factory_owner_phone">{{ factory_owner_phone }}</td>
-    <td class="td_factory_owner_email">{{ factory_owner_email }}</td>
+    <td class="td_factory_owner">{{ factory_owner|default:'' }}</td>
+    <td class="td_factory_owner_phone">{{ factory_owner_phone|default:'' }}</td>
+    <td class="td_factory_owner_email">{{ factory_owner_email|default:'' }}</td>
 </tr>

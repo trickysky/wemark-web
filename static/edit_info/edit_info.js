@@ -1,8 +1,14 @@
 /**
  * Created by tk on 2017/1/3.
  */
+var $factory_info_modal = $('#factory_info_modal');
 
-$('#factory_info_modal').find('.confirm_btn').bind('click', function () {
+$('#factory_info').find('.new-factory').bind('click', function () {
+    init_modal();
+    $factory_info_modal.modal('show');
+});
+
+$factory_info_modal.find('.confirm-btn').bind('click', function () {
     var factory_name = $('#factory_name').val();
     var factory_type = $('#factory_type').val();
     var factory_ip = $('#factory_ip').val();
@@ -12,7 +18,7 @@ $('#factory_info_modal').find('.confirm_btn').bind('click', function () {
     var factory_phone = $('#factory_phone').val();
     var factory_email = $('#factory_email').val();
     if (factory_name && factory_type && factory_ip && factory_region && factory_status && factory_owner && factory_phone && factory_email) {
-        $('#factory_info_modal').find('.modal-footer button').attr('disabled', true);
+        $factory_info_modal.find('.modal-footer button').attr('disabled', true);
         $(this).html('发送中<i class="fa fa-spinner fa-pulse fa-fw"></i>');
         $.ajax({
             type: 'POST',
@@ -66,6 +72,8 @@ $('.drop-factory').bind('click', function () {
 
 
 $('.update-factory').bind('click', function () {
+    $factory_info_modal.find('.confirm-btn').addClass('hidden');
+    $factory_info_modal.find('.update-btn').removeClass('hidden');
     var factory_id = $(this).attr('factory_id');
     var $factory_tr = $('#factory-' + factory_id);
     $('#factory_name').val($factory_tr.find('.td_factory_name').text());
@@ -73,7 +81,6 @@ $('.update-factory').bind('click', function () {
     var factory_type_val;
     var $factory_type = $('#factory_type');
     $factory_type.find('option').each(function () {
-        console.log($(this).text());
         if ($(this).text() == factory_type) {
             factory_type_val = $(this).val();
             return false;
@@ -89,7 +96,6 @@ $('.update-factory').bind('click', function () {
     var factory_status_val;
     var $factory_status = $('#factory_status');
     $factory_status.find('option').each(function () {
-        console.log($(this).text());
         if ($(this).text() == factory_status) {
             factory_status_val = $(this).val();
             return false;
@@ -102,10 +108,28 @@ $('.update-factory').bind('click', function () {
     $('#factory_owner').val($factory_tr.find('.td_factory_owner').text());
     $('#factory_phone').val($factory_tr.find('.td_factory_owner_phone').text());
     $('#factory_email').val($factory_tr.find('.td_factory_owner_email').text());
-    $('#factory_info_modal').modal('show');
+    $factory_info_modal.modal('show');
+});
+
+
+$factory_info_modal.find('.update-btn').on('click', function () {
+   console.log('confirm update');
 });
 
 
 function init_modal() {
-
+    $('#factory_name').val(null);
+    var $factory_type = $('#factory_type');
+    $factory_type.val(null);
+    $factory_type.selectpicker('refresh');
+    $('#factory_ip').val(null);
+    $('#factory_region').val(null);
+    var $factory_status = $('#factory_status');
+    $factory_status.val(null);
+    $factory_status.selectpicker('refresh');
+    $('#factory_owner').val(null);
+    $('#factory_phone').val(null);
+    $('#factory_email').val(null);
+    $factory_info_modal.find('.update-btn').addClass('hidden');
+    $factory_info_modal.find('.confirm-btn').removeClass('hidden');
 }

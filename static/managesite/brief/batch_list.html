@@ -9,7 +9,9 @@
                 </h4>
             </div>
             {% if status == -1 %}
-                <div class="col-xs-4 text-right"><span class="label label-primary">生产中</span></div>
+                <div class="col-xs-4 text-right"><span class="label label-danger">生成码错误</span></div>
+            {% elif status == 1 %}
+                <div class="col-xs-4 text-right"><span class="label label-info">生成中</span></div>
             {% elif status == 2 %}
                 <div class="col-xs-4 text-right"><span class="label label-success">准备就绪</span></div>
             {% endif %}

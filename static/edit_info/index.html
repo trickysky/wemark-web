@@ -40,6 +40,7 @@
                                     <option value=2>纸箱厂</option>
                                     <option value=3>标签厂</option>
                                     <option value=4>纪念商店</option>
+                                    <option value=-1>本地下载</option>
                                 </select>
                             </div>
                         </div>
@@ -96,7 +97,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary confirm_btn">提交</button>
+                    <button type="button" class="btn btn-warning update-btn hidden">提交</button>
+                    <button type="button" class="btn btn-primary confirm-btn">提交</button>
                 </div>
             </div>
         </div>
@@ -120,7 +122,7 @@
             <p>2</p>
         </div>
         <div role="tabpanel" class="tab-pane fade active in" id="factory_info" aria-labelledby="home-tab">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#factory_info_modal">
+            <button type="button" class="btn btn-primary new-factory" data-toggle="modal">
                 <i class="fa fa-plus" aria-hidden="true"></i> 新建
             </button>
             <table class="table table-hover">
