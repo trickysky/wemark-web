@@ -67,6 +67,45 @@ $('.drop-factory').bind('click', function () {
 
 $('.update-factory').bind('click', function () {
     var factory_id = $(this).attr('factory_id');
-    console.log(factory_id);
+    var $factory_tr = $('#factory-' + factory_id);
+    $('#factory_name').val($factory_tr.find('.td_factory_name').text());
+    var factory_type = $factory_tr.find('.td_factory_type').text();
+    var factory_type_val;
+    var $factory_type = $('#factory_type');
+    $factory_type.find('option').each(function () {
+        console.log($(this).text());
+        if ($(this).text() == factory_type) {
+            factory_type_val = $(this).val();
+            return false;
+        }
+    });
+    if (factory_type_val) {
+        $factory_type.val(factory_type_val);
+    }
+    $factory_type.selectpicker('refresh');
+    $('#factory_ip').val($factory_tr.find('.td_factory_ip').text());
+    $('#factory_region').val($factory_tr.find('.td_factory_region').text());
+    var factory_status = $factory_tr.find('.td_factory_status').text();
+    var factory_status_val;
+    var $factory_status = $('#factory_status');
+    $factory_status.find('option').each(function () {
+        console.log($(this).text());
+        if ($(this).text() == factory_status) {
+            factory_status_val = $(this).val();
+            return false;
+        }
+    });
+    if (factory_status_val) {
+        $factory_status.val(factory_status_val);
+    }
+    $factory_status.selectpicker('refresh');
+    $('#factory_owner').val($factory_tr.find('.td_factory_owner').text());
+    $('#factory_phone').val($factory_tr.find('.td_factory_owner_phone').text());
+    $('#factory_email').val($factory_tr.find('.td_factory_owner_email').text());
     $('#factory_info_modal').modal('show');
 });
+
+
+function init_modal() {
+
+}

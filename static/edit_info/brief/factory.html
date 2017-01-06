@@ -7,31 +7,31 @@
             <i class="fa fa-trash" aria-hidden="true"></i>
         </button>
     </td>
-    <td>{{ factory_id }}</td>
-    <td>{{ factory_name }}</td>
+    <td class="td_factory_id">{{ factory_id }}</td>
+    <td class="td_factory_name">{{ factory_name }}</td>
     {% if factory_type == 0 %}
-        <td>啤酒厂</td>
+        <td class="td_factory_type">啤酒厂</td>
     {% elif factory_type == 1 %}
-        <td>瓶盖厂</td>
+        <td class="td_factory_type">瓶盖厂</td>
     {% elif factory_type == 2 %}
-        <td>纸箱厂</td>
+        <td class="td_factory_type">纸箱厂</td>
     {% elif factory_type == 3 %}
-        <td>标签厂</td>
+        <td class="td_factory_type">标签厂</td>
     {% elif factory_type == 4 %}
-        <td>纪念商店</td>
+        <td class="td_factory_type">纪念商店</td>
     {% else %}
-        <td>未知工厂类型</td>
+        <td class="td_factory_type">未知工厂类型</td>
     {% endif %}
-    <td>{{ factory_ip }}</td>
-    <td>{{ factory_region }}</td>
-    {% if factory_type == 1 %}
-        <td>正常</td>
+    <td class="td_factory_ip">{{ factory_ip }}</td>
+    <td class="td_factory_region">{{ factory_region }}</td>
+    {% if factory_status == 1 %}
+        <td class="td_factory_status">正常</td>
     {% elif factory_type == 0 %}
-        <td>停产</td>
+        <td class="td_factory_status">停产</td>
     {% else %}
-        <td>未知状态</td>
+        <td class="td_factory_status">异常状态</td>
     {% endif %}
-    <td>{{ factory_owner }}</td>
-    <td>{{ factory_owner_phone }}</td>
-    <td>{{ factory_owner_email }}</td>
+    <td class="td_factory_owner">{{ factory_owner }}</td>
+    <td class="td_factory_owner_phone">{{ factory_owner_phone }}</td>
+    <td class="td_factory_owner_email">{{ factory_owner_email }}</td>
 </tr>
