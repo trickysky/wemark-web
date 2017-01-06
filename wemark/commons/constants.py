@@ -24,3 +24,5 @@ CLIENT_CALLBACK_URI = 'http://localhost:8000/oauth2/callback'
 OAUTH2_SCHEMA = Schema.HTTP
 OAUTH2_HOST = 'auth.spoonsea.com'
 OAUTH2_PORT = 80
+
+LOCALHOST = ['localhost', '127.0.0.1']
