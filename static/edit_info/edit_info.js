@@ -35,7 +35,7 @@ $factory_info_modal.find('.confirm-btn').bind('click', function () {
                 'status': factory_status
             },
             success: function (data) {
-                if (data['code']==0) {
+                if (data['code'] == 0) {
                     location.reload();
                 }
             },
@@ -108,12 +108,49 @@ $('.update-factory').bind('click', function () {
     $('#factory_owner').val($factory_tr.find('.td_factory_owner').text());
     $('#factory_phone').val($factory_tr.find('.td_factory_owner_phone').text());
     $('#factory_email').val($factory_tr.find('.td_factory_owner_email').text());
+    $factory_info_modal.factory_id = factory_id;
     $factory_info_modal.modal('show');
 });
 
 
 $factory_info_modal.find('.update-btn').on('click', function () {
-   console.log('confirm update');
+    console.log('confirm update');
+    var factory_name = $('#factory_name').val();
+    var factory_type = $('#factory_type').val();
+    var factory_ip = $('#factory_ip').val();
+    var factory_region = $('#factory_region').val();
+    var factory_status = $('#factory_status').val();
+    var factory_owner = $('#factory_owner').val();
+    var factory_phone = $('#factory_phone').val();
+    var factory_email = $('#factory_email').val();
+    if (factory_name && factory_type && factory_ip && factory_region && factory_status && factory_owner && factory_phone && factory_email) {
+        $factory_info_modal.find('.modal-footer button').attr('disabled', true);
+        $(this).html('发送中<i class="fa fa-spinner fa-pulse fa-fw"></i>');
+        $.ajax({
+            type: 'PUT',
+            dateType: "json",
+            url: "/s/factory/" + $factory_info_modal.factory_id,
+            data: {
+                'factory_name': factory_name,
+                'location': factory_ip,
+                'region': factory_region,
+                'type': factory_type,
+                'owner': factory_owner,
+                'owner_email': factory_email,
+                'owner_mobile': factory_phone,
+                'status': factory_status
+            },
+            success: function (data) {
+                if (data['code'] == 0) {
+                    location.reload();
+                }
+            },
+            error: function (xml, e) {
+                $(this).html('提交');
+                $('#factory_info_modal').find('.modal-footer button').attr('disabled', false);
+            }
+        })
+    }
 });
 
 

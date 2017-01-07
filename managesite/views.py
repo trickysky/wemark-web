@@ -2,13 +2,12 @@
 # -*- coding=UTF-8 -*-
 from django.shortcuts import render
 from django.http import JsonResponse
-import requests
 import time
 
+from wemark.commons.services import FactoryService, BatchService
+
+
 # Create your views here.
-
-server_url = 'http://api.wemarklinks.net:81'
-
 
 def set_index():
     base_data = {}
@@ -21,12 +20,12 @@ def set_index():
         {'text': 'barcode_option3', 'value': 'barcode_value_3'}
     ]
     base_data['factory_options'] = []
-    factories = requests.get("http://api.wemarklinks.net:81/factory/info").json()
+    factories = FactoryService.get_factory_list()
     if factories and factories['code'] == 0:
         for factory in factories['data']:
             base_data['factory_options'].append({'text': factory['factoryName'], 'value': factory['id']})
 
-    base_data['batch_list'] = set_batch_list(get_batch())
+    base_data['batch_list'] = set_batch_list(BatchService.get_batch_list())
     return base_data
 
 
@@ -36,35 +35,29 @@ def index(request):
 
 def new_batch(request):
     body = request.POST
-    params = {}
-    params['factory_id'] = body.get('factory_id')
-    params['incode_factory'] = body.get('incode_factory')
-    params['outcode_factory'] = body.get('outcode_factory')
-    params['casecode_factory'] = body.get('casecode_factory')
-    params['case_count'] = body.get('case_count')
-    params['case_size'] = body.get('case_size')
-    params['unit_count'] = body.get('unit_count')
-    params['barcode'] = body.get('barcode')
-    params['expired_time'] = body.get('expired_time')
-    params['product_info'] = body.get('product_info')
-    params['callback_uri'] = body.get('callback_uri')
-    response = requests.post('%s/batch' % server_url, data=params).json()
-    return response
-
-
-def get_batch():
-    return requests.get('%s/batch' % server_url).json()
+    return BatchService.create_batch(
+        factory_id=body.get('factory_id'),
+        incode_factory=body.get('incode_factory'),
+        outcode_factory=body.get('outcode_factory'),
+        casecode_factory=body.get('casecode_factory'),
+        case_count=body.get('case_count'),
+        case_size=body.get('case_size'),
+        unit_count=body.get('unit_count'),
+        barcode=body.get('barcode'),
+        expired_time=body.get('expired_time'),
+        product_info=body.get('product_info'),
+        callback_uri=body.get('callback_uri')
+    )
 
 
 def get_factory_by_id(factory_id):
     if not factory_id:
         return None
+    response = FactoryService.get_factory(factory_id=factory_id)
+    if response['code'] == 0:
+        return response['data'].get('factoryName')
     else:
-        response = requests.get('%s/factory/info/%s' % (server_url, factory_id)).json()
-        if response['code'] == 0:
-            return response['data'].get('factoryName')
-        else:
-            return None
+        return None
 
 
 def set_batch_list(response):
@@ -92,5 +85,5 @@ def batch(request):
                     'msg': 'new batch success' if new_batch_response['code'] == 0 else 'new batch error'}
         return JsonResponse(response)
     elif request.method == 'GET':
-        response = get_batch()
+        response = BatchService.get_batch_list()
         return JsonResponse(response)

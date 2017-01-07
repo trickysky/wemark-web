@@ -1,7 +1,7 @@
-import requests
-from django.http import JsonResponse
-from wemark_config import SERVER_HOST
-import time
+from django.http import JsonResponse, QueryDict
+
+from wemark.commons.services import FactoryService
+from oauth2.commons.security import Subject
 
 
 # Create your views here.
@@ -12,55 +12,54 @@ def batch(request):
 
 
 def factory(request):
+    r = None
     if request.method == 'GET':
-        response = get_factory()
-        return JsonResponse(response)
-    elif request.method == 'POST':
-        return new_factory(request)
+        r = FactoryService.get_factory_list()
+    if request.method == 'POST':
+        info = get_user_info(request)
+        body = request.POST
+        r = FactoryService.create_factory(
+            factory_name=body.get('factory_name'),
+            location=body.get('location'),
+            region=body.get('region'),
+            f_type=body.get('type'),
+            owner=body.get('owner'),
+            owner_email=body.get('owner_email'),
+            owner_mobile=body.get('owner_mobile'),
+            status=body.get('status'),
+            created_by=info['id'],
+            updated_by=info['id']
+        )
+    return JsonResponse(r)
 
 
 def factory_info(request, factory_id):
+    r = None
     if request.method == 'DELETE':
-        return JsonResponse(requests.delete('%s/factory/info/%s' % (SERVER_HOST, factory_id)).json())
+        r = FactoryService.delete_factory(
+            factory_id=factory_id
+        )
     if request.method == 'PUT':
-        return JsonResponse(update_factory(request, factory_id))
+        info = get_user_info(request)
+        body = QueryDict(request.body)
+        r = FactoryService.update_factory(
+            factory_id=factory_id,
+            factory_name=body.get('factory_name'),
+            location=body.get('location'),
+            region=body.get('region'),
+            f_type=body.get('type'),
+            owner=body.get('owner'),
+            owner_email=body.get('owner_email'),
+            owner_mobile=body.get('owner_mobile'),
+            status=body.get('status'),
+            updated_by=info['id']
+        )
+    return JsonResponse(r)
 
 
-def get_factory():
-    return requests.get('%s/factory/info' % SERVER_HOST).json()
-
-
-def new_factory(request):
-    body = request.POST
-    params = {
-        'factory_name': body.get('factory_name'),
-        'location': body.get('location'),
-        'region': body.get('region'),
-        'type': body.get('type'),
-        'owner': body.get('owner'),
-        'owner_email': body.get('owner_email'),
-        'owner_mobile': body.get('owner_mobile'),
-        'status': body.get('status'),
-        'created_time': int(time.time()) * 1000,
-        'updated_time': int(time.time()) * 1000
-    }
-    response = requests.post('%s/factory' % SERVER_HOST, data=params).json()
-    return JsonResponse(response)
-
-
-def update_factory(request, factory_id):
-    body = request.POST
-    b = request.GET
-    params = {
-        'factory_name': body.get('factory_name'),
-        'location': body.get('location'),
-        'region': body.get('region'),
-        'type': body.get('type'),
-        'owner': body.get('owner'),
-        'owner_email': body.get('owner_email'),
-        'owner_mobile': body.get('owner_mobile'),
-        'status': body.get('status'),
-        'updated_time': int(time.time()) * 1000
-    }
-    response = requests.put('%s/factory/info/%s' % (SERVER_HOST, factory_id), data=params).json()
-    return JsonResponse(response)
+def get_user_info(request):
+    subject = Subject.get_instance(request.session)
+    info = subject.get_user_info()
+    if info is None:
+        info = subject.get_user_info(True)
+    return info

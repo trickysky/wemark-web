@@ -17,3 +17,14 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
+
+
+def clean_params(dict_obj):
+    """
+    :type dict_obj: dict
+    """
+    ret = {}
+    for key in dict_obj:
+        if dict_obj[key] is not None:
+            ret[key] = dict_obj[key]
+    return ret
