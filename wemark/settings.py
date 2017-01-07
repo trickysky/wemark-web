@@ -24,7 +24,7 @@ SECRET_KEY = 'z0s!f&19la&=iza)3jpev!gk3qk=*4$cia2-+z5yopgt061g)$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['manage.spoonsea.com']
 
 # Application definition
 
