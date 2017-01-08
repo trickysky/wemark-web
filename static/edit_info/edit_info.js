@@ -107,7 +107,6 @@ $('.update-factory').bind('click', function () {
 
 
 $factory_info_modal.find('.update-btn').on('click', function () {
-    console.log('confirm update');
     var factory_name = $('#factory_name').val();
     var factory_type = $('#factory_type').val();
     var factory_ip = $('#factory_ip').val();
@@ -120,7 +119,7 @@ $factory_info_modal.find('.update-btn').on('click', function () {
         $factory_info_modal.find('.modal-footer button').attr('disabled', true);
         $(this).html('发送中<i class="fa fa-spinner fa-pulse fa-fw"></i>');
         $.ajax({
-            type: 'PUT',
+            type: 'POST',
             dateType: "json",
             url: "/s/factory/" + $factory_info_modal.factory_id,
             data: {

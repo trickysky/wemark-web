@@ -33,15 +33,15 @@ def factory(request):
     return JsonResponse(r)
 
 
-def factory_info(request, factory_id):
+def factory_id(request, factory_id):
     r = None
     if request.method == 'DELETE':
         r = FactoryService.delete_factory(
             factory_id=factory_id
         )
-    if request.method == 'PUT':
+    if request.method == 'POST':
         info = get_user_info(request)
-        body = QueryDict(request.body)
+        body = request.POST
         r = FactoryService.update_factory(
             factory_id=factory_id,
             factory_name=body.get('factory_name'),
