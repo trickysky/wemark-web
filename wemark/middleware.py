@@ -16,7 +16,7 @@ class AuthenticationMiddleware(MiddlewareMixin):
         """
         subject = Subject.get_instance(request.session)
         if request.path not in AuthenticationMiddleware.EXCEPTIONS and not subject.is_authenticated():
-            redirect_uri = subject.redirect_to_authenticate()
+            redirect_uri = subject.redirect_to_authenticate(request.get_raw_uri())
             if redirect_uri:
                 return HttpResponseRedirect(redirect_uri)
             else:

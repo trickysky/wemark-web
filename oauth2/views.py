@@ -9,7 +9,8 @@ def authorize(request):
     state = OAuth2Utils.parse_state(request)
 
     if subject.authenticate(code):
-        return HttpResponseRedirect(redirect_to='/report')
+        redirect_uri = state if state else '/report'
+        return HttpResponseRedirect(redirect_to=redirect_uri)
     else:
         HttpResponseRedirect(redirect_to=subject.redirect_to_authenticate(state=state))
 
