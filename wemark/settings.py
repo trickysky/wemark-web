@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'report',
     'oauth2',
+    'edit_info',
+    's',
 ]
 
 STATICFILES_DIRS = (

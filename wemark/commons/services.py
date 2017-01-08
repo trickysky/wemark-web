@@ -1,7 +1,7 @@
 from wemark_config import SERVER_HOST
 import utils
 import requests
-
+from s.models import CompanyInfo
 
 class FactoryService(object):
     @staticmethod
@@ -138,3 +138,15 @@ class BatchService(object):
         }
         params = utils.clean_params(params)
         return requests.post('%s/batch' % SERVER_HOST, data=params).json()
+
+
+class CompanyService(object):
+    @staticmethod
+    def get_company_info():
+        company_count = CompanyInfo.objects.all().count()
+        conpany_info = CompanyInfo.objects.get() if company_count else None
+        return {
+            'name': conpany_info.name if conpany_info else None,
+            'description': conpany_info.description if conpany_info else None,
+            'homepage': conpany_info.homepage if conpany_info else None,
+        }

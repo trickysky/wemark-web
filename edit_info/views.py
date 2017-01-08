@@ -3,16 +3,20 @@
 # trickysky
 # 2016/11/22
 from django.shortcuts import render
-from wemark.commons.services import FactoryService
+from wemark.commons.services import FactoryService, CompanyService
 
 
 # Create your views here.
 def set_index():
+    company_info = CompanyService.get_company_info()
     base_data = {
         'app_name': u'信息录入',
         'page_name': u'信息录入',
         'page_desc': u'',
-        'factory_list': []
+        'factory_list': [],
+        'company_name': company_info.get('name') if company_info else None,
+        'company_description': company_info.get('description') if company_info else None,
+        'company_homepage': company_info.get('homepage') if company_info else None
     }
     factories = FactoryService.get_factory_list()
     if factories and factories['code'] == 0:
