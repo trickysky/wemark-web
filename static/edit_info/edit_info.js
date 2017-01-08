@@ -9,14 +9,7 @@ $('#factory_info').find('.new-factory').bind('click', function () {
 });
 
 $factory_info_modal.find('.confirm-btn').bind('click', function () {
-    var factory_name = $('#factory_name').val();
-    var factory_type = $('#factory_type').val();
-    var factory_ip = $('#factory_ip').val();
-    var factory_region = $('#factory_region').val();
-    var factory_status = $('#factory_status').val();
-    var factory_owner = $('#factory_owner').val();
-    var factory_phone = $('#factory_phone').val();
-    var factory_email = $('#factory_email').val();
+    var factory_info = get_factory_info();
     if (factory_name && factory_type && factory_ip && factory_region && factory_status && factory_owner && factory_phone && factory_email) {
         $factory_info_modal.find('.modal-footer button').attr('disabled', true);
         $(this).html('发送中<i class="fa fa-spinner fa-pulse fa-fw"></i>');
@@ -25,14 +18,14 @@ $factory_info_modal.find('.confirm-btn').bind('click', function () {
             dateType: "json",
             url: "/s/factory",
             data: {
-                'factory_name': factory_name,
-                'location': factory_ip,
-                'region': factory_region,
-                'type': factory_type,
-                'owner': factory_owner,
-                'owner_email': factory_email,
-                'owner_mobile': factory_phone,
-                'status': factory_status
+                'factory_name': factory_info['factory_name'],
+                'location': factory_info['factory_ip'],
+                'region': factory_info['factory_region'],
+                'type': factory_info['factory_type'],
+                'owner': factory_info['factory_owner'],
+                'owner_email': factory_info['factory_email'],
+                'owner_mobile': factory_info['factory_phone'],
+                'status': factory_info['factory_status']
             },
             success: function (data) {
                 if (data['code']==0) {
@@ -132,4 +125,17 @@ function init_modal() {
     $('#factory_email').val(null);
     $factory_info_modal.find('.update-btn').addClass('hidden');
     $factory_info_modal.find('.confirm-btn').removeClass('hidden');
+}
+
+function get_factory_info() {
+    return {
+        'factory_name': $('#factory_name').val(),
+        'factory_type': $('#factory_type').val(),
+        'factory_ip': $('#factory_ip').val(),
+        'factory_region': $('#factory_region').val(),
+        'factory_status': $('#factory_status').val(),
+        'factory_owner': $('#factory_owner').val(),
+        'factory_phone': $('#factory_phone').val(),
+        'factory_email': $('#factory_email').val()
+    };
 }

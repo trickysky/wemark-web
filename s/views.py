@@ -2,7 +2,7 @@ import requests
 from django.http import JsonResponse
 from wemark_config import SERVER_HOST
 import time
-from django.http import QueryDict
+from oauth2.commons.security import Subject
 # Create your views here.
 
 
@@ -21,8 +21,8 @@ def factory(request):
 def factory_info(request, factory_id):
 	if request.method == 'DELETE':
 		return JsonResponse(requests.delete('%s/factory/info/%s' % (SERVER_HOST, factory_id)).json())
-	if request.method == 'PUT':
-		return JsonResponse(update_factory(request, factory_id))
+	if request.method == 'POST':
+		pass
 
 
 def get_factory():
