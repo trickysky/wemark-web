@@ -175,3 +175,30 @@ function get_factory_info() {
         'factory_email': $('#factory_email').val()
     };
 }
+
+var $company_info = $('#company_info');
+$company_info.find('.tab-footer .confirm').bind('click', function () {
+    var company_name = $company_info.find('#company_name').val();
+    var company_description = $company_info.find('#company_description').val();
+    var company_homepage = $company_info.find('#company_homepage').val();
+    if (company_name) {
+        $company_info.find('.tab-footer .confirm').html('发送中<i class="fa fa-spinner fa-pulse fa-fw"></i>')
+        $.ajax({
+            type: 'POST',
+            url: '/s/company',
+            data: {
+                'name': company_name,
+                'description': company_description,
+                'homepage': company_homepage
+            },
+            success: function (data) {
+                if (0 == data['code']) {
+                    location.reload();
+                }
+            },
+            error: function () {
+                $company_info.find('.tab-footer .confirm').html('');
+            }
+        })
+    }
+});

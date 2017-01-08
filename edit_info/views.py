@@ -8,7 +8,7 @@ from wemark.commons.services import FactoryService, CompanyService
 
 # Create your views here.
 def set_index():
-    company_info = CompanyService.get_company_info()
+    company_info = CompanyService.get_company()
     base_data = {
         'app_name': u'信息录入',
         'page_name': u'信息录入',

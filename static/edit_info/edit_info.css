@@ -27,6 +27,15 @@
     width: 80%;
 }
 
+#company_info .tab-footer {
+    height: 100px;
+}
+
+#company_info .tab-footer button{
+    float: right;
+    margin-right: 20%;
+}
+
 #factory_info .table>tbody>tr:first-child {
     padding-right: 0;
 }
