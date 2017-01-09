@@ -169,3 +169,67 @@ class CompanyService(object):
 				'code': 1,
 				'msg': 'update company info error:\r\n %s' % e
 			}
+
+
+class ProductService(object):
+	@staticmethod
+	def get_product():
+		r = requests.get('%s/product' % SERVER_HOST)
+		return r.json() if r else None
+
+	@staticmethod
+	def new_product_list(name=None, status=-1, created_by=None, updated_by=None, barcode=None, intro=None, icon=None,
+	                     images=None, description=None):
+		params = {
+			'name': name,
+			'status': status,
+			'created_by': created_by,
+			'created_time': utils.current_timestamp_in_millis(),
+			'updated_by': updated_by,
+			'updated_time': utils.current_timestamp_in_millis(),
+			'barcode': barcode,
+			'intro': intro,
+			'icon': icon,
+			'images': images,
+			'description': description
+		}
+		params = utils.clean_params(params)
+		r = requests.post('%s/product' % SERVER_HOST, data=params).json()
+		return r.json() if r else None
+
+	@staticmethod
+	def get_product(product_id=None):
+		if product_id:
+			r = requests.get('%s/product/%s' % (SERVER_HOST, product_id))
+			return r.json() if r else None
+		else:
+			return None
+
+	@staticmethod
+	def update_product(product_id=None, name=None, status=-1, updated_by=None, barcode=None, intro=None, icon=None,
+	                   images=None, description=None):
+		if product_id:
+			params = {
+				'name': name,
+				'status': status,
+				'updated_by': updated_by,
+				'updated_time': utils.current_timestamp_in_millis(),
+				'barcode': barcode,
+				'intro': intro,
+				'icon': icon,
+				'images': images,
+				'description': description
+			}
+			params = utils.clean_params(params)
+			r = requests.put('%s/product/%s' % (SERVER_HOST, product_id), data=params)
+			return r.json() if r else None
+		else:
+			return None
+
+	@staticmethod
+	def delete_product(product_id):
+		if product_id:
+			r = requests.delete('%s/product/%s' % (SERVER_HOST, product_id))
+			return r.json() if r else None
+		else:
+			return None
