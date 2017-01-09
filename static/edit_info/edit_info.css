@@ -40,3 +40,14 @@
     padding-right: 0;
 }
 
+#product_info .img-rounded {
+    max-height: 22px;
+}
+
+#product_image_modal .modal-image {
+    clear: both;
+    display: block;
+    margin: auto;
+    width: 100%
+}
+

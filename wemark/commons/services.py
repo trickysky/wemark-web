@@ -173,12 +173,12 @@ class CompanyService(object):
 
 class ProductService(object):
 	@staticmethod
-	def get_product():
+	def get_product_list():
 		r = requests.get('%s/product' % SERVER_HOST)
 		return r.json() if r else None
 
 	@staticmethod
-	def new_product_list(name=None, status=-1, created_by=None, updated_by=None, barcode=None, intro=None, icon=None,
+	def new_product(name=None, status=-1, created_by=None, updated_by=None, barcode=None, intro=None, icon=None,
 	                     images=None, description=None):
 		params = {
 			'name': name,

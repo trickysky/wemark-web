@@ -202,3 +202,11 @@ $company_info.find('.tab-footer .confirm').bind('click', function () {
         })
     }
 });
+
+var $product_info = $('#product_info');
+var $product_image_modal = $('#product_image_modal');
+$product_info.find('.td-image').bind('click', function () {
+    var image_url = $(this).find('img').attr('src');
+    $product_image_modal.find('.modal-body img').attr('src', image_url);
+    $product_image_modal.modal('show');
+});
