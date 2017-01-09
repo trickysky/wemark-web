@@ -81,7 +81,7 @@
                             <label class="col-xs-2 control-label">负责人电话</label>
                             <div class="col-xs-6">
                                 <label>
-                                    <input id="factory_phone" class="form-control">
+                                    <input type="tel" id="factory_phone" class="form-control">
                                 </label>
                             </div>
                         </div>
@@ -89,7 +89,7 @@
                             <label class="col-xs-2 control-label">负责人邮箱</label>
                             <div class="col-xs-6">
                                 <label>
-                                    <input id="factory_email" class="form-control">
+                                    <input type="email" id="factory_email" class="form-control">
                                 </label>
                             </div>
                         </div>
@@ -103,25 +103,78 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="product_image_modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                </div>
+                <div class="modal-body">
+                    <img class="text-center modal-image" src="">
+                </div>
+            </div>
+        </div>
+    </div>
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation"><a href="#company_info" id="company_info_tab" role="tab"
+        <li role="presentation" class="active"><a href="#company_info" id="company_info_tab" role="tab"
                                    data-toggle="tab" aria-controls="company_info" aria-expanded="true">公司信息</a>
         </li>
         <li role="presentation"><a href="#product_info" id="product_info_tab" role="tab"
                                    data-toggle="tab" aria-controls="product_info" aria-expanded="true">产品信息</a>
         </li>
-        <li role="presentation" class="active"><a href="#factory_info" id="factory_info_tab" role="tab"
+        <li role="presentation"><a href="#factory_info" id="factory_info_tab" role="tab"
                                                   data-toggle="tab" aria-controls="factory_info" aria-expanded="true">工厂信息</a>
         </li>
     </ul>
     <div id="my_tab_content" class="tab-content">
         <div role="tabpanel" class="tab-pane fade" id="company_info" aria-labelledby="home-tab">
-            <p>company_info company_info company_info company_info company_info company_info </p>
+            <form>
+                <div class="company-info-detail">
+                    <label class="company-label" for="company_name">公司名称</label>
+                    <input id="company_name" value="{{ company_name }}">
+                </div>
+                <div class="company-info-detail">
+                    <label class="company-label" for="company_description">公司介绍</label>
+                    <textarea id="company_description" spellcheck="true" tabindex="4" rows="10">{{ company_description|default:'' }}</textarea>
+                </div>
+                <div class="company-info-detail">
+                    <label class="company-label" for="company_homepage">公司主页</label>
+                    <input id="company_homepage" value="{{ company_homepage|default:'' }}">
+                </div>
+            </form>
+            <div class="tab-footer">
+                <button type="button" class="btn btn-primary confirm">
+                    提交更改
+                </button>
+            </div>
         </div>
-        <div role="tabpanel" class="tab-pane fade" id="product_info" aria-labelledby="home-tab">
-            <p>2</p>
+        <div role="tabpanel" class="tab-pane fade active in" id="product_info" aria-labelledby="home-tab">
+            <button type="button" class="btn btn-primary new-product" data-toggle="modal">
+                <i class="fa fa-plus" aria-hidden="true"></i> 新建
+            </button>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>操作</th>
+                    <th>序号</th>
+                    <th>名称</th>
+                    <th>条码</th>
+                    <th>图标</th>
+                    <th>照片</th>
+                    <th>简介</th>
+                    <th>描述</th>
+                    <th>状态</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for product in product_list %}
+                        {% include "edit_info/brief/product.html" with product_id=product.product_id product_name=product.product_name product_barcode=product.product_barcode product_icon=product.product_icon product_images=product.product_images product_intro=product.product_intro product_description=product.product_description product_status=product.product_status %}
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-        <div role="tabpanel" class="tab-pane fade active in" id="factory_info" aria-labelledby="home-tab">
+        <div role="tabpanel" class="tab-pane fade" id="factory_info" aria-labelledby="home-tab">
             <button type="button" class="btn btn-primary new-factory" data-toggle="modal">
                 <i class="fa fa-plus" aria-hidden="true"></i> 新建
             </button>

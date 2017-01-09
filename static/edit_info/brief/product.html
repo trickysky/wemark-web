@@ -1,0 +1,24 @@
+<tr id="product-{{ product_id }}">
+    <td>
+        <button type="button" class="btn btn-info btn-xs update-product" product_id="{{ product_id }}">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="btn btn-danger btn-xs drop-product" product_id="{{ product_id }}">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+        </button>
+    </td>
+    <td class="td-product-id">{{ product_id }}</td>
+    <td class="td-product-name">{{ product_name }}</td>
+    <td class="td-product-barcode">{{ product_barcode }}</td>
+    <td class="td-product-icon td-image"><img src="{{ product_icon }}" alt="" class="img-rounded"></td>
+    <td class="td-product-images td-image"><img src="{{ product_images }}" alt="" class="img-rounded"></td>
+    <td class="td-product-intro">{{ product_intro }}</td>
+    <td class="td-product-description">{{ product_description }}</td>
+    <td class="td-product-status">
+        {% if product_status == 1  %}
+            正常
+        {% else %}
+            异常状态
+        {% endif %}
+    </td>
+</tr>

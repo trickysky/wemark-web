@@ -9,14 +9,7 @@ $('#factory_info').find('.new-factory').bind('click', function () {
 });
 
 $factory_info_modal.find('.confirm-btn').bind('click', function () {
-    var factory_name = $('#factory_name').val();
-    var factory_type = $('#factory_type').val();
-    var factory_ip = $('#factory_ip').val();
-    var factory_region = $('#factory_region').val();
-    var factory_status = $('#factory_status').val();
-    var factory_owner = $('#factory_owner').val();
-    var factory_phone = $('#factory_phone').val();
-    var factory_email = $('#factory_email').val();
+    var factory_info = get_factory_info();
     if (factory_name && factory_type && factory_ip && factory_region && factory_status && factory_owner && factory_phone && factory_email) {
         $factory_info_modal.find('.modal-footer button').attr('disabled', true);
         $(this).html('发送中<i class="fa fa-spinner fa-pulse fa-fw"></i>');
@@ -25,14 +18,14 @@ $factory_info_modal.find('.confirm-btn').bind('click', function () {
             dateType: "json",
             url: "/s/factory",
             data: {
-                'factory_name': factory_name,
-                'location': factory_ip,
-                'region': factory_region,
-                'type': factory_type,
-                'owner': factory_owner,
-                'owner_email': factory_email,
-                'owner_mobile': factory_phone,
-                'status': factory_status
+                'factory_name': factory_info['factory_name'],
+                'location': factory_info['factory_ip'],
+                'region': factory_info['factory_region'],
+                'type': factory_info['factory_type'],
+                'owner': factory_info['factory_owner'],
+                'owner_email': factory_info['factory_email'],
+                'owner_mobile': factory_info['factory_phone'],
+                'status': factory_info['factory_status']
             },
             success: function (data) {
                 if (data['code'] == 0) {
@@ -114,7 +107,6 @@ $('.update-factory').bind('click', function () {
 
 
 $factory_info_modal.find('.update-btn').on('click', function () {
-    console.log('confirm update');
     var factory_name = $('#factory_name').val();
     var factory_type = $('#factory_type').val();
     var factory_ip = $('#factory_ip').val();
@@ -127,7 +119,7 @@ $factory_info_modal.find('.update-btn').on('click', function () {
         $factory_info_modal.find('.modal-footer button').attr('disabled', true);
         $(this).html('发送中<i class="fa fa-spinner fa-pulse fa-fw"></i>');
         $.ajax({
-            type: 'PUT',
+            type: 'POST',
             dateType: "json",
             url: "/s/factory/" + $factory_info_modal.factory_id,
             data: {
@@ -170,3 +162,51 @@ function init_modal() {
     $factory_info_modal.find('.update-btn').addClass('hidden');
     $factory_info_modal.find('.confirm-btn').removeClass('hidden');
 }
+
+function get_factory_info() {
+    return {
+        'factory_name': $('#factory_name').val(),
+        'factory_type': $('#factory_type').val(),
+        'factory_ip': $('#factory_ip').val(),
+        'factory_region': $('#factory_region').val(),
+        'factory_status': $('#factory_status').val(),
+        'factory_owner': $('#factory_owner').val(),
+        'factory_phone': $('#factory_phone').val(),
+        'factory_email': $('#factory_email').val()
+    };
+}
+
+var $company_info = $('#company_info');
+$company_info.find('.tab-footer .confirm').bind('click', function () {
+    var company_name = $company_info.find('#company_name').val();
+    var company_description = $company_info.find('#company_description').val();
+    var company_homepage = $company_info.find('#company_homepage').val();
+    if (company_name) {
+        $company_info.find('.tab-footer .confirm').html('发送中<i class="fa fa-spinner fa-pulse fa-fw"></i>')
+        $.ajax({
+            type: 'POST',
+            url: '/s/company',
+            data: {
+                'name': company_name,
+                'description': company_description,
+                'homepage': company_homepage
+            },
+            success: function (data) {
+                if (0 == data['code']) {
+                    location.reload();
+                }
+            },
+            error: function () {
+                $company_info.find('.tab-footer .confirm').html('');
+            }
+        })
+    }
+});
+
+var $product_info = $('#product_info');
+var $product_image_modal = $('#product_image_modal');
+$product_info.find('.td-image').bind('click', function () {
+    var image_url = $(this).find('img').attr('src');
+    $product_image_modal.find('.modal-body img').attr('src', image_url);
+    $product_image_modal.modal('show');
+});

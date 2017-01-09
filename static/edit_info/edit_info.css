@@ -2,6 +2,52 @@
     padding-left: 20px;
 }
 
-.table>tbody>tr:first-child {
+#company_info form {
+    /*padding-top: 10px;*/
+}
+
+#company_info .company-info-detail {
+    margin: 30px 0;
+}
+
+#company_info .company-label {
+    font-size: 20px;
+    font-weight: bolder;
+    float: left;
+    padding-right: 25px;
+    text-align: right;
+}
+
+#company_info input {
+    width: 15%;
+    min-width: 50px;
+}
+
+#company_info textarea {
+    width: 80%;
+}
+
+#company_info .tab-footer {
+    height: 100px;
+}
+
+#company_info .tab-footer button{
+    float: right;
+    margin-right: 20%;
+}
+
+#factory_info .table>tbody>tr:first-child {
     padding-right: 0;
 }
+
+#product_info .img-rounded {
+    max-height: 22px;
+}
+
+#product_image_modal .modal-image {
+    clear: both;
+    display: block;
+    margin: auto;
+    width: 100%
+}
+
