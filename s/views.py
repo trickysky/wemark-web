@@ -93,4 +93,21 @@ def product(request):
 
 
 def product_id(request, product_id):
-	pass
+	r = None
+	if request.method == 'DELETE':
+		r = ProductService.delete_product(
+			product_id=product_id
+		)
+	elif request.method == 'POST':
+		body = request.POST
+		info = get_user_info(request)
+		r = ProductService.update_product(
+			product_id=product_id,
+			name=body.get('name'),
+			icon=body.get('icon'),
+			images=body.get('images'),
+			intro=body.get('intro'),
+			description=body.get('description'),
+			updated_by=info['id']
+		)
+	return JsonResponse(r)

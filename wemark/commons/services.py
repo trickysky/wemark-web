@@ -206,7 +206,7 @@ class ProductService(object):
 			return None
 
 	@staticmethod
-	def update_product(product_id=None, name=None, status=-1, updated_by=None, barcode=None, intro=None, icon=None,
+	def update_product(product_id=None, name=None, status=0, updated_by=None, barcode=None, intro=None, icon=None,
 	                   images=None, description=None):
 		if product_id:
 			params = {
