@@ -205,8 +205,44 @@ $company_info.find('.tab-footer .confirm').bind('click', function () {
 
 var $product_info = $('#product_info');
 var $product_image_modal = $('#product_image_modal');
+var $product_info_modal = $('#product_info_modal');
 $product_info.find('.td-image').bind('click', function () {
     var image_url = $(this).find('img').attr('src');
     $product_image_modal.find('.modal-body img').attr('src', image_url);
     $product_image_modal.modal('show');
+});
+
+$product_info.find('.new-product').bind('click', function () {
+    init_modal();
+    $product_info_modal.modal('show');
+});
+
+$product_info_modal.find('.modal-footer .confirm-btn').bind('click', function () {
+    var product_name = $('#product_name').val(),
+        product_icon = $('#product_icon').val(),
+        product_images = $('#product_images').val(),
+        product_intro = $('#product_intro').val(),
+        product_description = $('#product_description').val();
+    if (product_name) {
+        $product_info_modal.find('.modal-footer .confirm-btn').html('发送中<i class="fa fa-spinner fa-pulse fa-fw"></i>')
+        $.ajax({
+            type: 'POST',
+            url: '/s/product',
+            data: {
+                'name': product_name,
+                'icon': product_icon,
+                'images': product_images,
+                'intro': product_intro,
+                'description': product_description
+            },
+            success: function (data) {
+                if (data['code'] == 0) {
+                    location.reload();
+                }
+            },
+            error: function () {
+                $product_info_modal.find('.modal-footer .confirm-btn').text('提交');
+            }
+        });
+    }
 });

@@ -1,6 +1,6 @@
 from django.http import JsonResponse, QueryDict
 
-from wemark.commons.services import FactoryService, CompanyService
+from wemark.commons.services import FactoryService, CompanyService, ProductService
 from oauth2.commons.security import Subject
 
 
@@ -74,3 +74,23 @@ def company(request):
 			homepage=body.get('homepage'),
 		)
 		return JsonResponse(r)
+
+
+def product(request):
+	if request.method == 'POST':
+		body = request.POST
+		info = get_user_info(request)
+		r = ProductService.new_product(
+			name=body.get('name'),
+			icon=body.get('icon'),
+			images=body.get('images'),
+			intro=body.get('intro'),
+			description=body.get('description'),
+			created_by=info['id'],
+			updated_by=info['id']
+		)
+		return JsonResponse(r) if r else None
+
+
+def product_id(request, product_id):
+	pass
