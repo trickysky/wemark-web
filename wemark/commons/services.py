@@ -178,7 +178,7 @@ class ProductService(object):
 		return r.json() if r else None
 
 	@staticmethod
-	def new_product(name=None, status=-1, created_by=None, updated_by=None, barcode=None, intro=None, icon=None,
+	def new_product(name=None, status=0, created_by=None, updated_by=None, barcode=None, intro=None, icon=None,
 	                     images=None, description=None):
 		params = {
 			'name': name,
@@ -194,7 +194,7 @@ class ProductService(object):
 			'description': description
 		}
 		params = utils.clean_params(params)
-		r = requests.post('%s/product' % SERVER_HOST, data=params).json()
+		r = requests.post('%s/product' % SERVER_HOST, data=params)
 		return r.json() if r else None
 
 	@staticmethod
@@ -206,7 +206,7 @@ class ProductService(object):
 			return None
 
 	@staticmethod
-	def update_product(product_id=None, name=None, status=-1, updated_by=None, barcode=None, intro=None, icon=None,
+	def update_product(product_id=None, name=None, status=0, updated_by=None, barcode=None, intro=None, icon=None,
 	                   images=None, description=None):
 		if product_id:
 			params = {

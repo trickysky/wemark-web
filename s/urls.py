@@ -13,4 +13,6 @@ urlpatterns = [
     url(r'^factory/(?P<factory_id>\d+)$', views.factory_id),
     url(r'^batch$', views.batch),
     url(r'^company$', views.company),
+    url(r'^product$', views.product),
+    url(r'^product/(?P<product_id>\d+)$', views.product_id),
 ]

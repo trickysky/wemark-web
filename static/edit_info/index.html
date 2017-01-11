@@ -116,11 +116,71 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="product_info_modal" tabindex="-1" role="dialog" aria-labelledby="product-info-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="product-info-modal-label">产品信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">产品名称</label>
+                            <div class="col-xs-3">
+                                <label class="input-label">
+                                    <input id="product_name" class="form-control">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">产品图标</label>
+                            <div class="col-xs-8">
+                                <label class="input-label">
+                                    <input id="product_icon" class="form-control">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">产品照片</label>
+                            <div class="col-xs-8">
+                                <label class="input-label">
+                                    <input id="product_images" class="form-control">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">产品简介</label>
+                            <div class="col-xs-8">
+                                <label class="input-label">
+                                    <textarea id="product_intro" rows="4" class="form-control"></textarea>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">产品描述</label>
+                            <div class="col-xs-8">
+                                <label class="input-label">
+                                    <textarea id="product_description" rows="8" class="form-control"></textarea>
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-warning update-btn hidden">提交</button>
+                    <button type="button" class="btn btn-primary confirm-btn">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#company_info" id="company_info_tab" role="tab"
+        <li role="presentation"><a href="#company_info" id="company_info_tab" role="tab"
                                    data-toggle="tab" aria-controls="company_info" aria-expanded="true">公司信息</a>
         </li>
-        <li role="presentation"><a href="#product_info" id="product_info_tab" role="tab"
+        <li role="presentation" class="active"><a href="#product_info" id="product_info_tab" role="tab"
                                    data-toggle="tab" aria-controls="product_info" aria-expanded="true">产品信息</a>
         </li>
         <li role="presentation"><a href="#factory_info" id="factory_info_tab" role="tab"
@@ -132,15 +192,15 @@
             <form>
                 <div class="company-info-detail">
                     <label class="company-label" for="company_name">公司名称</label>
-                    <input id="company_name" value="{{ company_name }}">
+                    <input class="form-control" id="company_name" value="{{ company_name }}">
                 </div>
                 <div class="company-info-detail">
                     <label class="company-label" for="company_description">公司介绍</label>
-                    <textarea id="company_description" spellcheck="true" tabindex="4" rows="10">{{ company_description|default:'' }}</textarea>
+                    <textarea class="form-control" id="company_description" spellcheck="true" tabindex="4" rows="10">{{ company_description|default:'' }}</textarea>
                 </div>
                 <div class="company-info-detail">
                     <label class="company-label" for="company_homepage">公司主页</label>
-                    <input id="company_homepage" value="{{ company_homepage|default:'' }}">
+                    <input class="form-control" id="company_homepage" value="{{ company_homepage|default:'' }}">
                 </div>
             </form>
             <div class="tab-footer">
@@ -159,17 +219,15 @@
                     <th>操作</th>
                     <th>序号</th>
                     <th>名称</th>
-                    <th>条码</th>
                     <th>图标</th>
                     <th>照片</th>
                     <th>简介</th>
                     <th>描述</th>
-                    <th>状态</th>
                 </tr>
                 </thead>
                 <tbody>
                     {% for product in product_list %}
-                        {% include "edit_info/brief/product.html" with product_id=product.product_id product_name=product.product_name product_barcode=product.product_barcode product_icon=product.product_icon product_images=product.product_images product_intro=product.product_intro product_description=product.product_description product_status=product.product_status %}
+                        {% include "edit_info/brief/product.html" with product_id=product.product_id product_name=product.product_name product_icon=product.product_icon product_images=product.product_images product_intro=product.product_intro product_description=product.product_description %}
                     {% endfor %}
                 </tbody>
             </table>

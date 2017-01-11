@@ -205,8 +205,123 @@ $company_info.find('.tab-footer .confirm').bind('click', function () {
 
 var $product_info = $('#product_info');
 var $product_image_modal = $('#product_image_modal');
+var $product_info_modal = $('#product_info_modal');
 $product_info.find('.td-image').bind('click', function () {
     var image_url = $(this).find('img').attr('src');
     $product_image_modal.find('.modal-body img').attr('src', image_url);
     $product_image_modal.modal('show');
+});
+
+$product_info.find('.new-product').bind('click', function () {
+    init_modal();
+    $product_info_modal.modal('show');
+});
+
+function get_product_info() {
+    return {
+        'product_name': $('#product_name').val(),
+        'product_icon': $('#product_icon').val(),
+        'product_images': $('#product_images').val(),
+        'product_intro': $('#product_intro').val(),
+        'product_description': $('#product_description').val()
+    };
+}
+
+$product_info_modal.find('.modal-footer .confirm-btn').bind('click', function () {
+    var product_info = get_product_info();
+    if (product_info.product_name) {
+        $product_info_modal.find('.modal-footer .confirm-btn').html('发送中<i class="fa fa-spinner fa-pulse fa-fw"></i>');
+        $.ajax({
+            type: 'POST',
+            url: '/s/product',
+            data: {
+                'name': product_info.product_name,
+                'icon': product_info.product_icon,
+                'images': product_info.product_images,
+                'intro': product_info.product_intro,
+                'description': product_info.product_description
+            },
+            success: function (data) {
+                if (data['code'] == 0) {
+                    location.reload();
+                }
+            },
+            error: function () {
+                $product_info_modal.find('.modal-footer .confirm-btn').text('提交');
+            }
+        });
+    }
+});
+
+$product_info.find('.drop-product').bind('click', function () {
+    var $this = $(this);
+    var product_id = $this.attr('product_id');
+    if (product_id) {
+        $this.parent().html('<button type="button" class="btn btn-danger btn-xs confirm-delete-product-btn">确认删除</button>');
+        $('.confirm-delete-product-btn').one('click', function () {
+            $(this).html('<i class="fa fa-spinner fa-pulse fa-fw"></i>');
+            $.ajax({
+                type: 'DELETE',
+                url: "/s/product/" + product_id,
+                success: function (data) {
+                    if (data['code'] == 0) {
+                        $('#product-' + product_id).hide('slow');
+                    }
+                },
+                error: function (xml, e) {
+                    console.log('delete product error: \r\n' + e);
+                }
+            });
+        });
+    }
+});
+
+$product_info.find('.update-product').bind('click', function () {
+    $product_info_modal.find('.modal-footer .confirm-btn').addClass('hidden');
+    $product_info_modal.find('.modal-footer .update-btn').removeClass('hidden');
+    var $this = $(this),
+        product_id = $this.attr('product_id'),
+        $product_id = $('#product-'+product_id);
+    var product_name = $product_id.find('.td-product-name').text(),
+        product_icon = $product_id.find('.td-product-icon img').attr('src'),
+        product_images = $product_id.find('.td-product-images img').attr('src'),
+        product_intro = $product_id.find('.td-product-intro').text(),
+        product_description = $product_id.find('.td-product-description').text();
+    $('#product_name').val(product_name);
+    $('#product_icon').val(product_icon);
+    $('#product_images').val(product_images);
+    $('#product_intro').val(product_intro);
+    $('#product_description').val(product_description);
+    $product_info_modal.product_id=product_id;
+    $product_info_modal.modal('show');
+});
+
+$product_info_modal.find('.modal-footer .update-btn').bind('click', function () {
+    var product_info = get_product_info();
+    if (product_info.product_name) {
+        $product_info_modal.find('.modal-footer .update-btn').html('发送中<i class="fa fa-spinner fa-pulse fa-fw"></i>');
+        $.ajax({
+            type: 'POST',
+            url: '/s/product/' + $product_info_modal.product_id,
+            data:{
+                'name': product_info.product_name,
+                'icon': product_info.product_icon,
+                'images': product_info.product_images,
+                'intro': product_info.product_intro,
+                'description': product_info.product_description
+            },
+            success: function (data) {
+                if (data['code']==0) {
+                    location.reload();
+                } else {
+                    $product_info_modal.find('.modal-footer .update-btn').text('提交');
+                    console.log('update product info error:\r\n' + e);
+                }
+            },
+            error: function (xml, e) {
+                $product_info_modal.find('.modal-footer .update-btn').text('提交');
+                console.log('update product info error:\r\n' + e);
+            }
+        });
+    }
 });

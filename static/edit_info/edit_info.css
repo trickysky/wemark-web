@@ -48,6 +48,10 @@
     clear: both;
     display: block;
     margin: auto;
-    width: 100%
+    width: 100%;
+}
+
+#product_info_modal .input-label {
+    width: 100%;
 }
 
