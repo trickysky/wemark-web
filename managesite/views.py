@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 import time
 
-from wemark.commons.services import FactoryService, BatchService
+from wemark.commons.services import FactoryService, BatchService, CompanyService
 
 
 # Create your views here.
@@ -12,7 +12,7 @@ from wemark.commons.services import FactoryService, BatchService
 def set_index():
     base_data = {}
     base_data['app_name'] = u'生产赋码'
-    base_data['page_name'] = u'百威啤酒'
+    base_data['page_name'] = CompanyService.get_company().get('name')
     base_data['page_desc'] = u'批次管理'
     base_data['barcode_options'] = [
         {'text': 'barcode_option1', 'value': 'barcode_value_1'},
