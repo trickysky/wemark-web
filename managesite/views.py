@@ -5,7 +5,7 @@ from django.http import JsonResponse
 import time
 
 from wemark.commons.services import FactoryService, BatchService, CompanyService
-from s.views import get_user_info
+from oauth2.commons.security import Subject
 
 
 # Create your views here.
@@ -35,6 +35,9 @@ def index(request):
 
 
 def new_batch(request):
+    subject = Subject.get_instance(request.session)
+    user = subject.get_user_info()
+
     body = request.POST
     return BatchService.create_batch(
         factory_id=body.get('factory_id'),
@@ -47,7 +50,9 @@ def new_batch(request):
         barcode=body.get('barcode'),
         expired_time=body.get('expired_time'),
         product_info=body.get('product_info'),
-        callback_uri=body.get('callback_uri')
+        callback_uri=body.get('callback_uri'),
+        created_by=user['id'],
+        updated_by=user['id']
     )
 
 
@@ -62,11 +67,10 @@ def get_factory_by_id(factory_id):
 
 
 def set_batch_list(request, response):
+    subject = Subject.get_instance(request.session)
     batch_list = []
     for b in response['data']:
-        aaa = b.get('createdBy')
-        bbb = get_user_info(request).get('id')
-        if b.get('createdBy') == get_user_info(request).get('id'):
+        if b.get('createdBy') == subject.get_user_info(request).get('id'):
             batch_list.append({
                 'expired_time': time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(b['updatedTime'] / 1000)),
                 'barcode': b['barcode'],

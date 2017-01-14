@@ -111,7 +111,7 @@ class Subject(object):
 
     def get_user_info(self, force_update=False):
         info_cached = self.get_session_by_key(Subject.SESSION_USER_INFO)
-        if not force_update:
+        if not force_update and info_cached is not None:
             return info_cached
 
         builder = self.__create_oauth2_builder(OAuth2Utils.SEGMENT_GET_USER_INFO)
@@ -126,7 +126,7 @@ class Subject(object):
                 self.add_or_update_session_by_key(Subject.SESSION_USER_INFO, data)
                 return data
 
-        return info_cached
+        return None
 
     def get_session(self):
         return self.session
