@@ -70,7 +70,7 @@ def set_batch_list(request, response):
     subject = Subject.get_instance(request.session)
     batch_list = []
     for b in response['data']:
-        if b.get('createdBy') == subject.get_user_info(request).get('id'):
+        if subject.has_role('root') or b.get('createdBy') == subject.get_user_info(request).get('id'):
             batch_list.append({
                 'expired_time': time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(b['updatedTime'] / 1000)),
                 'barcode': b['barcode'],
