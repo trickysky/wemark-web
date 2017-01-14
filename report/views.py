@@ -5,39 +5,44 @@ from collections import defaultdict
 from django.shortcuts import render
 
 from wemark.commons.response import ResponseEntity
-from services import AwardService
-from services import BatchService
-from services import ScanCodeService
-
-award_service = AwardService()
-scan_code_service = ScanCodeService()
-batch_service = BatchService()
+from services import ReportService
+from oauth2.commons.security import Subject
 
 
-def set_index():
+def set_index(request):
+    service = create_service(request=request)
+
     base_data = {
         'app_name': u'数据报表',
         'icon_name': u'icon-bar-chart',
         'page_name': u'数据报表',
         'page_desc': u'图表-地图',
-        'dashboards': get_dashboard().values(),
-        'portlets': get_charts().values()
+        'dashboards': get_dashboard(request).values(),
+        'portlets': get_charts().values(),
+        'dropdown_name': u'选择批次',
+        'items': [{'id': bid, 'name': u'生产批次' + str(bid)} for bid in service.get_batches_ids()]
     }
 
     return base_data
 
 
-def get_dashboard():
+def get_dashboard(request):
+    service = create_service(request=request)
+    ids = service.get_batches_ids()
+    current_bid = ids[0] if len(ids) != 0 else None
+
     confs = defaultdict(dict)
     confs[0] = {'lg_pos': 3, 'md_pos': 3, 'sm_pos': 6, 'xm_pos': 12, 'color': 'blue', 'icon': 'bar-chart',
-                'name': u'总扫码量', 'value': u'1,209,437'}
+                'id': 'total_scan', 'name': u'总扫码量',
+                'value': service.get_total_scan_count(current_bid) if current_bid is not None else 0}
     confs[1] = {'lg_pos': 3, 'md_pos': 3, 'sm_pos': 6, 'xm_pos': 12, 'color': 'yellow-crusta', 'icon': 'clock-o',
-                'name': u'总赋码数', 'value': u'10,261,034'}
+                'id': 'total_code', 'name': u'总赋码数',
+                'value': service.get_total_code_count(current_bid) if current_bid is not None else 0}
     confs[2] = {'lg_pos': 3, 'md_pos': 3, 'sm_pos': 6, 'xm_pos': 12, 'color': 'green-jungle', 'icon': 'plug',
-                'name': u'总奖金', 'value': u'5,000,000', 'unit': u'元'}
+                'id': 'total_award', 'name': u'总奖金', 'value': service.get_total_award_amount(), 'unit': u'元'}
     confs[3] = {'lg_pos': 3, 'md_pos': 3, 'sm_pos': 6, 'xm_pos': 12, 'color': 'red', 'icon': 'exclamation-triangle',
-                'name': u'已兑奖金额',
-                'value': u'1,146,302', 'unit': u'元'}
+                'id': 'total_accepted', 'name': u'已兑奖金额',
+                'value': service.get_total_accepted_amount(current_bid) if current_bid is not None else 0, 'unit': u'元'}
     return confs
 
 
@@ -58,81 +63,45 @@ def get_charts():
     return confs
 
 
-def fetch_batches_if_necessary(start_ts, end_ts, force_update):
-    success = True
-    error_message = None
-
-    if force_update or not batch_service.has_cache(BatchService.CACHE_BATCH_IDS_KEY):
-        success = batch_service.fetch(start_ts, end_ts)
-        error_message = batch_service.get_error_message()
-
-    return success, error_message
-
-
 def index(request):
-    return render(request, 'report/index.html', set_index())
+    return render(request, 'report/index.html', set_index(request))
 
 
-def scan_code(request):
-    start_ts, end_ts, force_update = get_params(request.GET)
-    success = True
-    error_message = None
+def scan_count(request, bid):
+    service = create_service(request)
+    return ResponseEntity.ok(service.get_total_scan_count(bid=bid))
 
-    if force_update or not scan_code_service.has_cache(ScanCodeService.CACHE_SCAN_CODE_COUNT_KEY):
-        success, error_message = fetch_batches_if_necessary(start_ts, end_ts, error_message)
 
-        if success:
-            batch_ids = batch_service.get_batch_ids()
-            success = scan_code_service.fetch_all(batch_ids=batch_ids, location=None, start_time=start_ts,
-                                                  end_time=end_ts)
-            error_message = scan_code_service.get_error_message()
-
-    return ResponseEntity.ok(scan_code_service.get_scan_count()) if success else ResponseEntity.bad_request(
-        error_message)
+def code_count(request, bid):
+    service = create_service(request)
+    return ResponseEntity.ok(service.get_total_code_count(bid=bid))
 
 
 def award_amount(request):
-    start_ts, end_ts, force_update = get_params(request.GET)
-    success = True
-    error_message = None
-
-    if force_update or not award_service.has_cache(AwardService.CACHE_AWARD_AMOUNT_KEY):
-        success, error_message = fetch_batches_if_necessary(start_ts, end_ts, force_update)
-
-        if success:
-            batch_ids = batch_service.get_batch_ids()
-            success = award_service.fetch_all(batch_ids=batch_ids, accept_location=None, start_accept_time=start_ts,
-                                              end_accept_time=end_ts)
-            error_message = award_service.get_error_message()
-
-    return ResponseEntity.ok(award_service.get_award_amount()) if success else ResponseEntity.bad_request(error_message)
+    service = create_service(request)
+    return ResponseEntity.ok(service.get_total_award_amount())
 
 
-def award_count(request):
-    start_ts, end_ts, force_update = get_params(request.GET)
-    success = True
-    error_message = None
-
-    if force_update or not award_service.has_cache(AwardService.CACHE_AWARD_COUNT_KEY):
-        success, error_message = fetch_batches_if_necessary(start_ts, end_ts, force_update)
-
-        if success:
-            batch_ids = batch_service.get_batch_ids()
-            success = award_service.fetch_all(batch_ids=batch_ids, accept_location=None, start_accept_time=start_ts,
-                                              end_accept_time=end_ts)
-            error_message = award_service.get_error_message()
-
-    return ResponseEntity.ok(award_service.get_award_count()) if success else ResponseEntity.bad_request(error_message)
+def accepted_amount(request, bid):
+    service = create_service(request)
+    return ResponseEntity.ok(service.get_total_accepted_amount(bid=bid))
 
 
-def get_params(params):
-    start_ts = params.get('start_ts')
-    end_ts = params.get('start_ts')
-    if start_ts is not None and start_ts.isdigit():
-        start_ts = long(start_ts)
-    if end_ts is not None and end_ts.isdigit():
-        end_ts = long(end_ts)
-    force_update = params.get('force_update')
-    if force_update is None:
-        force_update = False
-        return start_ts, end_ts, force_update
+def batch_id(request):
+    service = create_service(request)
+    return ResponseEntity.ok(service.get_batches_ids())
+
+
+def daily_count(request, bid):
+    service = create_service(request)
+    return ResponseEntity.ok(service.get_daily_scan_and_accepted_count(bid=bid))
+
+
+def accepted_rate(request):
+    service = create_service(request)
+    return ResponseEntity.ok(service.get_accepted_rate_by_product())
+
+
+def create_service(request):
+    subject = Subject.get_instance(request.session)
+    return ReportService(user_id=subject.get_user_info()['id'], is_root=subject.has_role('root'))
