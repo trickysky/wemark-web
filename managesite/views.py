@@ -5,11 +5,12 @@ from django.http import JsonResponse
 import time
 
 from wemark.commons.services import FactoryService, BatchService, CompanyService
+from s.views import get_user_info
 
 
 # Create your views here.
 
-def set_index():
+def set_index(request):
     base_data = {}
     base_data['app_name'] = u'生产赋码'
     base_data['page_name'] = CompanyService.get_company().get('name')
@@ -25,12 +26,12 @@ def set_index():
         for factory in factories['data']:
             base_data['factory_options'].append({'text': factory['factoryName'], 'value': factory['id']})
 
-    base_data['batch_list'] = set_batch_list(BatchService.get_batch_list())
+    base_data['batch_list'] = set_batch_list(request, BatchService.get_batch_list())
     return base_data
 
 
 def index(request):
-    return render(request, 'managesite/index.html', set_index())
+    return render(request, 'managesite/index.html', set_index(request))
 
 
 def new_batch(request):
@@ -60,21 +61,24 @@ def get_factory_by_id(factory_id):
         return None
 
 
-def set_batch_list(response):
+def set_batch_list(request, response):
     batch_list = []
     for b in response['data']:
-        batch_list.append({
-            'expired_time': time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(b['updatedTime'] / 1000)),
-            'barcode': b['barcode'],
-            'unit_count': b['unitCount'],
-            'inner_code_factory': get_factory_by_id(b['incodeFactory'] if b['incodeFactory'] else None),
-            'outer_code_factory': get_factory_by_id(b['outcodeFactory'] if b['outcodeFactory'] else None),
-            'case_code_factory': get_factory_by_id(b['casecodeFactory'] if b['casecodeFactory'] else None),
-            'factory_id': get_factory_by_id(b['factoryId'] if b['factoryId'] else None),
-            'prod_info': b['productInfo'] if b['productInfo'] else None,
-            'batch_id': b['id'],
-            'status': b['status']
-        })
+        aaa = b.get('createdBy')
+        bbb = get_user_info(request).get('id')
+        if b.get('createdBy') == get_user_info(request).get('id'):
+            batch_list.append({
+                'expired_time': time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(b['updatedTime'] / 1000)),
+                'barcode': b['barcode'],
+                'unit_count': b['unitCount'],
+                'inner_code_factory': get_factory_by_id(b['incodeFactory'] if b['incodeFactory'] else None),
+                'outer_code_factory': get_factory_by_id(b['outcodeFactory'] if b['outcodeFactory'] else None),
+                'case_code_factory': get_factory_by_id(b['casecodeFactory'] if b['casecodeFactory'] else None),
+                'factory_id': get_factory_by_id(b['factoryId'] if b['factoryId'] else None),
+                'prod_info': b['productInfo'] if b['productInfo'] else None,
+                'batch_id': b['id'],
+                'status': b['status']
+            })
     return batch_list
 
 
