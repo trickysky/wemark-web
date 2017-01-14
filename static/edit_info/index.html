@@ -177,10 +177,10 @@
         </div>
     </div>
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation"><a href="#company_info" id="company_info_tab" role="tab"
+        <li role="presentation" class="active"><a href="#company_info" id="company_info_tab" role="tab"
                                    data-toggle="tab" aria-controls="company_info" aria-expanded="true">公司信息</a>
         </li>
-        <li role="presentation" class="active"><a href="#product_info" id="product_info_tab" role="tab"
+        <li role="presentation"><a href="#product_info" id="product_info_tab" role="tab"
                                    data-toggle="tab" aria-controls="product_info" aria-expanded="true">产品信息</a>
         </li>
         <li role="presentation"><a href="#factory_info" id="factory_info_tab" role="tab"
@@ -188,7 +188,7 @@
         </li>
     </ul>
     <div id="my_tab_content" class="tab-content">
-        <div role="tabpanel" class="tab-pane fade" id="company_info" aria-labelledby="home-tab">
+        <div role="tabpanel" class="tab-pane fade active in" id="company_info" aria-labelledby="home-tab">
             <form>
                 <div class="company-info-detail">
                     <label class="company-label" for="company_name">公司名称</label>
@@ -209,7 +209,7 @@
                 </button>
             </div>
         </div>
-        <div role="tabpanel" class="tab-pane fade active in" id="product_info" aria-labelledby="home-tab">
+        <div role="tabpanel" class="tab-pane fade" id="product_info" aria-labelledby="home-tab">
             <button type="button" class="btn btn-primary new-product" data-toggle="modal">
                 <i class="fa fa-plus" aria-hidden="true"></i> 新建
             </button>
