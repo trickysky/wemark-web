@@ -5,18 +5,6 @@ TIME_MINUTE_UNIT = 60
 TIME_SECOND_UNIT = 60
 TIME_MILLIS_UNIT = 1000
 
-LOTTERY_SCAN = 1
-TRACEABILITY_SCAN = 2
-
-WECHAT_USER_TYPE = 1
-
-BATCH_DISCARD_STATUS = -1
-BATCH_DONE_STATUS = 0
-BATCH_PROCEEDING_STATUS = 1
-BATCH_READY_STATUS = 2
-BATCH_DOWNLOADING_STATUS = 3
-BATCH_DOWNLOADED_STATUS = 4
-
 CLIENT_ID = 'dd055109e309a4c8'
 CLIENT_SECRET = '83eb90109062909b03ceb2efa13016f9'
 # CLIENT_CALLBACK_URI = 'http://manage.spoonsea.com/oauth2/callback'
@@ -27,3 +15,37 @@ OAUTH2_HOST = 'auth.spoonsea.com'
 OAUTH2_PORT = 80
 
 LOCALHOST = ['localhost', '127.0.0.1']
+
+UNIT_CHINA_FEN = 100
+
+
+class ScanCode(object):
+    Lottery = 1
+    Traceability = 2
+
+
+class UserType(object):
+    Wechat = 1
+    Dealer = 99
+    Factory = 100
+
+
+class CodeType(object):
+    Outer = 0
+    Inner = 1
+    Case = 2
+
+
+class BatchStatus(object):
+    Discard = -1
+    Done = 0
+    Proceeding = 1
+    Ready = 2
+    Downloading = 3
+    Downloaded = 4
+
+
+class ProductStatus(object):
+    Normal = 0
+    Removed = 1
+    Abnormal = -1

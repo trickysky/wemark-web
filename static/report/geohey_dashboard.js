@@ -5,7 +5,7 @@
 
 var dashboard = function () {
     return {
-        initDataTrend: function () {
+        initDataTrend: function (data) {
             if (typeof(AmCharts) === 'undefined' || $('#datatrend').size() === 0) {
                 return;
             }
@@ -68,161 +68,19 @@ var dashboard = function () {
                     "valueAlign": "left"
                 },
                 "titles": [],
-                "dataProvider": [
-                    // {
-                    //     "date": "2016-09-18",
-                    //     "scan": "2576",
-                    //     "confirm": "180"
-                    // },
-                    // {
-                    //     "date": "2016-09-19",
-                    //     "scan": "2382",
-                    //     "confirm": "892"
-                    // },
-                    // {
-                    //     "date": "2016-09-20",
-                    //     "scan": "2909",
-                    //     "confirm": "559"
-                    // },
-                    // {
-                    //     "date": "2016-09-21",
-                    //     "scan": "2986",
-                    //     "confirm": "728"
-                    // },
-                    // {
-                    //     "date": "2016-09-22",
-                    //     "scan": "2348",
-                    //     "confirm": "755"
-                    // },
-                    // {
-                    //     "date": "2016-09-23",
-                    //     "scan": "3292",
-                    //     "confirm": "765"
-                    // },
-                    // {
-                    //     "date": "2016-09-24",
-                    //     "scan": "3375",
-                    //     "confirm": "646"
-                    // },
-                    // {
-                    //     "date": "2016-09-25",
-                    //     "scan": "2959",
-                    //     "confirm": "521"
-                    // },
-                    // {
-                    //     "date": "2016-09-26",
-                    //     "scan": "2810",
-                    //     "confirm": "345"
-                    // },
-                    // {
-                    //     "date": "2016-09-27",
-                    //     "scan": "2763",
-                    //     "confirm": "988"
-                    // },
-                    // {
-                    //     "date": "2016-09-28",
-                    //     "scan": "2966",
-                    //     "confirm": "666"
-                    // },
-                    // {
-                    //     "date": "2016-09-29",
-                    //     "scan": "2284",
-                    //     "confirm": "381"
-                    // },
-                    // {
-                    //     "date": "2016-09-30",
-                    //     "scan": "3656",
-                    //     "confirm": "982"
-                    // },
-                    {
-                        "date": "2016-10-01",
-                        "scan": "2153",
-                        "confirm": "416"
-                    },
-                    {
-                        "date": "2016-10-02",
-                        "scan": "2020",
-                        "confirm": "272"
-                    },
-                    {
-                        "date": "2016-10-03",
-                        "scan": "2075",
-                        "confirm": "299"
-                    },
-                    {
-                        "date": "2016-10-04",
-                        "scan": "2129",
-                        "confirm": "276"
-                    },
-                    {
-                        "date": "2016-10-05",
-                        "scan": "2464",
-                        "confirm": "361"
-                    },
-                    {
-                        "date": "2016-10-06",
-                        "scan": "2252",
-                        "confirm": "281"
-                    },
-                    {
-                        "date": "2016-10-07",
-                        "scan": "2079",
-                        "confirm": "268"
-                    },
-                    {
-                        "date": "2016-10-08",
-                        "scan": "2194",
-                        "confirm": "411"
-                    },
-                    {
-                        "date": "2016-10-09",
-                        "scan": "2203",
-                        "confirm": "377"
-                    },
-                    {
-                        "date": "2016-10-10",
-                        "scan": "2313",
-                        "confirm": "440"
-                    },
-                    {
-                        "date": "2016-10-11",
-                        "scan": "2745",
-                        "confirm": "263"
-                    },
-                    {
-                        "date": "2016-10-12",
-                        "scan": "3339",
-                        "confirm": "267"
-                    },
-                    {
-                        "date": "2016-10-13",
-                        "scan": "3650",
-                        "confirm": "261"
-                    },
-                    {
-                        "date": "2016-10-14",
-                        "scan": "3392",
-                        "confirm": "260"
-                    },
-                    {
-                        "date": "2016-10-15",
-                        "scan": "3510",
-                        "confirm": "507"
-                    },
-                    {
-                        "date": "2016-10-16",
-                        "scan": "3344",
-                        "confirm": "638"
-                    }
-                ]
+                "dataProvider": data
             });
         },
         initSpiderBalance: function () {
             $('#spiderbalance').html("<iframe width=100% height=100% src='http://geohey.com/apps/dataviz/55f5f8c6105143bd989a7c42a4f12b19/share?ak=N2IxMTc3MTIyODRlNGJkNjkxYWVlNDQ4OWI1YWY0ZTk' frameborder=0></iframe>");
         },
-        initDataRank: function () {
+        initDataRank: function (data) {
             if (typeof(AmCharts) === 'undefined' || $('#datarank').size() === 0) {
                 return;
+            }
+            var colors = ['#FD0000', '#FE7E00', '#FEF001', '#01D85B', '#0188FE', '#8900FE', '#FF00E4', '#000000'];
+            for (var i = 0; i < data.length; ++i) {
+                data[i]['color'] = colors[i % colors.length]
             }
 
             var chart = AmCharts.makeChart("datarank", {
@@ -289,51 +147,10 @@ var dashboard = function () {
                         "text": "产品兑奖率"
                     }
                 ],
-                "dataProvider": [
-                    {
-                        "category": "百威",
-                        "color": "#FD0000",
-                        "rate": "22"
-                    },
-                    {
-                        "category": "百威纯生",
-                        "color": "#FE7E00",
-                        "rate": "43"
-                    },
-                    {
-                        "category": "哈尔滨小麦王",
-                        "color": "#FEF001",
-                        "rate": "22"
-                    },
-                    {
-                        "category": "哈尔滨冰爽",
-                        "color": "#01D85B",
-                        "rate": "47"
-                    },
-                    {
-                        "category": "哈尔滨冰畅",
-                        "color": "#0188FE",
-                        "rate": "28"
-                    },
-                    {
-                        "category": "哈尔滨清爽",
-                        "color": "#8900FE",
-                        "rate": "36"
-                    },
-                    {
-                        "category": "大富豪",
-                        "color": "#FF00E4",
-                        "rate": "56"
-                    },
-                    {
-                        "category": "雪津",
-                        "color": "#000000",
-                        "rate": "39"
-                    }
-                ]
+                "dataProvider": data
             });
         },
-        initDataFormation: function () {
+        initDataFormation: function (accepted, total) {
             if (typeof(AmCharts) === 'undefined' || $('#dataformation').size() === 0) {
                 return;
             }
@@ -348,16 +165,16 @@ var dashboard = function () {
                 "arrows": [
                     {
                         "id": "GaugeArrow-1",
-                        "value": 114
+                        "value": accepted / 10000
                     }
                 ],
                 "axes": [
                     {
-                        "bottomText": "1,146,302 元",
+                        "bottomText": accepted.toString() + "元",
                         "bottomTextColor": "#00CC00",
                         "bottomTextFontSize": 21,
                         "bottomTextYOffset": -20,
-                        "endValue": 500,
+                        "endValue": total / 10000,
                         "id": "GaugeAxis-1",
                         "unit": " 万元",
                         "valueInterval": 50,
@@ -397,10 +214,71 @@ var dashboard = function () {
             });
         },
         init: function () {
-            this.initDataTrend();
-            this.initSpiderBalance();
-            this.initDataRank();
-            this.initDataFormation();
+            var that = this;
+            var list = $('#dropdown_btn ul li a');
+            if (list == null) {
+                list = [];
+            }
+            var ids = [];
+            for (var i = 0; i < list.length; ++i) {
+                var item_id = list[i].id;
+                ids.push((item_id.split('_'))[1]);
+            }
+            if (ids.length != 0) {
+                that.refresh(ids[0])
+            }
+
+            $.ajax({
+                type: 'GET',
+                url: 's/accepted_rate',
+                success: function (data) {
+                    if (data['error_code'] == 0) {
+                        that.initDataRank(data['data']);
+                    }
+                }
+            });
+        },
+        refresh: function (batch_id) {
+            var that = this;
+            $.ajax({
+                type: 'GET',
+                url: 's/scan_count/' + batch_id,
+                success: function (data) {
+                    if (data['error_code'] == 0) {
+                        $('#total_scan').text(data['data']);
+                    }
+                }
+            });
+
+            $.ajax({
+                type: 'GET',
+                url: 's/code_count/' + batch_id,
+                success: function (data) {
+                    if (data['error_code'] == 0) {
+                        $('#total_code').text(data['data']);
+                    }
+                }
+            });
+
+            $.ajax({
+                type: 'GET',
+                url: 's/accepted_amount/' + batch_id,
+                success: function (data) {
+                    if (data['error_code'] == 0) {
+                        $('#total_accepted').text(data['data']);
+                    }
+                }
+            });
+
+            $.ajax({
+                type: 'GET',
+                url: 's/daily_count/' + batch_id,
+                success: function (data) {
+                    if (data['error_code'] == 0) {
+                        that.initDataTrend(data['data'])
+                    }
+                }
+            });
         }
     };
 }();

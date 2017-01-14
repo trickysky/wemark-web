@@ -1,93 +1,169 @@
-import sys
-from wemark.commons import constants, utils
+from django.core.cache import cache
+import json
+import time
+from wemark.commons.services import BatchService, ProductService, DataService
+from wemark.commons import constants
 
 
-class Cacheable(object):
-    def __init__(self, prefix):
-        super(Cacheable, self).__init__()
-        self.prefix = prefix
+class ReportService(object):
+    CACHE_EXPIRES_IN = constants.TIME_SECOND_UNIT
+    BATCH_CACHE_KEY = 'batch_cache_key'
+    SCAN_CODE_CACHE_KEY = 'scan_code_cache_key_of_'
+    AWARD_CACHE_KEY = 'award_code_cache_key_of_'
 
-    def has_cache(self, key):
-        full_key = self.prefix + key
-        return False
+    def __init__(self, user_id, is_root=False):
+        super(ReportService, self).__init__()
+        self.is_root = is_root
+        self.user_id = user_id
 
-    def cache(self, key, value, expires_in):
-        full_key = self.prefix + key
+    def __get_batch_list(self):
+        batch_list = cache.get(self.__generate_key(self.BATCH_CACHE_KEY))
+        if batch_list is not None:
+            return batch_list
 
-    def get_cache(self, key):
-        full_key = self.prefix + key
+        batch_list = BatchService.get_batch_list(status=constants.BatchStatus.Ready)['data'] if self.is_root \
+            else BatchService.get_batch_list(created_by=self.user_id, status=constants.BatchStatus.Ready)['data']
+        cache.set(self.__generate_key(self.BATCH_CACHE_KEY), batch_list, self.CACHE_EXPIRES_IN)
 
+        return batch_list
 
-class AwardService(Cacheable):
-    CACHE_AWARD_PREFIX = 'cache_award_key:'
-    CACHE_AWARD_COUNT_KEY = "award_count"
-    CACHE_AWARD_AMOUNT_KEY = "award_amount"
+    def __get_scan_list(self, bid, user_type):
+        scan_list = cache.get(self.__generate_key(self.SCAN_CODE_CACHE_KEY, bid))
+        if scan_list is None:
+            if bid in self.get_batches_ids():
+                scan_list = DataService.get_scan_code_list(batch_id=bid, user_type=user_type)['data']
+                cache.set(self.__generate_key(self.SCAN_CODE_CACHE_KEY, bid), scan_list, self.CACHE_EXPIRES_IN)
+        return scan_list
 
-    def __init__(self):
-        super(AwardService, self).__init__(AwardService.CACHE_AWARD_PREFIX)
-        self.error_message = None
+    def __get_accepted_list(self, bid, user_type):
+        accepted_list = cache.get(self.__generate_key(self.AWARD_CACHE_KEY, bid))
+        if accepted_list is None:
+            if bid in self.get_batches_ids():
+                accepted_list = DataService.get_award_list(batch_id=bid, user_type=user_type)['data']
+                cache.set(self.__generate_key(self.AWARD_CACHE_KEY, bid), accepted_list, self.CACHE_EXPIRES_IN)
+        return accepted_list
 
-    def get_award_count(self):
-        pass
+    @staticmethod
+    def __get_batch(bid):
+        return BatchService.get_batch(bid)['data']
 
-    def get_award_amount(self):
-        pass
+    def __get_product_by_barcode(self, barcode):
+        products = ProductService.get_product_list(barcode=barcode)['data'] \
+            if self.is_root else ProductService.get_product_list(barcode=barcode, created_by=self.user_id)['data']
+        return products[0] if len(products) != 0 else None
 
-    def fetch_by_batch_id(self, batch_id, accept_location, start_accept_time,
-                          end_accept_time=utils.current_timestamp_in_millis(),
-                          user_type=constants.WECHAT_USER_TYPE):
-        pass
+    @staticmethod
+    def __generate_key(prefix, ordinal=None):
+        return prefix + str(ordinal) if ordinal is not None else prefix
 
-    def fetch_all(self, batch_ids, accept_location, start_accept_time,
-                  end_accept_time=utils.current_timestamp_in_millis(),
-                  user_type=constants.WECHAT_USER_TYPE):
-        pass
+    def get_batches_ids(self):
+        return [item['id'] for item in self.__get_batch_list()]
 
-    def get_error_message(self):
-        return self.error_message
+    def get_total_scan_count(self, bid, user_type=constants.UserType.Wechat):
+        scan_list = self.__get_scan_list(bid, user_type)
+        ret = 0
+        if scan_list is not None:
+            for scan_code in scan_list:
+                ret += scan_code['scanTimes']
+        return ret
 
+    def get_total_code_count(self, bid):
+        if bid in self.get_batches_ids():
+            batch = self.__get_batch(bid)
+            return batch['unitCount']
 
-class BatchService(Cacheable):
-    CACHE_BATCH_PREFIX = 'cache_batch_key:'
-    CACHE_BATCH_IDS_KEY = 'batch_ids'
+    @staticmethod
+    def get_total_award_amount():
+        default_award_amount = 1000000
+        return default_award_amount
 
-    def __init__(self):
-        super(BatchService, self).__init__(BatchService.CACHE_BATCH_PREFIX)
-        self.error_message = None
+    def get_total_accepted_count(self, bid, user_type=constants.UserType.Wechat):
+        accepted_list = self.__get_accepted_list(bid, user_type)
+        return len(accepted_list) if accepted_list is not None else 0
 
-    def get_batch_ids(self):
-        pass
+    def get_total_accepted_amount(self, bid, user_type=constants.UserType.Wechat):
+        accepted_list = self.__get_accepted_list(bid, user_type)
+        ret = 0
+        if accepted_list is not None:
+            for accept in accepted_list:
+                info = json.loads(accept['awardInfo'])
+                ret += float(info['amount']) / constants.UNIT_CHINA_FEN \
+                    if info is not None and info['amount'] is not None else 0
+        return ret
 
-    def fetch(self, start_created_time, end_created_time=utils.current_timestamp_in_millis(), incode_factory=None,
-              outcode_factory=None, casecode_factory=None, case_count=None, min_case_count=0,
-              max_case_count=sys.maxint, unit_count=None, min_unit_count=0, max_unit_count=sys.maxint,
-              status=constants.BATCH_DONE_STATUS):
-        pass
+    def get_daily_scan_and_accepted_count(self, bid, user_type=constants.UserType.Wechat):
+        def create_daily_item(date_str, scan, confirm):
+            return {
+                'date': date_str,
+                'scan': scan,
+                'confirm': confirm
+            }
 
-    def get_error_message(self):
-        return self.error_message
+        def format_timestamp(timestamp_in_second):
+            t = time.localtime(timestamp_in_second)
+            return time.strftime("%Y-%m-%d", t)
 
+        date_map = {}
+        now = time.time()
+        current = now
+        days_for_display = 15
+        for d in xrange(days_for_display):
+            date_map[format_timestamp(current)] = [0, 0]
+            current -= constants.TIME_HOUR_UNIT * constants.TIME_MINUTE_UNIT * constants.TIME_SECOND_UNIT
 
-class ScanCodeService(Cacheable):
-    CACHE_SCAN_CODE_PREFIX = 'cache_scan_code_key:'
-    CACHE_SCAN_CODE_COUNT_KEY = 'scan_code_count'
+        scan_list = self.__get_scan_list(bid, user_type)
+        accepted_list = self.__get_accepted_list(bid, user_type)
+        if scan_list is not None:
+            for scan_code in scan_list:
+                ts_in_millis = scan_code['scanTime']
+                times = scan_code['scanTimes']
+                date = format_timestamp(ts_in_millis / constants.TIME_MILLIS_UNIT)
+                if date_map[date] is not None:
+                    date_map[date][0] += times
+        if accepted_list is not None:
+            for accepted in accepted_list:
+                ts_in_millis = accepted['awardAcptTime']
+                date = format_timestamp(ts_in_millis / constants.TIME_MILLIS_UNIT)
+                if date_map[date] is not None:
+                    date_map[date][1] += 1
 
-    def __init__(self):
-        super(ScanCodeService, self).__init__(ScanCodeService.CACHE_SCAN_CODE_PREFIX)
-        self.error_message = None
+        ret = []
+        current = now
+        for d in xrange(days_for_display):
+            date = format_timestamp(current)
+            ret.append(create_daily_item(date, date_map[date][0], date_map[date][1]))
+            current -= constants.TIME_HOUR_UNIT * constants.TIME_MINUTE_UNIT * constants.TIME_SECOND_UNIT
+        ret.reverse()
 
-    def get_scan_count(self):
-        pass
+        return ret
 
-    def fetch_by_batch_id(self, batch_id, location, start_time, end_time=utils.current_timestamp_in_millis(),
-                          func=constants.LOTTERY_SCAN, user_type=constants.WECHAT_USER_TYPE, min_times=0,
-                          max_times=sys.maxint):
-        pass
+    def get_accepted_rate_by_product(self):
+        def create_product_item(product_name, rate):
+            return {
+                'category': product_name,
+                'rate': rate
+            }
 
-    def fetch_all(self, batch_ids, location, start_time, end_time=utils.current_timestamp_in_millis(),
-                  func=constants.LOTTERY_SCAN, user_type=constants.WECHAT_USER_TYPE, min_times=0,
-                  max_times=sys.maxint):
-        pass
+        product_map = {}
+        batch_list = self.__get_batch_list()
+        if batch_list is not None:
+            for batch in batch_list:
+                barcode = batch['barcode']
+                product = self.__get_product_by_barcode(barcode)
+                if product is not None:
+                    name = product['name']
+                    scan_count = self.get_total_scan_count(batch['id'])
+                    accepted_count = self.get_total_accepted_count(batch['id'])
+                    if product_map[name] is None:
+                        product_map[name] = [scan_count, accepted_count]
+                    else:
+                        product_map[name][0] += scan_count
+                        product_map[name][1] += accepted_count
 
-    def get_error_message(self):
-        return self.error_message
+        ret = []
+        for key in product_map:
+            scan = product_map[key][0]
+            accepted = product_map[key][1]
+            ret.append(create_product_item(key, accepted / scan * 100 if scan != 0 else 100))
+
+        return ret

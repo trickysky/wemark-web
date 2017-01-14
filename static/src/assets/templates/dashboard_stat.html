@@ -6,7 +6,8 @@
             </div>
             <div class="details">
                 <div class="number">
-                    <span data-counter="counterup" data-value="{{ dashboard.value|default:"0" }}">0</span>{{ dashboard.unit|default:"" }}
+                    <span id="{{ dashboard.id }}" data-counter="counterup"
+                          data-value="{{ dashboard.value|default:"0" }}">0</span>{{ dashboard.unit|default:"" }}
                 </div>
                 <div class="desc"> {{ dashboard.name|default:"指标" }} </div>
             </div>

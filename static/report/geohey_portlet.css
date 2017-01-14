@@ -117,3 +117,7 @@ font-size: 12px !important; }
   width: 100%;
   height: 350px;
   font-size: 11px; }
+
+#dropdown_btn {
+  min-height: 50px;
+}

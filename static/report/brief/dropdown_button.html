@@ -1,0 +1,12 @@
+<div class="dropdown" id="dropdown_btn">
+    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="true">
+        {{ dropdown_name }}
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        {% for item in items %}
+            <li><a id="item_{{ item.id }}">{{ item.name }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
