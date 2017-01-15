@@ -69,12 +69,13 @@ class ReportService(object):
 
     def get_total_code_count(self, bid):
         if bid in self.get_batches_ids():
-            batch = self.__get_batch(bid)
-            return batch['unitCount']
+            json_obj = DataService.get_associated_code_count(bid)
+            return json_obj['data'] if json_obj['code'] == 0 else 0
+        return 0
 
     @staticmethod
     def get_total_award_amount():
-        default_award_amount = 1000000
+        default_award_amount = 5000000
         return default_award_amount
 
     def get_total_accepted_count(self, bid, user_type=constants.UserType.Wechat):
@@ -154,7 +155,7 @@ class ReportService(object):
                     name = product['name']
                     scan_count = self.get_total_scan_count(batch['id'])
                     accepted_count = self.get_total_accepted_count(batch['id'])
-                    if product_map[name] is None:
+                    if name not in product_map.keys():
                         product_map[name] = [scan_count, accepted_count]
                     else:
                         product_map[name][0] += scan_count
