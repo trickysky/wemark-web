@@ -264,12 +264,12 @@ var dashboard = function () {
 
             $.ajax({
                 type: 'GET',
-                url: 's/accepted_amount/' + batch_id,
+                url: 's/accepted_and_award_amount/' + batch_id,
                 success: function (data) {
                     if (data['error_code'] == 0) {
-                        var accepted = data['data'];
-                        var total = $('#total_award').text();
-                        that.initDataFormation(accepted, parseInt(total));
+                        var accepted = data['data']['accepted'];
+                        var total = data['data']['award'];
+                        that.initDataFormation(accepted, total);
                         $('#total_accepted').text(accepted);
                     }
                 }
