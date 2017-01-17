@@ -82,9 +82,13 @@ def award_amount(request):
     return ResponseEntity.ok(service.get_total_award_amount())
 
 
-def accepted_amount(request, bid):
+def accepted_and_award_amount(request, bid):
     service = create_service(request)
-    return ResponseEntity.ok(service.get_total_accepted_amount(bid=bid))
+    data = {
+        'award': service.get_total_award_amount(),
+        'accepted': service.get_total_accepted_amount(bid=bid)
+    }
+    return ResponseEntity.ok(data)
 
 
 def batch_id(request):

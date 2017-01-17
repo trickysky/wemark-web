@@ -414,3 +414,15 @@ class DataService(object):
         params = utils.clean_params(params)
         r = requests.get('%s/data/batch' % SERVER_HOST, params=params)
         return r.json() if r.ok else None
+
+    @staticmethod
+    def get_associated_code_count(batch_id, assign_type=None, enabled=None, enabled_factory=None):
+        params = {
+            'batch_id': batch_id,
+            'assign_type': assign_type,
+            'enabled': enabled,
+            'enabled_factory': enabled_factory
+        }
+        params = utils.clean_params(params)
+        r = requests.get('%s/data/associate/count' % SERVER_HOST, params=params)
+        return r.json() if r.ok else None

@@ -177,27 +177,27 @@ var dashboard = function () {
                         "endValue": total / 10000,
                         "id": "GaugeAxis-1",
                         "unit": " 万元",
-                        "valueInterval": 50,
+                        "valueInterval": total / 100000,
                         "bands": [
                             {
                                 "color": "#00CC00",
-                                "endValue": 250,
+                                "endValue": total / 50000,
                                 "id": "GaugeBand-1",
                                 "startValue": 0
                             },
                             {
                                 "color": "#ffac29",
-                                "endValue": 400,
+                                "endValue": total / 20000,
                                 "id": "GaugeBand-2",
                                 "innerRadius": "96%",
-                                "startValue": 250
+                                "startValue": total / 50000
                             },
                             {
                                 "color": "#ea3838",
-                                "endValue": 500,
+                                "endValue": total / 10000,
                                 "id": "GaugeBand-3",
                                 "innerRadius": "94%",
-                                "startValue": 400
+                                "startValue": total / 20000
                             }
                         ]
                     }
@@ -237,6 +237,8 @@ var dashboard = function () {
                     }
                 }
             });
+
+            that.initSpiderBalance();
         },
         refresh: function (batch_id) {
             var that = this;
@@ -262,10 +264,13 @@ var dashboard = function () {
 
             $.ajax({
                 type: 'GET',
-                url: 's/accepted_amount/' + batch_id,
+                url: 's/accepted_and_award_amount/' + batch_id,
                 success: function (data) {
                     if (data['error_code'] == 0) {
-                        $('#total_accepted').text(data['data']);
+                        var accepted = data['data']['accepted'];
+                        var total = data['data']['award'];
+                        that.initDataFormation(accepted, total);
+                        $('#total_accepted').text(accepted);
                     }
                 }
             });
@@ -286,6 +291,12 @@ var dashboard = function () {
 
 if (App.isAngularJsApp() === false) {
     jQuery(document).ready(function () {
-        dashboard.init(); // init metronic core componets
+        dashboard.init(); // init metronic core components
+        $('#dropdown_btn ul li a').each(function (index, item) {
+            $(this).bind('click', function () {
+                const bid = item.id.split('_')[1];
+                dashboard.refresh(bid);
+            })
+        })
     });
 }
