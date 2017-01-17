@@ -250,5 +250,5 @@ $confirm_btn.bind("click", function () {
             }
         });
     }
-
 });
+
