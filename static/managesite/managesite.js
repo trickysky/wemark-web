@@ -252,3 +252,21 @@ $confirm_btn.bind("click", function () {
     }
 });
 
+$('#product').bind('change', function () {
+    var product_id = $(this).val();
+    if (product_id) {
+        $.ajax({
+            type: 'GET',
+            url: '/s/product/' + product_id,
+            success: function (data) {
+                if (data['code'] == 0) {
+                    $('#prod_info').val(JSON.stringify(data['data'], undefined, 4));
+                }
+            },
+            error: function (xml, e) {
+                console.log('get product error: \r\n' + e);
+            }
+        });
+    }
+});
+

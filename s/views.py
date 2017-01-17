@@ -108,4 +108,6 @@ def product_by_id(request, product_id):
             description=body.get('description'),
             updated_by=info['id']
         )
+    elif request.method == 'GET':
+        r = ProductService.get_product(product_id)
     return JsonResponse(r) if r else ResponseEntity.server_error()

@@ -319,7 +319,7 @@ class ProductService(object):
             }
             params = utils.clean_params(params)
             r = requests.put('%s/product/%s' % (SERVER_HOST, product_id), data=params)
-            return r.json() if r else None
+            return r.json() if r.ok else None
         else:
             return None
 
@@ -327,7 +327,7 @@ class ProductService(object):
     def delete_product(product_id):
         if product_id:
             r = requests.delete('%s/product/%s' % (SERVER_HOST, product_id))
-            return r.json() if r else None
+            return r.json() if r.ok else None
         else:
             return None
 
