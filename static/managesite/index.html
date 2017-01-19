@@ -94,6 +94,10 @@
                                 <label class="col-xs-2 control-label"><b>产品名称</b></label>
                                 <label class="col-xs-8 batch-value red-font">未设置</label>
                             </div>
+                            <div id="batch_barcode" class="form-group">
+                                <label class="col-xs-2 control-label"><b>产品条码</b></label>
+                                <label class="col-xs-8 batch-value red-font">无</label>
+                            </div>
                             <div id="batch_factory" class="form-group">
                                 <label class="col-xs-2 control-label"><b>激活工厂</b></label>
                                 <label class="col-xs-8 batch-value red-font">未设置</label>
@@ -137,7 +141,7 @@
 
     <div class="panel-group" id="order_list" role="tablist" aria-multiselectable="true">
         {% for batch in batch_list %}
-        {% include "managesite/brief/batch_list.html" with batch_id=batch.batch_id status=batch.status expired_time=batch.expired_time barcode=batch.barcode unit_count=batch.unit_count inner_code_factory=batch.inner_code_factory outer_code_factory=batch.outer_code_factory case_code_factory=batch.case_code_factory factory_id=batch.factory_id prod_info=batch.prod_info %}
+        {% include "managesite/brief/batch_list.html" with batch_id=batch.batch_id status=batch.status expired_time=batch.expired_time product_name=batch.product_name barcode=batch.barcode unit_count=batch.unit_count inner_code_factory=batch.inner_code_factory outer_code_factory=batch.outer_code_factory case_code_factory=batch.case_code_factory factory_id=batch.factory_id prod_info=batch.prod_info %}
         {% endfor %}
     </div>
 

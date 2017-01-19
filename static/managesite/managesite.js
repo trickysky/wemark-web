@@ -171,6 +171,24 @@ $("#make_order_btn").bind("click", function () {
         $batch_prod_info_value.text("未设置");
         $batch_prod_info_value.addClass("red-font");
     }
+
+    // 产品条码
+    var barcode = (function() {
+        try {
+            return JSON.parse(prod_info)["barcode"];
+        } catch(e) {
+            return undefined;
+        }
+    })();
+    var $batch_barcode_value = $("#batch_barcode").find(".batch-value");
+    if (barcode) {
+        $batch_barcode_value.text(barcode);
+        $batch_barcode_value.removeClass('red-font');
+    }
+    else {
+        $batch_barcode_value.text('无');
+        $batch_barcode_value.addClass('red-font');
+    }
 });
 
 $("#back_btn").bind("click", function () {
@@ -215,6 +233,13 @@ $confirm_btn.bind("click", function () {
         box_code_factory_id = parseInt($box_code.find("option:selected").val());
     }
     var prod_info = $("#prod_info").val();
+    var barcode = (function() {
+        try {
+            return JSON.parse(prod_info)["barcode"];
+        } catch(e) {
+            return undefined;
+        }
+    })();
 
     if (factory_id && total_count && datetime && prod_id) {
         $confirm_btn.html('发送中<i class="fa fa-spinner fa-pulse fa-fw"></i>');
@@ -226,6 +251,7 @@ $confirm_btn.bind("click", function () {
             url: "s/batch",
             data: {
                 'factory_id': factory_id,
+                'barcode': barcode,
                 'incode_factory': inner_code_factory_id,
                 'outcode_factory': outer_code_factory_id,
                 'casecode_factory': box_code_factory_id,

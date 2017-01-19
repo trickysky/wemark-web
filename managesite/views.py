@@ -3,6 +3,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 import time
+import json
 
 from wemark.commons.services import FactoryService, BatchService, CompanyService, ProductService
 from oauth2.commons.security import Subject
@@ -75,8 +76,10 @@ def set_batch_list(request, response):
 	batch_list = []
 	for b in response['data']:
 		if subject.has_role('root') or b.get('createdBy') == subject.get_user_info(request).get('id'):
+			product_info = json.loads(b['productInfo']) if b['productInfo'] else {}
 			batch_list.append({
 				'expired_time': time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(b['updatedTime'] / 1000)),
+				'product_name': product_info['name'] if product_info['name'] else None,
 				'barcode': b['barcode'],
 				'unit_count': b['unitCount'],
 				'inner_code_factory': get_factory_by_id(b['incodeFactory'] if b['incodeFactory'] else None),
