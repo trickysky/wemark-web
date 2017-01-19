@@ -151,10 +151,11 @@ class BatchService(object):
         return r.json() if r.ok else None
 
     @staticmethod
-    def create_batch(factory_id, incode_factory, outcode_factory, casecode_factory, case_count, case_size, unit_count,
+    def create_batch(factory_id, product_id, incode_factory, outcode_factory, casecode_factory, case_count, case_size, unit_count,
                      barcode, expired_time, product_info, callback_uri, created_by, updated_by):
         params = {
             'factory_id': factory_id,
+            'product_id': product_id,
             'incode_factory': incode_factory,
             'outcode_factory': outcode_factory,
             'casecode_factory': casecode_factory,

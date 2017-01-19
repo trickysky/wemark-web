@@ -68,16 +68,16 @@ $("#make_order_btn").bind("click", function () {
         $batch_date_value.removeClass('red-font');
     }
 
-    // 产品条码
-    var barcode = $("#barcode").find("option:selected").text();
-    var $batch_barcode_value = $("#batch_barcode").find(".batch-value");
-    if (barcode && barcode != '-') {
-        $batch_barcode_value.text(barcode);
-        $batch_barcode_value.removeClass('red-font');
+    // 产品名称
+    var prod_name = $("#product").find("option:selected").text();
+    var $batch_prod_value = $("#batch_prod_name").find(".batch-value");
+    if (prod_name && prod_name != '-') {
+        $batch_prod_value.text(prod_name);
+        $batch_prod_value.removeClass('red-font');
     }
-    else if (barcode == '-') {
-        $batch_barcode_value.text('未设置');
-        $batch_barcode_value.addClass('red-font');
+    else if (prod_name == '-') {
+        $batch_prod_value.text('未设置');
+        $batch_prod_value.addClass('red-font');
     }
 
     // 激活工厂
@@ -183,9 +183,9 @@ $("#back_btn").bind("click", function () {
 var $confirm_btn = $("#confirm_btn");
 $confirm_btn.bind("click", function () {
     var datetime = $("#date_picker").datetimepicker("getDate").getTime();
-    var barcode = $("#barcode").find("option:selected").val();
-    if (barcode == "-") {
-        barcode = undefined;
+    var prod_id = $("#product").find("option:selected").val()
+    if (prod_id == "-") {
+        prod_id = undefined;
     }
     var factory_id = parseInt($("#factory").find("option:selected").val());
     var box_count = parseInt($("#box_count").val()) * 10000;
@@ -216,7 +216,7 @@ $confirm_btn.bind("click", function () {
     }
     var prod_info = $("#prod_info").val();
 
-    if (factory_id && total_count && datetime && barcode) {
+    if (factory_id && total_count && datetime && prod_id) {
         $confirm_btn.html('发送中<i class="fa fa-spinner fa-pulse fa-fw"></i>');
         $confirm_btn.attr("disabled", true);
         $("#back_btn").attr("disabled", true);
@@ -232,7 +232,7 @@ $confirm_btn.bind("click", function () {
                 'case_count': box_count,
                 'case_size': bottle_count,
                 'unit_count': total_count,
-                'barcode': 'query_test-3',
+                'product_id': prod_id,
                 'expired_time': datetime,
                 'product_info': prod_info
             },

@@ -51,6 +51,7 @@ def new_batch(request):
 		case_size=body.get('case_size'),
 		unit_count=body.get('unit_count'),
 		barcode=body.get('barcode'),
+		product_id=body.get('product_id'),
 		expired_time=body.get('expired_time'),
 		product_info=body.get('product_info'),
 		callback_uri=body.get('callback_uri'),
