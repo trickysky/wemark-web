@@ -39,10 +39,10 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                {% include "managesite/brief/select_actions.html" with label_name="产品" label_id="product" options=product_options %}
+                                {% include "managesite/brief/select_actions.html" with label_name="产品" label_id="product" default_value="" options=product_options %}
                             </div>
                             <div class="form-group">
-                                {% include "managesite/brief/select_actions.html" with label_name="激活工厂" label_id="factory" options=factory_options %}
+                                {% include "managesite/brief/select_actions.html" with label_name="激活工厂" label_id="factory" default_value=-1 options=factory_options %}
                             </div>
                             <div class="form-group">
                                 <label class="col-xs-2 control-label">生产数量</label>
@@ -51,30 +51,50 @@
                                         <input id="box_count" class="form-control" type="number">
                                     </label>
                                 </div>
-                                <span class="col-xs-1 unit">万箱</span>
-                                <span class="col-xs-1 unit"> X </span>
+                                <div class="dropdown col-xs-1">
+                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        <span id="base_box_count" class="base_count" value="1">箱</span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu base_count_options" aria-labelledby="dropdownMenu1">
+                                        <li><a href="" value="1">箱</a></li>
+                                        <li><a href="" value="1000">千箱</a></li>
+                                        <li><a href="" value="1000000">百万箱</a></li>
+                                    </ul>
+                                </div>
+                                <span class="unit col-xs-1" style="text-align:center;">X</span>
                                 <div class="col-xs-2">
                                     <label>
                                         <input id="bottle_count" value="24" class="form-control" type="number">
                                     </label>
                                 </div>
-                                <span class="col-xs-1 unit">瓶/箱</span>
+                                <span class="col-xs-1 unit"><span class="product_unit">瓶</span>/箱</span>
                             </div>
                             <div class="form-group">
                                 <label class="col-xs-2 control-label">
                                     <input id="total_count_checkbox" type="checkbox">
-                                    总瓶数</label>
+                                    总<span class="product_unit">瓶</span>数</label>
                                 <div class="col-xs-2">
                                     <label>
                                         <input id="total_count" disabled class="form-control" type="number">
                                     </label>
                                 </div>
-                                <span class="col-xs-2 unit">万瓶</span>
+                                <div class="dropdown col-xs-1">
+                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        <span type="text" id="base_total_count" class="base_count" value="1"><span class="product_unit">瓶</span></span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu base_count_options" aria-labelledby="dropdownMenu1">
+                                        <li><a href="" value="1"><span class="product_unit">瓶</span></a></li>
+                                        <li><a href="" value="1000">千<span class="product_unit">瓶</span></a></li>
+                                        <li><a href="" value="1000000">百万<span class="product_unit">瓶</span></a></li>
+                                    </ul>
+                                </div>
                             </div>
 
-                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="内码赋码工厂" label_id="inner_code" options=factory_options %}
-                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="外码赋码工厂" label_id="outer_code" options=factory_options %}
-                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="箱码赋码工厂" label_id="box_code" options=factory_options %}
+                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="内码赋码工厂" label_id="inner_code" default_value="-1" options=factory_options %}
+                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="外码赋码工厂" label_id="outer_code" default_value="-1" options=factory_options %}
+                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="箱码赋码工厂" label_id="box_code" default_value="-1" options=factory_options %}
 
                             <div class="form-group">
                                 <label class="col-xs-2 control-label">产品信息</label>
@@ -141,9 +161,14 @@
 
     <div class="panel-group" id="order_list" role="tablist" aria-multiselectable="true">
         {% for batch in batch_list %}
-        {% include "managesite/brief/batch_list.html" with batch_id=batch.batch_id status=batch.status expired_time=batch.expired_time product_name=batch.product_name barcode=batch.barcode unit_count=batch.unit_count inner_code_factory=batch.inner_code_factory outer_code_factory=batch.outer_code_factory case_code_factory=batch.case_code_factory factory_id=batch.factory_id prod_info=batch.prod_info %}
+        {% include "managesite/brief/batch_list.html" with batch=batch %}
         {% endfor %}
     </div>
 
+    <div id="product_units" hidden="hidden">
+        {% for product in products %}
+        <span id="product_{{ product.id }}">{{ product.unit }}</span>
+        {% endfor %}
+    </div>
 
 {% endblock %}

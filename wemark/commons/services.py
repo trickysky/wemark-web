@@ -220,8 +220,9 @@ class BatchService(object):
         return r.json() if r.ok else None
 
     @staticmethod
-    def activate_batch_code(batch_id, enabled_time, enabled_factory):
+    def activate_batch_code(batch_id, assign_type, enabled_time, enabled_factory):
         params = {
+            'assign_type': assign_type,
             'enabled_time': enabled_time,
             'enabled_factory': enabled_factory
         }

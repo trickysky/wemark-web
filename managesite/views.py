@@ -2,9 +2,10 @@
 # -*- coding=UTF-8 -*-
 from django.shortcuts import render
 from django.http import JsonResponse
-import time
 import json
-
+import time
+import wemark.commons.utils as utils
+from wemark.commons.constants import *
 from wemark.commons.services import FactoryService, BatchService, CompanyService, ProductService
 from oauth2.commons.security import Subject
 
@@ -12,25 +13,33 @@ from oauth2.commons.security import Subject
 # Create your views here.
 
 def set_index(request):
+	subject = Subject.get_instance(request.session)
+	user = subject.get_user_info()
+	user_id = None if subject.has_role('root') else user.get("id")
+
 	base_data = {
 		'app_name': u'生产赋码',
 		'page_name': CompanyService.get_company().get('name'),
 		'page_desc': u'批次管理',
 		'product_options': [],
-		'factory_options': []
+		'factory_options': [],
+		'products': []
 	}
-	products = ProductService.get_product_list()
+	products = ProductService.get_product_list(created_by=user_id)
+	product_dict = {}
 	if products and products['code'] == 0:
 		for product in products['data']:
+			id = product['id']
 			base_data['product_options'].append(
-				{'text': product['name'], 'value': product['id']}
+				{'text': product['name'], 'value': id}
 			)
-	factories = FactoryService.get_factory_list()
+			base_data['products'].append(product)
+			product_dict[id] = product
+	factories = FactoryService.get_factory_list(created_by=user_id)
 	if factories and factories['code'] == 0:
 		for factory in factories['data']:
 			base_data['factory_options'].append({'text': factory['factoryName'], 'value': factory['id']})
-
-	base_data['batch_list'] = set_batch_list(request, BatchService.get_batch_list())
+	base_data['batch_list'] = set_batch_list(BatchService.get_batch_list(created_by=user_id), product_dict)
 	return base_data
 
 
@@ -41,7 +50,6 @@ def index(request):
 def new_batch(request):
 	subject = Subject.get_instance(request.session)
 	user = subject.get_user_info()
-
 	body = request.POST
 	return BatchService.create_batch(
 		factory_id=body.get('factory_id'),
@@ -62,34 +70,39 @@ def new_batch(request):
 
 
 def get_factory_by_id(factory_id):
-	if not factory_id:
+	if factory_id is None:
 		return None
+	if factory_id < 0:
+		return '-'
 	response = FactoryService.get_factory(factory_id=factory_id)
 	if response['code'] == 0:
 		return response['data'].get('factoryName')
 	else:
+		print 'get factory info failed:', json.dumps(response)
 		return None
 
 
-def set_batch_list(request, response):
-	subject = Subject.get_instance(request.session)
+def set_batch_list(response, product_dict):
 	batch_list = []
 	for b in response['data']:
-		if subject.has_role('root') or b.get('createdBy') == subject.get_user_info(request).get('id'):
-			product_info = json.loads(b['productInfo']) if b['productInfo'] else {}
-			batch_list.append({
-				'expired_time': time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(b['updatedTime'] / 1000)),
-				'product_name': product_info['name'] if product_info['name'] else None,
-				'barcode': b['barcode'],
-				'unit_count': b['unitCount'],
-				'inner_code_factory': get_factory_by_id(b['incodeFactory'] if b['incodeFactory'] else None),
-				'outer_code_factory': get_factory_by_id(b['outcodeFactory'] if b['outcodeFactory'] else None),
-				'case_code_factory': get_factory_by_id(b['casecodeFactory'] if b['casecodeFactory'] else None),
-				'factory_id': get_factory_by_id(b['factoryId'] if b['factoryId'] else None),
-				'prod_info': b['productInfo'] if b['productInfo'] else None,
-				'batch_id': b['id'],
-				'status': b['status']
-			})
+		product_info = product_dict.get(b['productId'], {})
+		batch_list.append({
+			'expired_time': time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(b['updatedTime'] / 1000)),
+			'product_name': product_info.get('name'),
+			'barcode': b['barcode'],
+			'unit_count': '%d%s' % (b['unitCount'], product_info.get('unit')),
+			'inner_code_factory_id': b['incodeFactory'],
+			'inner_code_factory': get_factory_by_id(b['incodeFactory']),
+			'outer_code_factory_id': b['outcodeFactory'],
+			'outer_code_factory': get_factory_by_id(b['outcodeFactory']),
+			'case_code_factory_id': b['casecodeFactory'],
+			'case_code_factory': get_factory_by_id(b['casecodeFactory']),
+			'enabled_factory_id': b['factoryId'],
+			'enabled_factory': get_factory_by_id(b['factoryId']),
+			'prod_info': b['productInfo'] if b['productInfo'] else None,
+			'batch_id': b['id'],
+			'status': b['status']
+		})
 	return batch_list
 
 
@@ -100,5 +113,85 @@ def batch(request):
 		            'msg': 'new batch success' if new_batch_response['code'] == 0 else 'new batch error'}
 		return JsonResponse(response)
 	elif request.method == 'GET':
-		response = BatchService.get_batch_list()
+		subject = Subject.get_instance(request.session)
+		user = subject.get_user_info()
+		user_id = None if subject.has_role('root') else user.get("id")
+		response = BatchService.get_batch_list(created_by=user_id)
 		return JsonResponse(response)
+
+
+def batch_by_id(request, batch_id):
+	if request.method == 'GET':
+		response = BatchService.get_batch(batch_id)
+		return JsonResponse(response)
+
+
+def batch_send_code(request):
+	if request.method == 'POST':
+		batch_id = request.POST.get('batch_id')
+		factory_id = request.POST.get('factory_id')
+		print 'batch_id =', batch_id, 'factory_id = ', factory_id
+		batch_info_resp = BatchService.get_batch(batch_id)
+		if batch_info_resp:
+			batch_info = batch_info_resp['data']
+			if batch_info.get('status') != BatchStatus.Ready:
+				# batch is not ready
+				print 'batch status is not ready:', batch_info.get('status')
+				return JsonResponse({'code': -1, 'msg': 'batch status is not ready'})
+			if factory_id == '-1':
+				# download code
+				code_type = request.POST.get('code_type')
+				if code_type == 'inner':
+					assign_type = AssignType.Inner
+				elif code_type == 'outer':
+					assign_type = AssignType.Outer
+				else:
+					assign_type = AssignType.Case
+				ret = BatchService.get_batch_code(batch_id=batch_id, assign_type=assign_type, section_id=0, factory_id = factory_id)
+				if ret is None:
+					ret = {'code': -1, 'msg': 'download failed'}
+				return JsonResponse(ret)
+			else:
+				ret = BatchService.update_batch_secret_status_and_send_to_factory_owner(batch_id = batch_id, factory_id = factory_id)
+				if ret is None:
+					ret = {'code': -1, 'msg': 'send secret failed'}
+				return JsonResponse(ret)
+		return JsonResponse({'code': -1, 'msg': 'batch not found'})
+
+
+def batch_enable_code(request):
+	if request.method == 'POST':
+		batch_id = request.POST.get('batch_id')
+		factory_id = request.POST.get('factory_id')
+		timestamp = utils.current_timestamp_in_millis()
+		batch_info_resp = BatchService.get_batch(batch_id)
+		if batch_info_resp:
+			batch_info = batch_info_resp['data']
+			enable_casecode = batch_info['casecodeFactory'] is not None
+			enable_incode = batch_info['incodeFactory'] is not None
+			enable_outcode = batch_info['outcodeFactory'] is not None
+			code_count = int(enable_incode) + int(enable_outcode) + int(enable_casecode)
+			if batch_info.get('status') != BatchStatus.Ready:
+				# batch is not ready
+				print 'batch status is not ready:', batch_info.get('status')
+				return JsonResponse({'code': -1, 'msg': 'batch status is not ready'})
+			elif code_count > 1:
+				print 'unable to enable code batchly since there are more than code type'
+				return JsonResponse({'code': -1, 'msg': 'more than one type of code in the batch'})
+			else:
+				if enable_incode:
+					assign_type = AssignType.Inner
+				elif enable_outcode:
+					assign_type = AssignType.Outer
+				else:
+					assign_type = AssignType.Case
+				ret = BatchService.activate_batch_code(batch_id=batch_id,
+													   assign_type=assign_type,
+													   enabled_time=timestamp,
+													   enabled_factory=factory_id)
+				if ret:
+					BatchService.update_batch_status(batch_id=batch_id, status=BatchStatus.Done)
+					return JsonResponse(ret)
+				return JsonResponse({'code': -1, 'msg': 'enable code failed'})
+		print 'batch not found:', batch_id
+		return JsonResponse({'code': -1, 'msg': 'batch not found'})
