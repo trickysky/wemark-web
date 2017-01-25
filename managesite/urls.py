@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'^s/batch$', views.batch),
     url(r'^s/batch/(?P<batch_id>\d+)$', views.batch_by_id),
     url(r'^s/batch/send_code$', views.batch_send_code),
+    url(r'^s/batch/download_code$', views.batch_download_code),
     url(r'^s/batch/enable_code$', views.batch_enable_code),
 ]

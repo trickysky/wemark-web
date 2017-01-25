@@ -9,3 +9,4 @@ class CompanyInfo(models.Model):
 	name = models.CharField(max_length=255)
 	description = models.TextField(null=True)
 	homepage = models.TextField(null=True)
+	urlprefix = models.CharField(max_length=255)

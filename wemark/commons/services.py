@@ -240,6 +240,7 @@ class CompanyService(object):
             'name': company_info.name if company_info else None,
             'description': company_info.description if company_info else None,
             'homepage': company_info.homepage if company_info else None,
+            'urlprefix': company_info.urlprefix if company_info else None
         }
 
     @staticmethod
@@ -247,8 +248,12 @@ class CompanyService(object):
         try:
             company_count = CompanyInfo.objects.all().count()
             if not 0 == company_count:
-                CompanyInfo.objects.all().delete()
-            company_info = CompanyInfo(name=name, description=description, homepage=homepage)
+                company_info = CompanyInfo.objects.get()
+                company_info.name = name
+                company_info.description = description
+                company_info.homepage = homepage
+            else:
+                company_info = CompanyInfo(name=name, description=description, homepage=homepage, urlprefix='http://v8m.cc/0/')
             company_info.save()
             return {
                 'code': 0,

@@ -32,7 +32,7 @@
                     {% if batch.status == 2 %}
                         {% if batch.inner_code_factory_id == -1 %}
                         <span class="label label-default">
-                            <a class="send_code" code-type="inner" value="{{ batch.inner_code_factory_id }}">下载</a>
+                            <a class="download_code" code-type="inner">下载</a>
                         </span>
                         {% elif batch.inner_code_factory_id > 0 %}
                         <span class="label label-default">
@@ -46,7 +46,7 @@
                     {% if batch.status == 2 %}
                         {% if batch.outer_code_factory_id == -1 %}
                         <span class="label label-default">
-                            <a class="send_code" code-type="outer" value="{{ batch.outer_code_factory_id }}">下载</a>
+                            <a class="download_code" code-type="outer">下载</a>
                         </span>
                         {% elif batch.outer_code_factory_id > 0 %}
                         <span class="label label-default">
@@ -60,7 +60,7 @@
                     {% if batch.status == 2 %}
                         {% if batch.case_code_factory_id == -1 %}
                         <span class="label label-default">
-                            <a class="send_code" code-type="case" value="{{ batch.case_code_factory_id }}">下载</a>
+                            <a class="download_code" code-type="case">下载</a>
                         </span>
                         {% elif batch.case_code_factory_id > 0 %}
                         <span class="label label-default">

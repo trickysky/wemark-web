@@ -312,6 +312,35 @@ $('.base_count_options>li>a').bind('click', function() {
     }
 });
 
+$('a.download_code').bind('click', function() {
+    var code_type = $(this).attr('code-type');
+    var batch_id = $(this).parents('.batch-list-item').attr("value");
+    $.ajax({
+        type: 'POST',
+        url: 's/batch/download_code',
+        data: {
+            'code_type': code_type,
+            'batch_id': batch_id
+        },
+        success: function(data, status, request) {
+            var disp = request.getResponseHeader('Content-Disposition');
+            if (disp && disp.search('attachment') != -1) {
+                var form = $('<form method="POST" action="s/batch/download_code">');
+                form.append($('<input type="hidden" name="batch_id" value="' + batch_id + '">'));
+                form.append($('<input type="hidden" name="code_type" value="' + code_type + '">'));
+                $('body').append(form);
+                form.submit();
+            } else {
+                console.log('send code failed: ' + data);
+            }
+        },
+        error: function(xml, e) {
+            console.log('get product error: \r\n' + e);
+        }
+    });
+
+});
+
 $('a.send_code').bind('click', function() {
     var factory_id = $(this).attr('value');
     var code_type = $(this).attr('code-type');

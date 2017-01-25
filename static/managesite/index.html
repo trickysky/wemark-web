@@ -92,8 +92,8 @@
                                 </div>
                             </div>
 
-                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="内码赋码工厂" label_id="inner_code" default_value="-1" options=factory_options %}
-                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="外码赋码工厂" label_id="outer_code" default_value="-1" options=factory_options %}
+                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="兑奖码(内码)赋码工厂" label_id="inner_code" default_value="-1" options=factory_options %}
+                            {% include "managesite/brief/checkbox_select_actions.html" with label_name="溯源码(外码)赋码工厂" label_id="outer_code" default_value="-1" options=factory_options %}
                             {% include "managesite/brief/checkbox_select_actions.html" with label_name="箱码赋码工厂" label_id="box_code" default_value="-1" options=factory_options %}
 
                             <div class="form-group">
@@ -127,11 +127,11 @@
                                 <label class="col-xs-8 batch-value red-font">未设置</label>
                             </div>
                             <div id="batch_inner_code" class="form-group">
-                                <label class="col-xs-2 control-label">内码赋码工厂</label>
+                                <label class="col-xs-2 control-label">兑奖码(内码)赋码工厂</label>
                                 <label class="col-xs-8 batch-value red-font">未设置</label>
                             </div>
                             <div id="batch_outer_code" class="form-group">
-                                <label class="col-xs-2 control-label">外码赋码工厂</label>
+                                <label class="col-xs-2 control-label">溯源码(外码)赋码工厂</label>
                                 <label class="col-xs-8 batch-value red-font">未设置</label>
                             </div>
                             <div id="batch_box_code" class="form-group">
