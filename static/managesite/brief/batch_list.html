@@ -28,7 +28,7 @@
                 <li class="list-group-item">产品名称: {{ batch.product_name }}</li>
                 <li class="list-group-item">产品条码: {{ batch.barcode }}</li>
                 <li class="list-group-item">生产数量: {{ batch.unit_count }}</li>
-                <li class="list-group-item">内码赋码工厂: {{ batch.inner_code_factory|default:'无' }}
+                <li class="list-group-item">兑奖码(内码)赋码工厂: {{ batch.inner_code_factory|default:'无' }}
                     {% if batch.status == 2 %}
                         {% if batch.inner_code_factory_id == -1 %}
                         <span class="label label-default">
@@ -42,7 +42,7 @@
                         <!--<i class="fa fa-check" aria-hidden="true"></i>-->
                     {% endif %}
                 </li>
-                <li class="list-group-item">外码赋码工厂: {{ batch.outer_code_factory|default:'无' }}
+                <li class="list-group-item">追溯码(外码)赋码工厂: {{ batch.outer_code_factory|default:'无' }}
                     {% if batch.status == 2 %}
                         {% if batch.outer_code_factory_id == -1 %}
                         <span class="label label-default">

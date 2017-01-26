@@ -312,6 +312,15 @@ $('.base_count_options>li>a').bind('click', function() {
     }
 });
 
+var show_msg = function(level, message) {
+    var msg_box = $('#msg_modal');
+    msg_box.find('.modal-body>p').html(message);
+    msg_box.modal('show');
+//    msg_box.find('.modal-footer .btn-primary').on('click', function() {
+//        msg_box.modal('hide');
+//    });
+}
+
 $('a.download_code').bind('click', function() {
     var code_type = $(this).attr('code-type');
     var batch_id = $(this).parents('.batch-list-item').attr("value");
@@ -331,11 +340,13 @@ $('a.download_code').bind('click', function() {
                 $('body').append(form);
                 form.submit();
             } else {
-                console.log('send code failed: ' + data);
+                console.log('download code failed: ' + data);
+                show_msg('warning', '下载失败');
             }
         },
         error: function(xml, e) {
             console.log('get product error: \r\n' + e);
+            show_msg('warning', '下载失败');
         }
     });
 
@@ -356,10 +367,14 @@ $('a.send_code').bind('click', function() {
         success: function(data) {
             if (!data || data['code'] != 0) {
                 console.log('send code failed: ' + data);
+                show_msg('warning', '发送失败');
+            } else {
+                show_msg('success', '发送成功');
             }
         },
         error: function(xml, e) {
             console.log('get product error: \r\n' + e);
+            show_msg('warning', '发送失败');
         }
     });
 });
