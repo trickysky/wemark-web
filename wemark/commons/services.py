@@ -151,10 +151,11 @@ class BatchService(object):
         return r.json() if r.ok else None
 
     @staticmethod
-    def create_batch(factory_id, incode_factory, outcode_factory, casecode_factory, case_count, case_size, unit_count,
+    def create_batch(factory_id, product_id, incode_factory, outcode_factory, casecode_factory, case_count, case_size, unit_count,
                      barcode, expired_time, product_info, callback_uri, created_by, updated_by):
         params = {
             'factory_id': factory_id,
+            'product_id': product_id,
             'incode_factory': incode_factory,
             'outcode_factory': outcode_factory,
             'casecode_factory': casecode_factory,
@@ -219,8 +220,9 @@ class BatchService(object):
         return r.json() if r.ok else None
 
     @staticmethod
-    def activate_batch_code(batch_id, enabled_time, enabled_factory):
+    def activate_batch_code(batch_id, assign_type, enabled_time, enabled_factory):
         params = {
+            'assign_type': assign_type,
             'enabled_time': enabled_time,
             'enabled_factory': enabled_factory
         }
@@ -238,6 +240,7 @@ class CompanyService(object):
             'name': company_info.name if company_info else None,
             'description': company_info.description if company_info else None,
             'homepage': company_info.homepage if company_info else None,
+            'urlprefix': company_info.urlprefix if company_info else None
         }
 
     @staticmethod
@@ -245,8 +248,12 @@ class CompanyService(object):
         try:
             company_count = CompanyInfo.objects.all().count()
             if not 0 == company_count:
-                CompanyInfo.objects.all().delete()
-            company_info = CompanyInfo(name=name, description=description, homepage=homepage)
+                company_info = CompanyInfo.objects.get()
+                company_info.name = name
+                company_info.description = description
+                company_info.homepage = homepage
+            else:
+                company_info = CompanyInfo(name=name, description=description, homepage=homepage, urlprefix='http://v8m.cc/0/')
             company_info.save()
             return {
                 'code': 0,

@@ -206,6 +206,10 @@ $company_info.find('.tab-footer .confirm').bind('click', function () {
             success: function (data) {
                 if (0 == data['code']) {
                     location.reload();
+                } else {
+                    alert("更新失败！");
+                    console.log(data['msg']);
+                    $company_info.find('.tab-footer .confirm').html('提交更改')
                 }
             },
             error: function (xml, e) {

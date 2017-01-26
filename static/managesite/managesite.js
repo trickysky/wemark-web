@@ -29,8 +29,11 @@ function refresh_total_count() {
     var $bottle_count = $("#bottle_count");
     var box_count = $box_count.val();
     var bottle_count = $bottle_count.val();
-    if (!isNaN(box_count) && !isNaN(bottle_count)) {
-        $("#total_count").val(box_count * bottle_count);
+    var base_box_count = $("#base_box_count").attr("value");
+    var base_total_count = $("#base_total_count").attr("value");
+    var is_total_count_checked = $("#total_count_checkbox").is(":checked");
+    if (!is_total_count_checked && !isNaN(box_count) && !isNaN(bottle_count)) {
+        $("#total_count").val(box_count * bottle_count * base_box_count / base_total_count);
     }
 }
 
@@ -68,41 +71,38 @@ $("#make_order_btn").bind("click", function () {
         $batch_date_value.removeClass('red-font');
     }
 
-    // 产品条码
-    var barcode = $("#barcode").find("option:selected").text();
-    var $batch_barcode_value = $("#batch_barcode").find(".batch-value");
-    if (barcode && barcode != '-') {
-        $batch_barcode_value.text(barcode);
-        $batch_barcode_value.removeClass('red-font');
+    // 产品名称
+    var prod_name = $("#product").find("option:selected").text();
+    var $batch_prod_value = $("#batch_prod_name").find(".batch-value");
+    if (prod_name && prod_name != '-') {
+        $batch_prod_value.text(prod_name);
+        $batch_prod_value.removeClass('red-font');
     }
-    else if (barcode == '-') {
-        $batch_barcode_value.text('未设置');
-        $batch_barcode_value.addClass('red-font');
+    else if (prod_name == '-') {
+        $batch_prod_value.text('未设置');
+        $batch_prod_value.addClass('red-font');
     }
 
     // 激活工厂
     var factory = $("#factory").find("option:selected").text();
     var $batch_factory_value = $("#batch_factory").find(".batch-value");
-    if (factory && factory != '-') {
-        $batch_factory_value.text(factory);
-        $batch_factory_value.removeClass('red-font');
-    }
-    else if (factory == '-') {
-        $batch_factory_value.text('未设置');
-        $batch_factory_value.addClass('red-font');
-    }
+    $batch_factory_value.text(factory);
+    $batch_factory_value.removeClass('red-font');
 
     // 生产数量
     var $box_count = $("#box_count");
     var $bottle_count = $("#bottle_count");
     var $total_count = $("#total_count");
     var box_count = $box_count.val();
+    var base_box_count = $("#base_box_count").attr("value");
     var bottle_count = $bottle_count.val();
+    var base_total_count = $("#base_total_count").attr("value");
     var total_count = $total_count.val();
     var $batch_count_value = $("#batch_count").find(".batch-value");
+    var product_unit = $("span.product_unit").html();
     if ($total_count.attr("disabled")) {
         if (box_count>0 && bottle_count>0) {
-            $batch_count_value.text(box_count+"万箱"+" X "+bottle_count+"瓶/箱 = "+box_count*bottle_count+'万瓶');
+            $batch_count_value.text(box_count * base_box_count + "箱" + " X " + bottle_count + product_unit + "/箱 = " + box_count * base_box_count * bottle_count + product_unit);
             $batch_count_value.removeClass('red-font');
         }
         else {
@@ -112,7 +112,7 @@ $("#make_order_btn").bind("click", function () {
     }
     else {
         if (total_count>0) {
-            $batch_count_value.text(total_count+'万瓶');
+            $batch_count_value.text(total_count * base_total_count + product_unit);
             $batch_count_value.removeClass('red-font');
         }
         else {
@@ -171,6 +171,24 @@ $("#make_order_btn").bind("click", function () {
         $batch_prod_info_value.text("未设置");
         $batch_prod_info_value.addClass("red-font");
     }
+
+    // 产品条码
+    var barcode = (function() {
+        try {
+            return JSON.parse(prod_info)["barcode"];
+        } catch(e) {
+            return undefined;
+        }
+    })();
+    var $batch_barcode_value = $("#batch_barcode").find(".batch-value");
+    if (barcode) {
+        $batch_barcode_value.text(barcode);
+        $batch_barcode_value.removeClass('red-font');
+    }
+    else {
+        $batch_barcode_value.text('无');
+        $batch_barcode_value.addClass('red-font');
+    }
 });
 
 $("#back_btn").bind("click", function () {
@@ -183,15 +201,17 @@ $("#back_btn").bind("click", function () {
 var $confirm_btn = $("#confirm_btn");
 $confirm_btn.bind("click", function () {
     var datetime = $("#date_picker").datetimepicker("getDate").getTime();
-    var barcode = $("#barcode").find("option:selected").val();
-    if (barcode == "-") {
-        barcode = undefined;
+    var prod_id = $("#product").find("option:selected").val()
+    if (!prod_id) {
+        prod_id = undefined;
     }
     var factory_id = parseInt($("#factory").find("option:selected").val());
-    var box_count = parseInt($("#box_count").val()) * 10000;
-    var bottle_count = parseInt($("#bottle_count").val());
+    var box_count = $("#box_count").val();
+    var base_box_count = $("#base_box_count").attr("value");
+    var bottle_count = $("#bottle_count").val() * base_box_count;
     var $total_count = $("#total_count");
-    var total_count = parseInt($total_count.val()) * 10000;
+    var base_total_count = $("#base_total_count").attr("value");
+    var total_count = $total_count.val() * base_total_count;
     if (!$total_count.attr("disabled")) {
         box_count = undefined;
         bottle_count = undefined;
@@ -215,8 +235,16 @@ $confirm_btn.bind("click", function () {
         box_code_factory_id = parseInt($box_code.find("option:selected").val());
     }
     var prod_info = $("#prod_info").val();
+    var barcode = (function() {
+        try {
+            return JSON.parse(prod_info)["barcode"];
+        } catch(e) {
+            return undefined;
+        }
+    })();
 
-    if (factory_id && total_count && datetime && barcode) {
+    var generate_code = inner_code_factory_id || outer_code_factory_id || box_code_factory_id;
+    if (factory_id && total_count && datetime && prod_id && generate_code) {
         $confirm_btn.html('发送中<i class="fa fa-spinner fa-pulse fa-fw"></i>');
         $confirm_btn.attr("disabled", true);
         $("#back_btn").attr("disabled", true);
@@ -226,13 +254,14 @@ $confirm_btn.bind("click", function () {
             url: "s/batch",
             data: {
                 'factory_id': factory_id,
+                'barcode': barcode,
                 'incode_factory': inner_code_factory_id,
                 'outcode_factory': outer_code_factory_id,
                 'casecode_factory': box_code_factory_id,
                 'case_count': box_count,
                 'case_size': bottle_count,
                 'unit_count': total_count,
-                'barcode': 'query_test-3',
+                'product_id': prod_id,
                 'expired_time': datetime,
                 'product_info': prod_info
             },
@@ -267,6 +296,127 @@ $('#product').bind('change', function () {
                 console.log('get product error: \r\n' + e);
             }
         });
+        // refresh the product unit
+        var unit = $("#product_" + product_id).text();
+        $(".product_unit").html(unit);
     }
 });
 
+$('.base_count_options>li>a').bind('click', function() {
+    var target = $(this).parents("div.dropdown").find("span.base_count");
+    var value = $(this).attr("value");
+    var content = $(this).html();
+    if (value != target.attr("value")) {
+        target.attr("value", value).html(content);
+        refresh_total_count();
+    }
+});
+
+var show_msg = function(level, message) {
+    var msg_box = $('#msg_modal');
+    msg_box.find('.modal-body>p').html(message);
+    msg_box.modal('show');
+//    msg_box.find('.modal-footer .btn-primary').on('click', function() {
+//        msg_box.modal('hide');
+//    });
+}
+
+$('a.download_code').bind('click', function() {
+    var code_type = $(this).attr('code-type');
+    var batch_id = $(this).parents('.batch-list-item').attr("value");
+    $.ajax({
+        type: 'POST',
+        url: 's/batch/download_code',
+        data: {
+            'code_type': code_type,
+            'batch_id': batch_id
+        },
+        success: function(data, status, request) {
+            var disp = request.getResponseHeader('Content-Disposition');
+            if (disp && disp.search('attachment') != -1) {
+                var form = $('<form method="POST" action="s/batch/download_code">');
+                form.append($('<input type="hidden" name="batch_id" value="' + batch_id + '">'));
+                form.append($('<input type="hidden" name="code_type" value="' + code_type + '">'));
+                $('body').append(form);
+                form.submit();
+            } else {
+                console.log('download code failed: ' + data);
+                show_msg('warning', '下载失败');
+            }
+        },
+        error: function(xml, e) {
+            console.log('get product error: \r\n' + e);
+            show_msg('warning', '下载失败');
+        }
+    });
+
+});
+
+$('a.send_code').bind('click', function() {
+    var factory_id = $(this).attr('value');
+    var code_type = $(this).attr('code-type');
+    var batch_id = $(this).parents('.batch-list-item').attr("value");
+    $.ajax({
+        type: 'POST',
+        url: 's/batch/send_code',
+        data: {
+            'factory_id': factory_id,
+            'code_type': code_type,
+            'batch_id': batch_id
+        },
+        success: function(data) {
+            if (!data || data['code'] != 0) {
+                console.log('send code failed: ' + data);
+                show_msg('warning', '发送失败');
+            } else {
+                show_msg('success', '发送成功');
+            }
+        },
+        error: function(xml, e) {
+            console.log('get product error: \r\n' + e);
+            show_msg('warning', '发送失败');
+        }
+    });
+});
+
+$('a.enable_code').bind('click', function() {
+    var batch_list_item = $(this).parents('.batch-list-item');
+    var factory_id = $(this).attr('value');
+    var batch_id = batch_list_item.attr("value");
+    $.ajax({
+        type: 'POST',
+        url: 's/batch/enable_code',
+        data: {
+            'factory_id': factory_id,
+            'batch_id': batch_id
+        },
+        success: function(data) {
+            if (data && data['code'] == 0) {
+                reload_batch_item(batch_list_item);
+            }
+        },
+        error: function(xml, e) {
+            console.log('get product error: \r\n' + e);
+        }
+    });
+});
+
+function reload(batch_item) {
+    $.ajax({
+        type: 'GET',
+        url: 's/batch/' + batch_item.attr('value'),
+        success: function(data) {
+            if (data && data['code'] == 0) {
+                if (data['data'].status != 2) {
+                    batch_item.find('li:not(.enabled-factory)>span.label').remove();
+                    if (data['data'].status == 0) {
+                        batch_item.find('li.enabled-factory>span.label').html(' 已激活 ');
+                    }
+                }
+            }
+        },
+        error: function(xml, e) {
+            console.log('get batch info error: \r\n' + e);
+        }
+    });
+}

@@ -14,10 +14,10 @@ def batch(request):
 
 def factory(request):
     r = None
+    info = get_user_info(request)
     if request.method == 'GET':
-        r = FactoryService.get_factory_list()
+        r = FactoryService.get_factory_list(created_by=info.get('id'))
     if request.method == 'POST':
-        info = get_user_info(request)
         body = request.POST
         r = FactoryService.create_factory(
             factory_name=body.get('factory_name'),

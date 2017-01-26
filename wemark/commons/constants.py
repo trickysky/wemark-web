@@ -30,7 +30,7 @@ class UserType(object):
     Factory = 100
 
 
-class CodeType(object):
+class AssignType(object):
     Outer = 0
     Inner = 1
     Case = 2
