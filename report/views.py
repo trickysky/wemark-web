@@ -11,6 +11,7 @@ from oauth2.commons.security import Subject
 
 def set_index(request):
     service = create_service(request=request)
+    ids = service.get_batches_ids()
 
     base_data = {
         'app_name': u'数据报表',
@@ -19,8 +20,9 @@ def set_index(request):
         'page_desc': u'图表-地图',
         'dashboards': get_dashboard(request).values(),
         'portlets': get_charts().values(),
-        'dropdown_name': u'选择批次',
-        'items': [{'id': bid, 'name': u'生产批次' + str(bid)} for bid in service.get_batches_ids()]
+        'dropdown_name': u'无可选批次' if not ids else u'生产批次' + str(ids[0]),
+        'items': [{'id': bid, 'name': u'生产批次' + str(bid)} for bid in ids],
+        'attr': u'disabled' if not ids else u''
     }
 
     return base_data

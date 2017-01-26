@@ -248,6 +248,7 @@ var dashboard = function () {
                 success: function (data) {
                     if (data['error_code'] == 0) {
                         $('#total_scan').text(data['data']);
+                        $('#dropdown_btn_title').text('生产批次' + batch_id.toString())
                     }
                 }
             });
