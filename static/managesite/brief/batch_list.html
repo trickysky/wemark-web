@@ -72,8 +72,8 @@
                 </li>
                 <li class="list-group-item enabled-factory">激活工厂: {{ batch.enabled_factory }}
                     {% if batch.status == 0 %}
-                    <span class="label label-success"> 已激活 </span>
-                    {% elif batch.status == 2 %}
+                        <span class="label label-success"> 已激活 </span>
+                    {% elif batch.status == 2 and not batch.case_code_factory and batch.code_type_count == 1 %}
                         <span class="label label-default"><a class="enable_code" value="{{ batch.enabled_factory_id }}"> 全部激活 </a></span>
                     {% endif %}
                 </li>
