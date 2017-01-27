@@ -12,7 +12,7 @@ def authorize(request):
         redirect_uri = state if state else '/report'
         return HttpResponseRedirect(redirect_to=redirect_uri)
     else:
-        HttpResponseRedirect(redirect_to=subject.redirect_to_authenticate(state=state))
+        return HttpResponseRedirect(redirect_to=subject.redirect_to_authenticate(state=state))
 
 
 def logout(request):
