@@ -138,6 +138,7 @@ def set_batch_list(response, product_dict):
             'outer_code_factory': get_factory_by_id(b['outcodeFactory']),
             'case_code_factory_id': b['casecodeFactory'],
             'case_code_factory': get_factory_by_id(b['casecodeFactory']),
+            'code_type_count': int(b['incodeFactory'] is not None) + int(b['outcodeFactory'] is not None) + int(b['casecodeFactory'] is not None),
             'enabled_factory_id': b['factoryId'],
             'enabled_factory': get_factory_by_id(b['factoryId']),
             'prod_info': b['productInfo'] if b['productInfo'] else None,
@@ -216,16 +217,14 @@ def batch_enable_code(request):
             # batch is not ready
             print 'batch status is not ready:', batch_info.get('status')
             return JsonResponse({'code': -1, 'msg': 'batch status is not ready'})
-        elif code_count > 1:
-            print 'unable to enable code batchly since there are more than code type'
+        elif code_count > 1 or enable_casecode:
+            print 'unable to enable code batchly since either there are more than code type or there is case code'
             return JsonResponse({'code': -1, 'msg': 'more than one type of code in the batch'})
         else:
             if enable_incode:
                 assign_type = AssignType.Inner
-            elif enable_outcode:
-                assign_type = AssignType.Outer
             else:
-                assign_type = AssignType.Case
+                assign_type = AssignType.Outer
             ret = BatchService.activate_batch_code(batch_id=batch_id,
                                                    assign_type=assign_type,
                                                    enabled_time=timestamp,

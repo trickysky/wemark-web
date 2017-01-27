@@ -316,9 +316,6 @@ var show_msg = function(level, message) {
     var msg_box = $('#msg_modal');
     msg_box.find('.modal-body>p').html(message);
     msg_box.modal('show');
-//    msg_box.find('.modal-footer .btn-primary').on('click', function() {
-//        msg_box.modal('hide');
-//    });
 }
 
 $('a.download_code').bind('click', function() {
@@ -392,16 +389,18 @@ $('a.enable_code').bind('click', function() {
         },
         success: function(data) {
             if (data && data['code'] == 0) {
+                show_msg('success', '激活成功');
                 reload_batch_item(batch_list_item);
             }
         },
         error: function(xml, e) {
-            console.log('get product error: \r\n' + e);
+            console.log('enable code error: \r\n' + e);
+            show_msg('warning', '激活失败');
         }
     });
 });
 
-function reload(batch_item) {
+function reload_batch_item(batch_item) {
     $.ajax({
         type: 'GET',
         url: 's/batch/' + batch_item.attr('value'),
@@ -410,7 +409,10 @@ function reload(batch_item) {
                 if (data['data'].status != 2) {
                     batch_item.find('li:not(.enabled-factory)>span.label').remove();
                     if (data['data'].status == 0) {
-                        batch_item.find('li.enabled-factory>span.label').html(' 已激活 ');
+                        batch_item.find('li.enabled-factory>span.label')
+                        .removeClass('label-default')
+                        .addClass('label-success')
+                        .html(' 已激活 ');
                     }
                 }
             }
