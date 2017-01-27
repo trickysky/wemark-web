@@ -3,7 +3,6 @@ from django.utils.deprecation import MiddlewareMixin
 from django.http import HttpRequest
 
 from oauth2.commons.security import Subject
-from commons import constants
 
 
 class AuthenticationMiddleware(MiddlewareMixin):
