@@ -8,14 +8,14 @@ def authorize(request):
     code = OAuth2Utils.parse_auth_code(request)
     state = OAuth2Utils.parse_state(request)
 
-    if subject.authenticate(code):
+    if subject.authenticate(request=request, auth_code=code):
         redirect_uri = state if state else '/report'
         return HttpResponseRedirect(redirect_to=redirect_uri)
     else:
-        return HttpResponseRedirect(redirect_to=subject.redirect_to_authenticate(state=state))
+        return HttpResponseRedirect(redirect_to=subject.redirect_to_authenticate(request=request, state=state))
 
 
 def logout(request):
     subject = Subject.get_instance(request.session)
     subject.logout()
-    return HttpResponseRedirect(redirect_to=subject.redirect_to_authenticate())
+    return HttpResponseRedirect(redirect_to=subject.redirect_to_authenticate(request=request))

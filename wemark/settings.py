@@ -54,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'wemark.middleware.AuthenticationMiddleware',
+    'wemark.middleware.MultipleProxyMiddleware',
 ]
 
 ROOT_URLCONF = 'wemark.urls'
