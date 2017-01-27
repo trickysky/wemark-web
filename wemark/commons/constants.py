@@ -7,8 +7,8 @@ TIME_MILLIS_UNIT = 1000
 
 CLIENT_ID = 'dd055109e309a4c8'
 CLIENT_SECRET = '83eb90109062909b03ceb2efa13016f9'
-# CLIENT_CALLBACK_URI = 'http://manage.spoonsea.com/oauth2/callback'
-CLIENT_CALLBACK_URI = 'http://localhost:8000/oauth2/callback'
+CLIENT_CALLBACK_URI = 'http://manage.spoonsea.com/oauth2/callback'
+# CLIENT_CALLBACK_URI = 'http://localhost:8000/oauth2/callback'
 
 OAUTH2_SCHEMA = Schema.HTTP
 OAUTH2_HOST = 'auth.spoonsea.com'
