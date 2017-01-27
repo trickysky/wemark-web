@@ -33,21 +33,25 @@ class Subject(object):
         return False
 
     @staticmethod
-    def redirect_to_authenticate(state=None):
+    def redirect_to_authenticate(request, state=None):
         builder = Subject.__create_oauth2_builder(OAuth2Utils.SEGMENT_AUTHORIZE)
 
+        callback_uri = '{scheme}://{host}{path}'.format(scheme=request.scheme, host=request.get_host(),
+                                                        path=constants.CLIENT_CALLBACK_URI)
         builder.set_response_type(ResponseType.CODE).set_client_id(constants.CLIENT_ID) \
-            .set_redirect_uri(constants.CLIENT_CALLBACK_URI).set_scope(Scope.WEB_LOGIN)
+            .set_redirect_uri(callback_uri).set_scope(Scope.WEB_LOGIN)
         if is_not_null_or_empty(state):
             builder.set_state(state)
 
         return builder.build() if builder.validate() else None
 
-    def authenticate(self, auth_code):
+    def authenticate(self, request, auth_code):
         builder = Subject.__create_oauth2_builder(OAuth2Utils.SEGMENT_ACCESS_TOKEN)
 
+        callback_uri = '{scheme}://{host}{path}'.format(scheme=request.scheme, host=request.get_host(),
+                                                        path=constants.CLIENT_CALLBACK_URI)
         builder.set_client_id(constants.CLIENT_ID).set_client_secret(constants.CLIENT_SECRET).set_code(auth_code) \
-            .set_grant_type(GrantType.AUTHORIZATION_CODE).set_redirect_uri(constants.CLIENT_CALLBACK_URI)
+            .set_grant_type(GrantType.AUTHORIZATION_CODE).set_redirect_uri(callback_uri)
 
         if builder.validate():
             url = builder.build()
