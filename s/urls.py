@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'^company$', views.company),
     url(r'^product$', views.product),
     url(r'^product/(?P<product_id>\d+)$', views.product_by_id),
+    url(r'^award', views.award)
 ]

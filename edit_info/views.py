@@ -3,13 +3,14 @@
 # trickysky
 # 2016/11/22
 from django.shortcuts import render
-from wemark.commons.services import FactoryService, CompanyService, ProductService
+from wemark.commons.services import FactoryService, CompanyService, ProductService, AwardSettingService
 from oauth2.commons.security import Subject
 
 
 # Create your views here.
 def set_index(request):
 	company_info = CompanyService.get_company()
+	award_setting = AwardSettingService.get_award_setting()
 	base_data = {
 		'app_name': u'信息录入',
 		'page_name': u'信息录入',
@@ -18,7 +19,11 @@ def set_index(request):
 		'product_list': [],
 		'company_name': company_info.get('name') if company_info else None,
 		'company_description': company_info.get('description') if company_info else None,
-		'company_homepage': company_info.get('homepage') if company_info else None
+		'company_homepage': company_info.get('homepage') if company_info else None,
+		'award_total_prize': award_setting.get('total_prize') if award_setting else 0,
+		'award_rate': award_setting.get('award_rate') if award_setting else 0,
+		'award_min_prize': award_setting.get('min_prize') if award_setting else 0,
+		'award_max_prize': award_setting.get('max_prize') if award_setting else 0
 	}
 	subject = Subject.get_instance(request.session)
 	products = ProductService.get_product_list()

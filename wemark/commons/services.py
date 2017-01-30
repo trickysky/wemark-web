@@ -1,7 +1,7 @@
 from wemark_config import SERVER_HOST
 import utils
 import requests
-from s.models import CompanyInfo
+from s.models import CompanyInfo, AwardSetting
 
 
 class FactoryService(object):
@@ -237,11 +237,11 @@ class CompanyService(object):
         company_count = CompanyInfo.objects.all().count()
         company_info = CompanyInfo.objects.get() if company_count else None
         return {
-            'name': company_info.name if company_info else None,
-            'description': company_info.description if company_info else None,
-            'homepage': company_info.homepage if company_info else None,
-            'urlprefix': company_info.urlprefix if company_info else None
-        }
+            'name': company_info.name,
+            'description': company_info.description,
+            'homepage': company_info.homepage,
+            'urlprefix': company_info.urlprefix
+        } if company_info else None
 
     @staticmethod
     def update_company(name=None, description=None, homepage=None):
@@ -263,6 +263,46 @@ class CompanyService(object):
             return {
                 'code': 1,
                 'msg': 'update company info error:\r\n %s' % e
+            }
+
+
+class AwardSettingService(object):
+    @staticmethod
+    def get_award_setting():
+        count = AwardSetting.objects.all().count()
+        award_setting = AwardSetting.objects.get() if count else None
+        return {
+            'total_prize': award_setting.total_prize / 100,
+            'award_rate': award_setting.rate / 100,
+            'min_prize': award_setting.min_prize / 100,
+            'max_prize': award_setting.max_prize / 100
+        } if award_setting else None
+
+    @staticmethod
+    def update_award_setting(total_prize=None, award_rate=None, min_prize=None, max_prize=None):
+        try:
+            count = AwardSetting.objects.all().count()
+            if not 0 == count:
+                award_setting = AwardSetting.objects.get()
+                award_setting.total_prize = int(total_prize * 100)
+                award_setting.rate = int(award_rate * 100)
+                award_setting.min_prize = int(min_prize * 100)
+                award_setting.max_prize = int(max_prize * 100)
+            else:
+                award_setting = AwardSetting(total_prize=int(total_prize * 100),
+                                             rate=int(award_rate * 100),
+                                             min_prize=int(min_prize * 100),
+                                             max_prize=int(max_prize * 100))
+            award_setting.save()
+            return {
+                'code': 0,
+                'msg': 'update award setting complete'
+            }
+        except Exception as e:
+            print e
+            return {
+                'code': 1,
+                'msg': 'update award setting error:\r\n %s' % e
             }
 
 
