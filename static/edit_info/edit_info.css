@@ -36,6 +36,26 @@
     margin-right: 20%;
 }
 
+#award_setting form {
+    margin: 30px 0;
+}
+
+#award_setting .award-setting-label {
+    font-size: 20px;
+    font-weight: bolder;
+    float: left;
+}
+
+#award_setting .award-setting-label2 {
+    font-size: 16px;
+    font-weight: bold;
+    float: left;
+}
+
+#award_setting .tab-footer {
+    height: 100px;
+}
+
 #factory_info .table>tbody>tr:first-child {
     padding-right: 0;
 }

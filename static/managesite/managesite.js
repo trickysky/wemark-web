@@ -312,12 +312,6 @@ $('.base_count_options>li>a').bind('click', function() {
     }
 });
 
-var show_msg = function(level, message) {
-    var msg_box = $('#msg_modal');
-    msg_box.find('.modal-body>p').html(message);
-    msg_box.modal('show');
-}
-
 $('a.download_code').bind('click', function() {
     var code_type = $(this).attr('code-type');
     var batch_id = $(this).parents('.batch-list-item').attr("value");

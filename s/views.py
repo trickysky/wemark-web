@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 
-from wemark.commons.services import FactoryService, CompanyService, ProductService
+from wemark.commons.services import FactoryService, CompanyService, ProductService, AwardSettingService
 from oauth2.commons.security import Subject
 from wemark.commons.response import ResponseEntity
 
@@ -111,3 +111,15 @@ def product_by_id(request, product_id):
     elif request.method == 'GET':
         r = ProductService.get_product(product_id)
     return JsonResponse(r) if r else ResponseEntity.server_error()
+
+
+def award(request):
+    if request.method == 'POST':
+        body = request.POST
+        r = AwardSettingService.update_award_setting(
+            total_prize=float(body.get('total_prize')),
+            award_rate=float(body.get('award_rate')),
+            min_prize=float(body.get('min_prize')),
+            max_prize=float(body.get('max_prize'))
+        )
+        return JsonResponse(r)
