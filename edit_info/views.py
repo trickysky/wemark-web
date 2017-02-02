@@ -33,6 +33,7 @@ def set_index(request):
 				base_data['product_list'].append({
 					'product_id': product['id'],
 					'product_name': product['name'],
+					'product_unit': product['unit'],
 					'product_barcode': product['barcode'],
 					'product_intro': product['intro'],
 					'product_icon': product['icon'],

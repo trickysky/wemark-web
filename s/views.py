@@ -80,12 +80,14 @@ def product(request):
         info = get_user_info(request)
         r = ProductService.new_product(
             name=body.get('name'),
+            unit=body.get('unit'),
+            barcode=body.get('barcode'),
             icon=body.get('icon'),
             images=body.get('images'),
             intro=body.get('intro'),
             description=body.get('description'),
             created_by=info['id'],
-            updated_by=info['id']
+            updated_by=info['id'],
         )
         return JsonResponse(r) if r else ResponseEntity.server_error()
 
