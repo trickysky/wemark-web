@@ -87,7 +87,7 @@ class ReportService(object):
         ret = 0
         if accepted_list is not None:
             for accept in accepted_list:
-                info = json.loads(accept['awardInfo'])
+                info = json.loads(accept['awardInfo']) if accept['awardInfo'] else None
                 ret += float(info['amount']) / constants.UNIT_CHINA_FEN \
                     if info is not None and info['amount'] is not None else 0
         return ret
