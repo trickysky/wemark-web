@@ -116,7 +116,7 @@ def get_factory_by_id(factory_id):
     if factory_id < 0:
         return '-'
     response = FactoryService.get_factory(factory_id=factory_id)
-    if response['code'] == 0:
+    if response is not None and response['code'] == 0:
         return response['data'].get('factoryName')
     else:
         print 'get factory info failed:', json.dumps(response)
@@ -173,7 +173,7 @@ def batch_send_code(request):
         batch_id = request.POST.get('batch_id')
         factory_id = request.POST.get('factory_id')
         batch_info_resp = BatchService.get_batch(batch_id)
-        if batch_info_resp is None:
+        if batch_info_resp is None or batch_info_resp['code'] != 0:
             return JsonResponse({'code': -1, 'msg': 'batch not found'})
         batch_info = batch_info_resp['data']
         if batch_info.get('status') != BatchStatus.Ready:
@@ -205,7 +205,7 @@ def batch_enable_code(request):
         factory_id = request.POST.get('factory_id')
         timestamp = utils.current_timestamp_in_millis()
         batch_info_resp = BatchService.get_batch(batch_id)
-        if batch_info_resp is None:
+        if batch_info_resp is None or batch_info_resp['code'] != 0:
             print 'batch not found:', batch_id
             return JsonResponse({'code': -1, 'msg': 'batch not found'})
         batch_info = batch_info_resp['data']

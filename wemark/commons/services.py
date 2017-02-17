@@ -19,7 +19,7 @@ class FactoryService(object):
         }
         params = utils.clean_params(params)
         r = requests.get('%s/factory/info' % SERVER_HOST, params=params)
-        return r.json() if r.ok else None
+        return r.json() if r else None
 
     @staticmethod
     def get_factory(factory_id):
@@ -44,7 +44,7 @@ class FactoryService(object):
         }
         params = utils.clean_params(params)
         r = requests.post('%s/factory' % SERVER_HOST, params=params)
-        return r.json() if r.ok else None
+        return r.json() if r else None
 
     @staticmethod
     def create_factory(status, created_by, updated_by, factory_name='', location='', region='', f_type='', owner='',
@@ -65,7 +65,7 @@ class FactoryService(object):
         }
         params = utils.clean_params(params)
         r = requests.post('%s/factory/info' % SERVER_HOST, params=params)
-        return r.json() if r.ok else None
+        return r.json() if r else None
 
     @staticmethod
     def update_factory(factory_id, factory_name=None, location=None, region=None, f_type=None, owner=None,
@@ -84,12 +84,12 @@ class FactoryService(object):
         }
         params = utils.clean_params(params)
         r = requests.put('%s/factory/info/%s' % (SERVER_HOST, factory_id), data=params)
-        return r.json() if r.ok else None
+        return r.json() if r else None
 
     @staticmethod
     def delete_factory(factory_id):
         r = requests.delete('%s/factory/info/%s' % (SERVER_HOST, factory_id))
-        return r.json() if r.ok else None
+        return r.json() if r else None
 
     @staticmethod
     def create_factory_secret(factory_id, factory_secret):
@@ -101,12 +101,12 @@ class FactoryService(object):
         }
         params = utils.clean_params(params)
         r = requests.post('%s/factory/secret' % SERVER_HOST, params=params)
-        return r.json() if r.ok else None
+        return r.json() if r else None
 
     @staticmethod
     def get_factory_secret(factory_id):
         r = requests.get('%s/factory/secret/%s' % (SERVER_HOST, factory_id))
-        return r.json() if r.ok else None
+        return r.json() if r else None
 
     @staticmethod
     def update_factory_secret(secret_id, factory_id=None, factory_secret=None):
@@ -117,12 +117,12 @@ class FactoryService(object):
         }
         params = utils.clean_params(params)
         r = requests.put('%s/factory/secret/%s' % (SERVER_HOST, secret_id), params=params)
-        return r.json() if r.ok else None
+        return r.json() if r else None
 
     @staticmethod
     def delete_factory_secret(secret_id):
         r = requests.delete('%s/factory/secret/%s' % (SERVER_HOST, secret_id))
-        return r.json() if r.ok else None
+        return r.json() if r else None
 
 
 class BatchService(object):
@@ -143,12 +143,12 @@ class BatchService(object):
         }
         params = utils.clean_params(params)
         r = requests.get('%s/batch' % SERVER_HOST, params=params)
-        return r.json() if r.ok else None
+        return r.json() if r else None
 
     @staticmethod
     def get_batch(batch_id):
         r = requests.get('%s/batch/info/%s' % (SERVER_HOST, batch_id))
-        return r.json() if r.ok else None
+        return r.json() if r else None
 
     @staticmethod
     def create_batch(factory_id, product_id, incode_factory, outcode_factory, casecode_factory, case_count, case_size, unit_count,
@@ -173,7 +173,7 @@ class BatchService(object):
         }
         params = utils.clean_params(params)
         r = requests.post('%s/batch' % SERVER_HOST, data=params)
-        return r.json() if r.ok else None
+        return r.json() if r else None
 
     @staticmethod
     def update_batch_status(batch_id, status):
@@ -182,12 +182,12 @@ class BatchService(object):
         }
         params = utils.clean_params(params)
         r = requests.put('%s/batch/%s/status' % (SERVER_HOST, batch_id), params=params)
-        return r.json() if r.ok else None
+        return r.json() if r else None
 
     @staticmethod
     def get_batch_secret_status(batch_id):
         r = requests.get('%s/batch/%s/secret_status' % (SERVER_HOST, batch_id))
-        return r.json() if r.ok else None
+        return r.json() if r else None
 
     @staticmethod
     def update_batch_secret_status_and_send_to_factory_owner(batch_id, factory_id):
@@ -196,7 +196,7 @@ class BatchService(object):
         }
         params = utils.clean_params(params)
         r = requests.put('%s/batch/%s/secret' % (SERVER_HOST, batch_id), params=params)
-        return r.json() if r.ok else None
+        return r.json() if r else None
 
     @staticmethod
     def get_batch_section_count(batch_id, assign_type, factory_id):
@@ -206,7 +206,7 @@ class BatchService(object):
         }
         params = utils.clean_params(params)
         r = requests.get('%s/batch/%s/code_section_count' % (SERVER_HOST, batch_id), params=params)
-        return r.json() if r.ok else None
+        return r.json() if r else None
 
     @staticmethod
     def get_batch_code(batch_id, assign_type, section_id, factory_id):
@@ -217,7 +217,7 @@ class BatchService(object):
         }
         params = utils.clean_params(params)
         r = requests.get('%s/batch/%s/code' % (SERVER_HOST, batch_id), params=params)
-        return r.json() if r.ok else None
+        return r.json() if r else None
 
     @staticmethod
     def activate_batch_code(batch_id, assign_type, enabled_time, enabled_factory):
@@ -228,7 +228,7 @@ class BatchService(object):
         }
         params = utils.clean_params(params)
         r = requests.put('%s/batch/%s/enable_code' % (SERVER_HOST, batch_id), params=params)
-        return r.json() if r.ok else None
+        return r.json() if r else None
 
 
 class CompanyService(object):
@@ -322,10 +322,11 @@ class ProductService(object):
         return r.json() if r else None
 
     @staticmethod
-    def new_product(name=None, status=0, created_by=None, updated_by=None, barcode=None, intro=None, icon=None,
+    def new_product(name=None, unit=None, status=0, created_by=None, updated_by=None, barcode=None, intro=None, icon=None,
                     images=None, description=None):
         params = {
             'name': name,
+            'unit': unit,
             'status': status,
             'created_by': created_by,
             'created_time': utils.current_timestamp_in_millis(),
@@ -350,11 +351,12 @@ class ProductService(object):
             return None
 
     @staticmethod
-    def update_product(product_id=None, name=None, status=0, updated_by=None, barcode=None, intro=None, icon=None,
+    def update_product(product_id=None, name=None, unit=None, status=0, updated_by=None, barcode=None, intro=None, icon=None,
                        images=None, description=None):
         if product_id:
             params = {
                 'name': name,
+                'unit': unit,
                 'status': status,
                 'updated_by': updated_by,
                 'updated_time': utils.current_timestamp_in_millis(),
@@ -366,7 +368,7 @@ class ProductService(object):
             }
             params = utils.clean_params(params)
             r = requests.put('%s/product/%s' % (SERVER_HOST, product_id), data=params)
-            return r.json() if r.ok else None
+            return r.json() if r else None
         else:
             return None
 
@@ -374,7 +376,7 @@ class ProductService(object):
     def delete_product(product_id):
         if product_id:
             r = requests.delete('%s/product/%s' % (SERVER_HOST, product_id))
-            return r.json() if r.ok else None
+            return r.json() if r else None
         else:
             return None
 
@@ -403,7 +405,7 @@ class DataService(object):
         }
         params = utils.clean_params(params)
         r = requests.get('%s/data/scan' % SERVER_HOST, params=params)
-        return r.json() if r.ok else None
+        return r.json() if r else None
 
     @staticmethod
     def get_award_list(batch_id, code=None, code_type=None, user_code=None, user_type=None, start_time=None,
@@ -427,7 +429,7 @@ class DataService(object):
         }
         params = utils.clean_params(params)
         r = requests.get('%s/data/award' % SERVER_HOST, params=params)
-        return r.json() if r.ok else None
+        return r.json() if r else None
 
     @staticmethod
     def get_batch_list(barcode=None, factory_id=None, incode_factory=None, outcode_factory=None, casecode_factory=None,
@@ -460,7 +462,7 @@ class DataService(object):
         }
         params = utils.clean_params(params)
         r = requests.get('%s/data/batch' % SERVER_HOST, params=params)
-        return r.json() if r.ok else None
+        return r.json() if r else None
 
     @staticmethod
     def get_associated_code_count(batch_id, assign_type=None, enabled=None, enabled_factory=None):
@@ -472,4 +474,4 @@ class DataService(object):
         }
         params = utils.clean_params(params)
         r = requests.get('%s/data/associate/count' % SERVER_HOST, params=params)
-        return r.json() if r.ok else None
+        return r.json() if r else None

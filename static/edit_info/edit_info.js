@@ -179,6 +179,8 @@ function init_modal() {
     $factory_info_modal.find('.update-btn').addClass('hidden');
     $factory_info_modal.find('.confirm-btn').removeClass('hidden');
     $('#product_name').val(null);
+    $('#product_unit').val(null);
+    $('#product_barcode').val(null);
     $('#product_icon').val(null);
     $('#product_images').val(null);
     $('#product_intro').val(null);
@@ -336,6 +338,8 @@ $product_info.find('.new-product').bind('click', function () {
 function get_product_info() {
     return {
         'product_name': $('#product_name').val(),
+        'product_unit': $('#product_unit').val(),
+        'barcode': $('#product_barcode').val(),
         'product_icon': $('#product_icon').val(),
         'product_images': $('#product_images').val(),
         'product_intro': $('#product_intro').val(),
@@ -352,6 +356,8 @@ $product_info_modal.find('.modal-footer .confirm-btn').bind('click', function ()
             url: '/s/product',
             data: {
                 'name': product_info.product_name,
+                'unit': product_info.product_unit,
+                'barcode': product_info.barcode,
                 'icon': product_info.product_icon,
                 'images': product_info.product_images,
                 'intro': product_info.product_intro,
@@ -399,11 +405,15 @@ $product_info.find('.update-product').bind('click', function () {
         product_id = $this.attr('product_id'),
         $product_id = $('#product-'+product_id);
     var product_name = $product_id.find('.td-product-name').text(),
+        product_unit = $product_id.find('.td-product-unit').text(),
+        product_barcode = $product_id.find('.td-product-barcode').text(),
         product_icon = $product_id.find('.td-product-icon img').attr('src'),
         product_images = $product_id.find('.td-product-images img').attr('src'),
         product_intro = $product_id.find('.td-product-intro').text(),
         product_description = $product_id.find('.td-product-description').text();
     $('#product_name').val(product_name);
+    $('#product_unit').val(product_unit);
+    $('#product_barcode').val(product_barcode);
     $('#product_icon').val(product_icon);
     $('#product_images').val(product_images);
     $('#product_intro').val(product_intro);
@@ -421,6 +431,8 @@ $product_info_modal.find('.modal-footer .update-btn').bind('click', function () 
             url: '/s/product/' + $product_info_modal.product_id,
             data:{
                 'name': product_info.product_name,
+                'unit': product_info.product_unit,
+                'barcode': product_info.barcode,
                 'icon': product_info.product_icon,
                 'images': product_info.product_images,
                 'intro': product_info.product_intro,

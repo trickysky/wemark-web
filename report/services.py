@@ -21,8 +21,8 @@ class ReportService(object):
         if batch_list is not None:
             return batch_list
 
-        batch_list = BatchService.get_batch_list(status=constants.BatchStatus.Ready)['data'] if self.is_root \
-            else BatchService.get_batch_list(created_by=self.user_id, status=constants.BatchStatus.Ready)['data']
+        batch_list = BatchService.get_batch_list(status=constants.BatchStatus.Done)['data'] if self.is_root \
+            else BatchService.get_batch_list(created_by=self.user_id, status=constants.BatchStatus.Done)['data']
         cache.set(self.__generate_key(self.BATCH_CACHE_KEY), batch_list, self.CACHE_EXPIRES_IN)
 
         return batch_list
