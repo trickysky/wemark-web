@@ -9,11 +9,11 @@ class CompanyInfo(models.Model):
 	name = models.CharField(max_length=255)
 	description = models.TextField(null=True)
 	homepage = models.TextField(null=True)
-	urlprefix = models.CharField(max_length=255)
+	urlprefix = models.CharField(max_length=255, null=True)
 
 
 class AwardSetting(models.Model):
-	total_prize = models.BigIntegerField(max_length=8)
-	rate = models.IntegerField(max_length=2)
-	max_prize = models.IntegerField(max_length=4)
-	min_prize = models.IntegerField(max_length=4)
+	total_prize = models.BigIntegerField(null=True)
+	rate = models.IntegerField(null=True)
+	max_prize = models.IntegerField(null=True)
+	min_prize = models.IntegerField(null=True)

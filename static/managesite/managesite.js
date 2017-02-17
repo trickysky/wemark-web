@@ -2,17 +2,6 @@
  * Created by tk on 2016/11/26.
  */
 
-$("#date_picker").datetimepicker({
-    format: "yyyy年mm月dd日",
-    showMeridian: true,
-    todayBtn: true,
-    language: "zh-CN",
-    startDate: (new Date()).toISOString().substring(0, 10),
-    autoclose: true,
-    minView: "month",
-    todayHighlight: true
-});
-
 $("#new_order_modal").find(".check-factory").find("input").change(function () {
     if($(this).is(":checked")) {
         $(this).parent(".code_factory").removeClass("disabled-font");
@@ -67,7 +56,9 @@ $("#make_order_btn").bind("click", function () {
     var datetime = $("#date_picker").val();
     if (datetime) {
         var $batch_date_value = $("#batch_date").find(".batch-value");
-        $batch_date_value.text(datetime);
+        var now = new Date();
+        var period = new Date(now.setMonth(parseInt(now.getMonth()) + parseInt(datetime)));
+        $batch_date_value.text(period.getFullYear() + '/' + (period.getMonth()+1)+'/'+period.getDate());
         $batch_date_value.removeClass('red-font');
     }
 
@@ -200,8 +191,9 @@ $("#back_btn").bind("click", function () {
 
 var $confirm_btn = $("#confirm_btn");
 $confirm_btn.bind("click", function () {
-    var datetime = $("#date_picker").datetimepicker("getDate").getTime();
-    var prod_id = $("#product").find("option:selected").val()
+    var now = new Date();
+    var datetime = new Date(now.setMonth(parseInt(now.getMonth()+parseInt($("#date_picker").val())))).getTime();
+    var prod_id = $("#product").find("option:selected").val();
     if (!prod_id) {
         prod_id = undefined;
     }

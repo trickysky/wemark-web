@@ -2,10 +2,6 @@
     border-radius: 5px !important;
 }
 
-#datePicker {
-    width: 135px;
-}
-
 .list-item > div {
     display: inline;
 }
@@ -21,6 +17,12 @@
 #new_order_modal .modal-body .unit {
     padding-left: 0;
     line-height: 34px;
+}
+
+#date_picker {
+    width: 65px;
+    display: inline;
+    margin-right: 10px;
 }
 
 .disabled-font {
