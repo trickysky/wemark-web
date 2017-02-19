@@ -70,12 +70,12 @@ def set_index(request):
     product_dict = {}
     if products and products['code'] == 0:
         for product in products['data']:
-            id = product['id']
+            prod_id = product['id']
             base_data['product_options'].append(
-                {'text': product['name'], 'value': id}
+                {'text': product['name'], 'value': prod_id}
             )
             base_data['products'].append(product)
-            product_dict[id] = product
+            product_dict[prod_id] = product
     factories = FactoryService.get_factory_list(created_by=user_id)
     if factories and factories['code'] == 0:
         for factory in factories['data']:
@@ -142,6 +142,10 @@ def set_batch_list(response, product_dict):
             'enabled_factory_id': b['factoryId'],
             'enabled_factory': get_factory_by_id(b['factoryId']),
             'prod_info': b['productInfo'] if b['productInfo'] else None,
+            'prod_icon': product_info['icon'],
+            'prod_images': product_info['images'].split(';'),
+            'prod_intro': product_info['intro'],
+            'prod_desc': product_info['description'],
             'batch_id': b['id'],
             'status': b['status']
         })
