@@ -18,16 +18,17 @@ function refresh_total_count() {
     var $bottle_count = $("#bottle_count");
     var box_count = $box_count.val();
     var bottle_count = $bottle_count.val();
-    var base_box_count = $("#base_box_count").attr("value");
-    var base_total_count = $("#base_total_count").attr("value");
+    var box_count_unit = $("#box_count_unit").val();
     var is_total_count_checked = $("#total_count_checkbox").is(":checked");
+    $("#total_count_unit").selectpicker('val', '1');
     if (!is_total_count_checked && !isNaN(box_count) && !isNaN(bottle_count)) {
-        $("#total_count").val(box_count * bottle_count * base_box_count / base_total_count);
+        $("#total_count").val(box_count * bottle_count * box_count_unit);
     }
 }
 
 $("#box_count").bind('input', refresh_total_count);
 $("#bottle_count").bind('input', refresh_total_count);
+$("#box_count_unit").bind('change', refresh_total_count);
 
 $("#total_count_checkbox").change(function () {
     var $box_count = $("#box_count");
@@ -38,10 +39,12 @@ $("#total_count_checkbox").change(function () {
         $bottle_count.val(0);
         $bottle_count.attr('disabled', true);
         $("#total_count").attr('disabled', false);
+        $("#total_count_unit").attr('disabled', false).selectpicker('refresh');
     } else {
         $box_count.attr('disabled', false);
         $bottle_count.attr('disabled', false);
         $("#total_count").attr('disabled', true);
+        $("#total_count_unit").attr('disabled', true).selectpicker('refresh');
     }
 });
 
@@ -82,18 +85,21 @@ $("#make_order_btn").bind("click", function () {
 
     // 生产数量
     var $box_count = $("#box_count");
+    var $box_count_unit = $("#box_count_unit");
     var $bottle_count = $("#bottle_count");
     var $total_count = $("#total_count");
+    var $total_count_unit = $("#total_count_unit");
     var box_count = $box_count.val();
-    var base_box_count = $("#base_box_count").attr("value");
+    var box_count_unit = $box_count_unit.val();
     var bottle_count = $bottle_count.val();
-    var base_total_count = $("#base_total_count").attr("value");
+    var total_count_unit = $("#total_count_unit").val();
     var total_count = $total_count.val();
     var $batch_count_value = $("#batch_count").find(".batch-value");
-    var product_unit = $("span.product_unit").html();
+    var box_count_unit_text = $box_count_unit.find("option:selected").text();
+    var total_count_unit_text = $total_count_unit.find("option:selected").text();
     if ($total_count.attr("disabled")) {
         if (box_count>0 && bottle_count>0) {
-            $batch_count_value.text(box_count * base_box_count + "箱" + " X " + bottle_count + product_unit + "/箱 = " + box_count * base_box_count * bottle_count + product_unit);
+            $batch_count_value.text(box_count * box_count_unit + box_count_unit_text + " X " + bottle_count + "瓶/箱 = " + total_count + total_count_unit_text);
             $batch_count_value.removeClass('red-font');
         }
         else {
@@ -103,7 +109,7 @@ $("#make_order_btn").bind("click", function () {
     }
     else {
         if (total_count>0) {
-            $batch_count_value.text(total_count * base_total_count + product_unit);
+            $batch_count_value.text(total_count * total_count_unit + "瓶");
             $batch_count_value.removeClass('red-font');
         }
         else {
@@ -199,11 +205,10 @@ $confirm_btn.bind("click", function () {
     }
     var factory_id = parseInt($("#factory").find("option:selected").val());
     var box_count = $("#box_count").val();
-    var base_box_count = $("#base_box_count").attr("value");
-    var bottle_count = $("#bottle_count").val() * base_box_count;
+    var box_count_unit = $("#box_count_unit").val();
+    var bottle_count = $("#bottle_count").val();
     var $total_count = $("#total_count");
-    var base_total_count = $("#base_total_count").attr("value");
-    var total_count = $total_count.val() * base_total_count;
+    var total_count = $total_count.val() * $("#total_count_unit").val();
     if (!$total_count.attr("disabled")) {
         box_count = undefined;
         bottle_count = undefined;

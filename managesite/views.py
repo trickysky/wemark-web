@@ -128,7 +128,7 @@ def set_batch_list(response, product_dict):
     for b in response['data']:
         product_info = product_dict.get(b['productId'], {})
         batch_list.append({
-            'expired_time': time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(b['updatedTime'] / 1000)),
+            'expired_time': time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(b['expiredTime'] / 1000)),
             'product_name': product_info.get('name'),
             'barcode': b['barcode'],
             'unit_count': '%d%s' % (b['unitCount'], product_info.get('unit')),

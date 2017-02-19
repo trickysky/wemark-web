@@ -47,16 +47,14 @@
                                         <input id="box_count" class="form-control" type="number">
                                     </label>
                                 </div>
-                                <div class="dropdown col-xs-1">
-                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                        <span id="base_box_count" class="base_count" value="1">箱</span>
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu base_count_options" aria-labelledby="dropdownMenu1">
-                                        <li><a href="" value="1">箱</a></li>
-                                        <li><a href="" value="1000">千箱</a></li>
-                                        <li><a href="" value="1000000">百万箱</a></li>
-                                    </ul>
+                                <div class="col-xs-1">
+                                    <label>
+                                        <select id="box_count_unit" class="selectpicker" data-size="3" data-width="fit">
+                                            <option value="1">箱</option>
+                                            <option value="1000">千箱</option>
+                                            <option value="1000000">百万箱</option>
+                                        </select>
+                                    </label>
                                 </div>
                                 <span class="unit col-xs-1" style="text-align:center;">X</span>
                                 <div class="col-xs-2">
@@ -76,15 +74,13 @@
                                     </label>
                                 </div>
                                 <div class="dropdown col-xs-1">
-                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                        <span type="text" id="base_total_count" class="base_count" value="1"><span class="product_unit">瓶</span></span>
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu base_count_options" aria-labelledby="dropdownMenu1">
-                                        <li><a href="" value="1"><span class="product_unit">瓶</span></a></li>
-                                        <li><a href="" value="1000">千<span class="product_unit">瓶</span></a></li>
-                                        <li><a href="" value="1000000">百万<span class="product_unit">瓶</span></a></li>
-                                    </ul>
+                                    <label>
+                                        <select id="total_count_unit" class="selectpicker" disabled data-size="3" data-width="fit">
+                                            <option value="1">瓶</option>
+                                            <option value="1000">千瓶</option>
+                                            <option value="1000000">百万瓶</option>
+                                        </select>
+                                    </label>
                                 </div>
                             </div>
 
