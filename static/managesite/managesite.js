@@ -3,7 +3,7 @@
  */
 
 $("#new_order_modal").find(".check-factory").find("input").change(function () {
-    if($(this).is(":checked")) {
+    if ($(this).is(":checked")) {
         $(this).parent(".code_factory").removeClass("disabled-font");
         $(this).parent(".code_factory").parent(".check-factory").find(".selectpicker").attr("disabled", false).selectpicker('refresh');
     }
@@ -32,7 +32,7 @@ $("#bottle_count").bind('input', refresh_total_count);
 $("#total_count_checkbox").change(function () {
     var $box_count = $("#box_count");
     var $bottle_count = $("#bottle_count");
-    if($(this).is(":checked")) {
+    if ($(this).is(":checked")) {
         $box_count.val(0);
         $box_count.attr('disabled', true);
         $bottle_count.val(0);
@@ -58,7 +58,7 @@ $("#make_order_btn").bind("click", function () {
         var $batch_date_value = $("#batch_date").find(".batch-value");
         var now = new Date();
         var period = new Date(now.setMonth(parseInt(now.getMonth()) + parseInt(datetime)));
-        $batch_date_value.text(period.getFullYear() + '/' + (period.getMonth()+1)+'/'+period.getDate());
+        $batch_date_value.text(period.getFullYear() + '/' + (period.getMonth() + 1) + '/' + period.getDate());
         $batch_date_value.removeClass('red-font');
     }
 
@@ -92,7 +92,7 @@ $("#make_order_btn").bind("click", function () {
     var $batch_count_value = $("#batch_count").find(".batch-value");
     var product_unit = $("span.product_unit").html();
     if ($total_count.attr("disabled")) {
-        if (box_count>0 && bottle_count>0) {
+        if (box_count > 0 && bottle_count > 0) {
             $batch_count_value.text(box_count * base_box_count + "箱" + " X " + bottle_count + product_unit + "/箱 = " + box_count * base_box_count * bottle_count + product_unit);
             $batch_count_value.removeClass('red-font');
         }
@@ -102,7 +102,7 @@ $("#make_order_btn").bind("click", function () {
         }
     }
     else {
-        if (total_count>0) {
+        if (total_count > 0) {
             $batch_count_value.text(total_count * base_total_count + product_unit);
             $batch_count_value.removeClass('red-font');
         }
@@ -164,10 +164,10 @@ $("#make_order_btn").bind("click", function () {
     }
 
     // 产品条码
-    var barcode = (function() {
+    var barcode = (function () {
         try {
             return JSON.parse(prod_info)["barcode"];
-        } catch(e) {
+        } catch (e) {
             return undefined;
         }
     })();
@@ -192,7 +192,7 @@ $("#back_btn").bind("click", function () {
 var $confirm_btn = $("#confirm_btn");
 $confirm_btn.bind("click", function () {
     var now = new Date();
-    var datetime = new Date(now.setMonth(parseInt(now.getMonth()+parseInt($("#date_picker").val())))).getTime();
+    var datetime = new Date(now.setMonth(parseInt(now.getMonth() + parseInt($("#date_picker").val())))).getTime();
     var prod_id = $("#product").find("option:selected").val();
     if (!prod_id) {
         prod_id = undefined;
@@ -227,10 +227,10 @@ $confirm_btn.bind("click", function () {
         box_code_factory_id = parseInt($box_code.find("option:selected").val());
     }
     var prod_info = $("#prod_info").val();
-    var barcode = (function() {
+    var barcode = (function () {
         try {
             return JSON.parse(prod_info)["barcode"];
-        } catch(e) {
+        } catch (e) {
             return undefined;
         }
     })();
@@ -258,7 +258,7 @@ $confirm_btn.bind("click", function () {
                 'product_info': prod_info
             },
             success: function (data) {
-                if (data['code']==0) {
+                if (data['code'] == 0) {
                     console.log('post success');
                     location.reload();
                 }
@@ -294,7 +294,7 @@ $('#product').bind('change', function () {
     }
 });
 
-$('.base_count_options>li>a').bind('click', function() {
+$('.base_count_options>li>a').bind('click', function () {
     var target = $(this).parents("div.dropdown").find("span.base_count");
     var value = $(this).attr("value");
     var content = $(this).html();
@@ -304,22 +304,35 @@ $('.base_count_options>li>a').bind('click', function() {
     }
 });
 
-$('a.download_code').bind('click', function() {
+$('a.download_code').bind('click', function () {
     var code_type = $(this).attr('code-type');
     var batch_id = $(this).parents('.batch-list-item').attr("value");
+    var radio_name = code_type + '_download_type_' + batch_id;
+    var csv_type = $("input[name=" + radio_name + "]:checked").val() == 'csv';
     $.ajax({
         type: 'POST',
         url: 's/batch/download_code',
         data: {
             'code_type': code_type,
-            'batch_id': batch_id
+            'batch_id': batch_id,
+            'csv_type': csv_type
         },
-        success: function(data, status, request) {
+        success: function (data, status, request) {
+            var DEFAULT_CODE_DOWNLOAD_LIMIT = 1000;
             var disp = request.getResponseHeader('Content-Disposition');
-            if (disp && disp.search('attachment') != -1) {
+            if (data['error_code'] == 0) {
+                var url_list = data['data'];
+                if (url_list.length > DEFAULT_CODE_DOWNLOAD_LIMIT) {
+                    $('#downloadModal').modal();
+                    return;
+                }
+                var render_type = code_type == 'inner' ? 'qr' : 'dm';
+                create_code_pic_and_download(url_list, render_type);
+            } else if (disp && disp.search('attachment') != -1) {
                 var form = $('<form method="POST" action="s/batch/download_code">');
                 form.append($('<input type="hidden" name="batch_id" value="' + batch_id + '">'));
                 form.append($('<input type="hidden" name="code_type" value="' + code_type + '">'));
+                form.append($('<input type="hidden" name="csv_type" value="' + csv_type + '">'));
                 $('body').append(form);
                 form.submit();
             } else {
@@ -327,7 +340,7 @@ $('a.download_code').bind('click', function() {
                 show_msg('warning', '下载失败');
             }
         },
-        error: function(xml, e) {
+        error: function (xml, e) {
             console.log('get product error: \r\n' + e);
             show_msg('warning', '下载失败');
         }
@@ -335,7 +348,7 @@ $('a.download_code').bind('click', function() {
 
 });
 
-$('a.send_code').bind('click', function() {
+$('a.send_code').bind('click', function () {
     var factory_id = $(this).attr('value');
     var code_type = $(this).attr('code-type');
     var batch_id = $(this).parents('.batch-list-item').attr("value");
@@ -347,7 +360,7 @@ $('a.send_code').bind('click', function() {
             'code_type': code_type,
             'batch_id': batch_id
         },
-        success: function(data) {
+        success: function (data) {
             if (!data || data['code'] != 0) {
                 console.log('send code failed: ' + data);
                 show_msg('warning', '发送失败');
@@ -355,14 +368,14 @@ $('a.send_code').bind('click', function() {
                 show_msg('success', '发送成功');
             }
         },
-        error: function(xml, e) {
+        error: function (xml, e) {
             console.log('get product error: \r\n' + e);
             show_msg('warning', '发送失败');
         }
     });
 });
 
-$('a.enable_code').bind('click', function() {
+$('a.enable_code').bind('click', function () {
     var batch_list_item = $(this).parents('.batch-list-item');
     var factory_id = $(this).attr('value');
     var batch_id = batch_list_item.attr("value");
@@ -373,13 +386,13 @@ $('a.enable_code').bind('click', function() {
             'factory_id': factory_id,
             'batch_id': batch_id
         },
-        success: function(data) {
+        success: function (data) {
             if (data && data['code'] == 0) {
                 show_msg('success', '激活成功');
                 reload_batch_item(batch_list_item);
             }
         },
-        error: function(xml, e) {
+        error: function (xml, e) {
             console.log('enable code error: \r\n' + e);
             show_msg('warning', '激活失败');
         }
@@ -390,21 +403,128 @@ function reload_batch_item(batch_item) {
     $.ajax({
         type: 'GET',
         url: 's/batch/' + batch_item.attr('value'),
-        success: function(data) {
+        success: function (data) {
             if (data && data['code'] == 0) {
                 if (data['data'].status != 2) {
                     batch_item.find('li:not(.enabled-factory)>span.label').remove();
                     if (data['data'].status == 0) {
                         batch_item.find('li.enabled-factory>span.label')
-                        .removeClass('label-default')
-                        .addClass('label-success')
-                        .html(' 已激活 ');
+                            .removeClass('label-default')
+                            .addClass('label-success')
+                            .html(' 已激活 ');
                     }
                 }
             }
         },
-        error: function(xml, e) {
+        error: function (xml, e) {
             console.log('get batch info error: \r\n' + e);
         }
     });
+}
+
+function create_code_pic_and_download(urls, code_type) {
+    var margin, code_size;
+    var canvas = $("#qrdm");
+    var canvas_element = document.getElementById("qrdm");
+    canvas.clearCanvas();
+
+    function renderQRCode() {
+        var code_per_row = 4;
+        margin = 50;
+        code_size = 200;
+
+        var row_number = Math.ceil(urls.length / code_per_row);
+        var width = code_per_row * code_size + (code_per_row + 1) * margin;
+        var height = row_number * code_size + (row_number + 1) * margin;
+
+        canvas_element.width = width;
+        canvas_element.height = height;
+
+        var top = margin, left = margin;
+        for (var idx = 0; idx < urls.length; ++idx) {
+            var url = urls[idx];
+            var option = {
+                text: url.trim(),
+                render: "canvas",
+                size: code_size,
+                background: 'white',
+                mode: 0,
+                minVersion: 1,
+                maxVersion: 3,
+                ecLevel: "L",
+                left: left,
+                top: top
+            };
+            canvas.qrcode(option);
+            left += code_size + margin;
+            if (left > width - code_size - margin) {
+                left = margin;
+                top += code_size + margin;
+            }
+            if (top > height - code_size - margin) {
+                break
+            }
+        }
+    }
+
+    function renderDMCode() {
+        var code_per_row = 8;
+        margin = 25;
+        code_size = 100;
+        var canvas = $("#qrdm");
+        var row_number = Math.ceil(urls.length / code_per_row);
+        var width = code_per_row * code_size + (code_per_row + 1) * margin;
+        var height = row_number * code_size + (row_number + 1) * margin;
+
+        var canvas_element = document.getElementById("qrdm");
+        canvas_element.width = width;
+        canvas_element.height = height;
+
+        canvas.clearCanvas();
+        var top = margin, left = margin;
+        for (var idx = 0; idx < urls.length; ++idx) {
+            var url = urls[idx];
+            var option = {
+                output: "canvas",
+                barWidth: code_size,
+                barHeight: code_size,
+                background: 'white',
+                showURI: true,
+                posX: left,
+                posY: top
+            };
+            canvas.barcode(url.trim(), "datamatrix", option);
+            left += code_size + margin;
+            if (left > width - code_size - margin) {
+                left = margin;
+                top += code_size + margin;
+            }
+            if (top > height - code_size - margin) {
+                break
+            }
+        }
+    }
+
+    if (code_type == 'qr') {
+        renderQRCode()
+    } else if (code_type == 'dm') {
+        renderDMCode()
+    }
+
+    var fixTypeFun = function (type) {
+        type = type.toLowerCase().replace(/jpg/i, 'jpeg');
+        var r = type.match(/png|jpeg|bmp|gif/)[0];
+        return 'image/' + r;
+    };
+
+    var type = 'png';
+    var img_data = (canvas[0]).toDataURL(type);
+    img_data = img_data.replace(fixTypeFun(type), 'image/octet-stream');
+    var link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+    link.href = img_data;
+    link.download = code_type + '_code_' + new Date().getTime().toString() + '.' + type;
+
+    var event = document.createEvent('MouseEvents');
+    event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+    link.dispatchEvent(event);
 }
