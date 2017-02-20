@@ -290,14 +290,16 @@
                         <option value=4>四个</option>
                     </select>
                 </div>
-                {% include "edit_info/brief/award.html" %}
+                <div id="award_detail">
+                    {% include "edit_info/brief/award.html" with award_setting=award_setting%}
+                </div>
                 <div class="info-detail">
                     <span class="base-label">总奖金</span>
-                    <input class="form-control" placeholder="总奖金" type="number"><span>元</span>
+                    <input class="form-control" type="number" value="{{ award_setting.total_prize }}"><span>元</span>
                 </div>
                 <div class="info-detail">
                     <span class="base-label">获奖个数</span>
-                    <input class="form-control" placeholder="获奖个数" type="number"><span>个</span>
+                    <input class="form-control" type="number" value="{{ award_setting.total_num }}"><span>个</span>
                 </div>
             </form>
         </div>

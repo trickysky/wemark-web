@@ -201,7 +201,7 @@ $company_info.find('.tab-footer .confirm').bind('click', function () {
     var company_description = $company_info.find('#company_description').val();
     var company_homepage = $company_info.find('#company_homepage').val();
     if (company_name) {
-        $company_info.find('.tab-footer .confirm').html('发送中<i class="fa fa-spinner fa-pulse fa-fw"></i>')
+        $company_info.find('.tab-footer .confirm').html('发送中<i class="fa fa-spinner fa-pulse fa-fw"></i>');
         $.ajax({
             type: 'POST',
             url: '/s/company',
@@ -228,18 +228,6 @@ $company_info.find('.tab-footer .confirm').bind('click', function () {
         })
     }
 });
-
-function check_award_setting() {
-    var total_prize = parseFloat($award_total_prize.val());
-    var award_rate = parseFloat($award_rate.val());
-    var min_prize = parseFloat($award_min_prize.val());
-    var max_prize = parseFloat($award_max_prize.val());
-    if (isNaN(total_prize) || isNaN(award_rate) || isNaN(min_prize) || isNaN(max_prize)) {
-        $award_setting_confirm.attr('disabled', true);
-    } else {
-        $award_setting_confirm.attr('disabled', false);
-    }
-}
 
 $product_info.find('.td-image').bind('click', function () {
     var image_url = $(this).find('img').attr('src');
@@ -369,4 +357,42 @@ $product_info_modal.find('.modal-footer .update-btn').bind('click', function () 
             }
         });
     }
+});
+
+$("#award_count").bind('change', function () {
+    var award_count = $("#award_count").val();
+    var $award_detail = $("#award_detail");
+    var award_html = "";
+    for (var i=0; i<award_count; i++) {
+        var prize_name;
+        switch (i) {
+            case 0:
+                prize_name = '谢谢参与奖';
+                break;
+            case 1:
+                prize_name = '一等奖';
+                break;
+            case 2:
+                prize_name = '二等奖';
+                break;
+            case 3:
+                prize_name = '三等奖';
+                break;
+        }
+        award_html += "<div class='info-detail'>\
+                <label class='type-label'>"+ prize_name +"</label>\
+                <span>中奖金额:</span>\
+                <input class='form-control prize' type='number'>\
+                <select class='selectpicker' data-width='fit'>\
+                    <option value='100'>元</option>\
+                    <option value='10'>角</option>\
+                    <option value='1'>分</option>\
+                    <option value='10000'>百元</option>\
+                </select>\
+                <span style=''>中奖比例:</span>\
+                <input class='form-control proportion' type='number'>\
+            </div>"
+    }
+    $award_detail.html(award_html);
+    $award_detail.find(".selectpicker").selectpicker('refresh');
 });

@@ -16,16 +16,18 @@
     float: left;
     padding-right: 25px;
     text-align: right;
+    width: 120px;
 }
 
 .type-label {
     float: left;
     padding-right: 25px;
-    text-align: left;
-    padding-left: 25px;
+    text-align: right;
+    padding-left: 35px;
     font-size: 18px;
     font-weight: normal;
     margin-top: 4px;
+    width: 150px;
 }
 
 .info-detail input {
@@ -76,4 +78,8 @@
     margin-left: 15px;
     width: 100px;
     min-width: 100px;
+}
+
+#award_detail .info-detail span {
+    margin-left: 30px;
 }

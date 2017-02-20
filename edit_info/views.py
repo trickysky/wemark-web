@@ -20,11 +20,28 @@ def set_index(request):
         'company_name': company_info.get('name') if company_info else None,
         'company_description': company_info.get('description') if company_info else None,
         'company_homepage': company_info.get('homepage') if company_info else None,
-        'award_total_prize': 10000,
-        'award_total_num': 1000,
-        'award_amount_unit': 100,
-        'award_proportion': [65, 10, 23],
-        'award_prize_amount': [0, 5, 2],
+        'award_setting': {
+            'total_prize': 10000,
+            'total_num': 1000,
+            'amount_unit': 100,
+            'prize': [
+                {
+                    'name': '谢谢参与奖',
+                    'proportion': 65,
+                    'amount': 0
+                },
+                {
+                    'name': '一等奖',
+                    'proportion': 10,
+                    'amount': 5
+                },
+                {
+                    'name': '二等奖',
+                    'proportion': 23,
+                    'amount': 2
+                },
+            ]
+        }
     }
     subject = Subject.get_instance(request.session)
     products = ProductService.get_product_list()
