@@ -34,8 +34,8 @@
                         <span class="label label-default">
                             <a class="download_code" code-type="inner">下载</a>
                         </span>
-                            <span class="radio-style"><input type="radio" name="inner_download_type_{{ batch.batch_id }}" value="csv" checked>原始码</span>
-                            <span class="radio-style"><input type="radio" name="inner_download_type_{{ batch.batch_id }}" value="pic">QR码</span>
+                            <span class="radio-style"><input type="radio" name="inner_download_type_{{ batch.batch_id }}" value="csv" checked><span class="text-item">原始码</span></span>
+                            <span class="radio-style"><input type="radio" name="inner_download_type_{{ batch.batch_id }}" value="pic"><span class="text-item">QR码</span></span>
                         {% elif batch.inner_code_factory_id > 0 %}
                         <span class="label label-default">
                             <a class="send_code" code-type="inner" value="{{ batch.inner_code_factory_id }}">发送</a>
@@ -50,8 +50,8 @@
                         <span class="label label-default">
                             <a class="download_code" code-type="outer">下载</a>
                         </span>
-                            <span class="radio-style"><input type="radio" name="outer_download_type_{{ batch.batch_id }}" value="csv" checked>原始码</span>
-                            <span class="radio-style"><input type="radio" name="outer_download_type_{{ batch.batch_id }}" value="pic">DM码</span>
+                            <span class="radio-style"><input type="radio" name="outer_download_type_{{ batch.batch_id }}" value="csv" checked><span class="text-item">原始码</span></span>
+                            <span class="radio-style"><input type="radio" name="outer_download_type_{{ batch.batch_id }}" value="pic"><span class="text-item">DM码</span></span>
                         {% elif batch.outer_code_factory_id > 0 %}
                         <span class="label label-default">
                             <a class="send_code" code-type="outer" value="{{ batch.outer_code_factory_id }}">发送</a>
@@ -66,8 +66,8 @@
                         <span class="label label-default">
                             <a class="download_code" code-type="case">下载</a>
                         </span>
-                            <span class="radio-style"><input type="radio" name="case_download_type_{{ batch.batch_id }}" value="csv" checked>原始码</span>
-                            <span class="radio-style"><input type="radio" name="case_download_type_{{ batch.batch_id }}" value="pic">DM码</span>
+                            <span class="radio-style"><input type="radio" name="case_download_type_{{ batch.batch_id }}" value="csv" checked><span class="text-item">原始码</span></span>
+                            <span class="radio-style"><input type="radio" name="case_download_type_{{ batch.batch_id }}" value="pic"><span class="text-item">DM码</span></span>
                         {% elif batch.case_code_factory_id > 0 %}
                         <span class="label label-default">
                             <a class="send_code" code-type="case" value="{{ batch.case_code_factory_id }}">发送</a>
