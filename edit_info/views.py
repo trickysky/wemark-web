@@ -17,13 +17,14 @@ def set_index(request):
         'page_desc': u'',
         'factory_list': [],
         'product_list': [],
-        'company_name': company_info.get('name', None),
-        'company_description': company_info.get('description', None),
-        'company_homepage': company_info.get('homepage', None),
-        'award_total_prize': award_setting.get('total_prize', 0),
-        'award_rate': award_setting.get('award_rate', 0),
-        'award_min_prize': award_setting.get('min_prize', 0),
-        'award_max_prize': award_setting.get('max_prize', 0)
+        'company_name': company_info.get('name') if company_info else None,
+        'company_description': company_info.get('description') if company_info else None,
+        'company_homepage': company_info.get('homepage') if company_info else None,
+        'award_total_prize': 10000,
+        'award_total_num': 1000,
+        'award_amount_unit': 100,
+        'award_proportion': [65, 10, 23],
+        'award_prize_amount': [0, 5, 2],
     }
     subject = Subject.get_instance(request.session)
     products = ProductService.get_product_list()

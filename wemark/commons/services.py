@@ -1,4 +1,4 @@
-from wemark_config import SERVER_HOST
+from wemark_config import SERVER_HOST, LOTTERY_HOST
 import utils
 import requests
 from s.models import CompanyInfo, AwardSetting
