@@ -295,13 +295,18 @@
                 </div>
                 <div class="info-detail">
                     <span class="base-label">总奖金</span>
-                    <input class="form-control" type="number" value="{{ award_setting.total_prize }}"><span>元</span>
+                    <input class="form-control" id="award_total_prize" type="number" value="{{ award_setting.total_prize }}"><span>元</span>
                 </div>
                 <div class="info-detail">
                     <span class="base-label">获奖个数</span>
-                    <input class="form-control" type="number" value="{{ award_setting.total_num }}"><span>个</span>
+                    <input class="form-control" id="award_total_num" type="number" value="{{ award_setting.total_num }}"><span>个</span>
                 </div>
             </form>
+            <div class="tab-footer">
+                <button type="button" class="btn btn-primary confirm">
+                    提交更改
+                </button>
+            </div>
         </div>
     </div>
 

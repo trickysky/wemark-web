@@ -6,6 +6,7 @@ var $factory_info_modal = $('#factory_info_modal'),
     $product_image_modal = $('#product_image_modal'),
     $product_info_modal = $('#product_info_modal'),
     $company_info = $('#company_info');
+    $award_setting = $('#award_setting');
 
 $('#factory_info').find('.new-factory').bind('click', function () {
     init_modal();
@@ -389,10 +390,28 @@ $("#award_count").bind('change', function () {
                     <option value='1'>分</option>\
                     <option value='10000'>百元</option>\
                 </select>\
-                <span style=''>中奖比例:</span>\
+                <span class='proportion-text'>中奖比例:</span>\
                 <input class='form-control proportion' type='number'>\
             </div>"
     }
     $award_detail.html(award_html);
     $award_detail.find(".selectpicker").selectpicker('refresh');
+});
+
+$award_setting.find('.tab-footer .confirm').bind('click', function () {
+    var $award_detail = $("#award_detail");
+    var total_prize = $("#award_total_prize").val();
+    var total_num = $("#award_total_num").val();
+    var prize_amount = $award_detail.find('input').filter('.prize').map(function () {
+        return $(this).val();
+    });
+    var prize_unit = $award_detail.find('select').map(function () {
+        return $(this).val();
+    });
+    var prize_proportion = $award_detail.find('input').filter('.proportion').map(function () {
+        return $(this).val();
+    });
+    for (var i=0;i<prize_amount.length;i++) {
+        prize_amount[i] *= prize_unit[i]
+    }
 });
