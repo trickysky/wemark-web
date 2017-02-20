@@ -282,7 +282,7 @@
         <div role="tabpanel" class="tab-pane fade" id="award_setting" aria-labelledby="home-tab">
             <form>
                 <div class="info-detail">
-                    <span class="base-label" for="award_count">奖项个数</span>
+                    <span class="base-label" for="award_count">奖项设置</span>
                     <select id="award_count" class="selectpicker" data-size="0" data-width="fit">
                         <option value=1>一个</option>
                         <option value=2>两个</option>
@@ -292,8 +292,12 @@
                 </div>
                 {% include "edit_info/brief/award.html" %}
                 <div class="info-detail">
-                    <span class="base-label" for="award_total_num">总奖金</span>
+                    <span class="base-label">总奖金</span>
                     <input class="form-control" placeholder="总奖金" type="number"><span>元</span>
+                </div>
+                <div class="info-detail">
+                    <span class="base-label">获奖个数</span>
+                    <input class="form-control" placeholder="获奖个数" type="number"><span>个</span>
                 </div>
             </form>
         </div>
