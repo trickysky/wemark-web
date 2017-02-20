@@ -209,16 +209,16 @@
     <div id="my_tab_content" class="tab-content">
         <div role="tabpanel" class="tab-pane fade active in" id="company_info" aria-labelledby="home-tab">
             <form>
-                <div class="company-info-detail">
-                    <label class="company-label" for="company_name">公司名称</label>
+                <div class="info-detail">
+                    <label class="base-label" for="company_name">公司名称</label>
                     <input class="form-control" id="company_name" value="{{ company_name }}">
                 </div>
-                <div class="company-info-detail">
-                    <label class="company-label" for="company_description">公司介绍</label>
+                <div class="info-detail">
+                    <label class="base-label" for="company_description">公司介绍</label>
                     <textarea class="form-control" id="company_description" spellcheck="true" tabindex="4" rows="10">{{ company_description|default:'' }}</textarea>
                 </div>
-                <div class="company-info-detail">
-                    <label class="company-label" for="company_homepage">公司主页</label>
+                <div class="info-detail">
+                    <label class="base-label" for="company_homepage">公司主页</label>
                     <input class="form-control" id="company_homepage" value="{{ company_homepage|default:'' }}">
                 </div>
             </form>
@@ -280,47 +280,26 @@
             </table>
         </div>
         <div role="tabpanel" class="tab-pane fade" id="award_setting" aria-labelledby="home-tab">
-            <form class="form-horizontal">
-                <div class="form-group award-setting-detail">
-                    <label class="col-xs-1 award-setting-label" for="award_total_prize">总奖金</label>
-                    <div class="col-xs-2 input-group">
-                        <span class="input-group-addon">¥</span>
-                        <input type="number" class="form-control" id="award_total_prize" value="{{ award_total_prize }}">
-                        <span class="input-group-addon">元</span>
-                    </div>
+            <form>
+                <div class="info-detail">
+                    <span class="base-label" for="award_count">奖项设置</span>
+                    <select id="award_count" class="selectpicker" data-size="0" data-width="fit">
+                        <option value=1>一个</option>
+                        <option value=2>两个</option>
+                        <option value=3>三个</option>
+                        <option value=4>四个</option>
+                    </select>
                 </div>
-                <div class="form-group award-setting-detail">
-                    <label class="col-xs-1 award-setting-label" for="award_rate">中奖率</label>
-                    <div class="col-xs-2 input-group">
-                        <input type="number" class="form-control" id="award_rate" value="{{ award_rate }}">
-                        <span class="input-group-addon">%</span>
-                    </div>
+                {% include "edit_info/brief/award.html" %}
+                <div class="info-detail">
+                    <span class="base-label">总奖金</span>
+                    <input class="form-control" placeholder="总奖金" type="number"><span>元</span>
                 </div>
-                <div class="form-group award-setting-detail">
-                    <span class="col-xs-2 award-setting-label">单次奖励</span>
-                </div>
-                <div class="form-group award-setting-detail">
-                    <label class="col-xs-1 award-setting-label2" for="award_min_prize">最低奖励</label>
-                    <div class="col-xs-2 input-group">
-                        <span class="input-group-addon">¥</span>
-                        <input type="number" class="form-control" id="award_min_prize" value="{{ award_min_prize }}">
-                        <span class="input-group-addon">元</span>
-                    </div>
-                </div>
-                <div class="form-group award-setting-detail">
-                    <label class="col-xs-1 award-setting-label2" for="award_max_prize">最高奖励</label>
-                    <div class="col-xs-2 input-group">
-                        <span class="input-group-addon">¥</span>
-                        <input type="number" class="form-control" id="award_max_prize" value="{{ award_max_prize }}">
-                        <span class="input-group-addon">元</span>
-                    </div>
+                <div class="info-detail">
+                    <span class="base-label">获奖个数</span>
+                    <input class="form-control" placeholder="获奖个数" type="number"><span>个</span>
                 </div>
             </form>
-            <div class="tab-footer">
-                <button type="button" class="btn btn-primary confirm">
-                    提交更改
-                </button>
-            </div>
         </div>
     </div>
 

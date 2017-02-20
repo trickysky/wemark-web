@@ -5,13 +5,7 @@ var $factory_info_modal = $('#factory_info_modal'),
     $product_info = $('#product_info'),
     $product_image_modal = $('#product_image_modal'),
     $product_info_modal = $('#product_info_modal'),
-    $company_info = $('#company_info'),
-    $award_setting = $('#award_setting'),
-    $award_total_prize = $award_setting.find('#award_total_prize'),
-    $award_rate = $award_setting.find('#award_rate'),
-    $award_min_prize = $award_setting.find('#award_min_prize'),
-    $award_max_prize = $award_setting.find('#award_max_prize'),
-    $award_setting_confirm = $award_setting.find('.tab-footer .confirm');
+    $company_info = $('#company_info');
 
 $('#factory_info').find('.new-factory').bind('click', function () {
     init_modal();
@@ -246,83 +240,6 @@ function check_award_setting() {
         $award_setting_confirm.attr('disabled', false);
     }
 }
-
-$award_rate.bind('change', function() {
-    var $this = $(this);
-    var value = parseFloat($(this).val());
-    if (isNaN(value) || value < 0) {
-        value = 0;
-    } else if (value > 100) {
-        value = 100;
-    }
-    $this.val(value);
-    check_award_setting();
-});
-
-$award_min_prize.bind('change', function() {
-    var $this = $(this);
-    var min_value = parseFloat($this.val());
-    var max_value = parseFloat($award_max_prize.val());
-    if (isNaN(min_value) || min_value < 0) {
-        min_value = 0;
-    }
-    if (isNaN(max_value) || min_value > max_value) {
-        $award_max_prize.val(min_value);
-    }
-    $this.val(min_value);
-    check_award_setting();
-});
-
-$award_max_prize.bind('change', function() {
-    var $this = $(this);
-    var max_value = parseFloat($this.val());
-    var min_value = parseFloat($award_min_prize.val());
-    if (isNaN(max_value) || max_value < 0) {
-        max_value = 0;
-    }
-    if (isNaN(min_value) || max_value < min_value) {
-        $award_min_prize.val(max_value);
-    }
-    $this.val(max_value);
-    check_award_setting();
-});
-
-$award_setting_confirm.bind('click', function() {
-    var total_prize = parseFloat($award_total_prize.val());
-    var award_rate = parseFloat($award_rate.val());
-    var min_prize = parseFloat($award_min_prize.val());
-    var max_prize = parseFloat($award_max_prize.val());
-    $award_setting_confirm.attr('disabled', true).html('发送中<i class="fa fa-spinner fa-pulse fa-fw"></i>');
-    $.ajax({
-        'type': 'POST',
-        'url': '/s/award',
-        'data': {
-            'total_prize': total_prize,
-            'award_rate': award_rate,
-            'min_prize': min_prize,
-            'max_prize': max_prize
-        },
-        'success': function(data) {
-            if (0 == data['code']) {
-                show_msg('success', '修改成功');
-            } else {
-                console.log(data['msg']);
-                show_msg('warning', '修改失败');
-            }
-        },
-        'error': function(xml, e) {
-            console.log(e);
-            show_msg('warning', '修改失败');
-        },
-        'complete': function() {
-            $award_setting_confirm.attr('disabled', false).html('提交更改');
-        }
-    });
-});
-
-$award_setting.bind('load', function() {
-    check_award_setting();
-});
 
 $product_info.find('.td-image').bind('click', function () {
     var image_url = $(this).find('img').attr('src');
