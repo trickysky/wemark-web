@@ -9,6 +9,7 @@ import StringIO
 import wemark.commons.utils as utils
 from wemark.commons.constants import *
 from wemark.commons.services import FactoryService, BatchService, CompanyService, ProductService
+from wemark.commons.response import ResponseEntity
 from oauth2.commons.security import Subject
 
 
@@ -18,13 +19,17 @@ def __get_batch_code(batch_id, assign_type, section_id):
     cache_expires_in = 60
     cache_key = __generate_key('%s_%d_%d' % (batch_id, assign_type, section_id))
     code_data = cache.get(cache_key)
-    urlprefix = CompanyService.get_company().get('urlprefix', '').strip() if assign_type == AssignType.Inner else ''
+    urlprefix = None
+    if assign_type == AssignType.Inner:
+        urlprefix = CompanyService.get_company().get('urlprefix', '')
+    if urlprefix is None:
+        urlprefix = ''
     if code_data is not None:
         return code_data
     ret = BatchService.get_batch_code(batch_id, assign_type, section_id, -1)
     if ret is not None and ret['code'] == 0:
         code_data = ret['data']
-        code_data['code'] = '\n'.join([urlprefix + c.strip() for c in ret['data']['code']])
+        code_data['code'] = '\n'.join([urlprefix.strip() + c.strip() for c in ret['data']['code']])
         cache.set(cache_key, code_data, cache_expires_in)
     return code_data
 
@@ -138,7 +143,8 @@ def set_batch_list(response, product_dict):
             'outer_code_factory': get_factory_by_id(b['outcodeFactory']),
             'case_code_factory_id': b['casecodeFactory'],
             'case_code_factory': get_factory_by_id(b['casecodeFactory']),
-            'code_type_count': int(b['incodeFactory'] is not None) + int(b['outcodeFactory'] is not None) + int(b['casecodeFactory'] is not None),
+            'code_type_count': int(b['incodeFactory'] is not None) + int(b['outcodeFactory'] is not None) + int(
+                b['casecodeFactory'] is not None),
             'enabled_factory_id': b['factoryId'],
             'enabled_factory': get_factory_by_id(b['factoryId']),
             'prod_info': b['productInfo'] if b['productInfo'] else None,
@@ -191,12 +197,14 @@ def batch_download_code(request):
     if request.method == 'POST':
         code_type = request.POST.get('code_type')
         batch_id = request.POST.get('batch_id')
+        csv_type = (request.POST.get('csv_type') == 'true')
         assign_type = __get_assign_type(code_type)
         code_data = __get_batch_code(batch_id, assign_type, 0)
         if code_data is None:
             return JsonResponse({'code': -1, 'msg': 'download failed'})
         else:
-            return __generate_csv_file_for_code(code_data)
+            return __generate_csv_file_for_code(code_data) if csv_type is True else ResponseEntity.ok(
+                code_data['code'].split('\n'))
 
 
 def batch_enable_code(request):

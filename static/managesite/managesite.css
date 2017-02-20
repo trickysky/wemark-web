@@ -44,3 +44,13 @@
 .label-success {
     background-color: #5cb85c;
 }
+
+.radio-style {
+    margin-left: 12px;
+}
+
+#qrdm {
+    position: absolute;
+    z-index: -9999;
+    top: -60000px;
+}
