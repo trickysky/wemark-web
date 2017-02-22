@@ -268,15 +268,10 @@ class CompanyService(object):
 
 class AwardSettingService(object):
     @staticmethod
-    def get_award_setting():
-        count = AwardSetting.objects.all().count()
-        award_setting = AwardSetting.objects.get() if count else None
-        return {
-            'total_prize': award_setting.total_prize / 100,
-            'award_rate': award_setting.rate / 100,
-            'min_prize': award_setting.min_prize / 100,
-            'max_prize': award_setting.max_prize / 100
-        } if award_setting else None
+    def get_award_setting(activity_id):
+        r = requests.get('%s/lottery/get-settings?id=%s' % (LOTTERY_HOST, activity_id))
+        data = r.json().get('data') if r else None
+        return data
 
     @staticmethod
     def update_award_setting(total_prize=None, award_rate=None, min_prize=None, max_prize=None):

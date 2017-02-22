@@ -9,8 +9,17 @@ from oauth2.commons.security import Subject
 
 # Create your views here.
 def set_index(request):
+    subject = Subject.get_instance(request.session)
     company_info = CompanyService.get_company()
-    award_setting = AwardSettingService.get_award_setting()
+    award_data = AwardSettingService.get_award_setting(activity_id=subject.get_user_info(request).get('id'))
+    prize_name = ['谢谢参与奖', '一等奖', '二等奖', '三等奖', '四等奖']
+    prize = []
+    for i in range(len(award_data['proportion'])):
+        prize.append({
+            'name': prize_name[i],
+            'proportion': award_data['proportion'][i],
+            'amount': award_data['prize_amount'][i],
+        })
     base_data = {
         'app_name': u'信息录入',
         'page_name': u'信息录入',
@@ -21,29 +30,12 @@ def set_index(request):
         'company_description': company_info.get('description') if company_info else None,
         'company_homepage': company_info.get('homepage') if company_info else None,
         'award_setting': {
-            'total_prize': 10000,
-            'total_num': 1000,
-            'amount_unit': 100,
-            'prize': [
-                {
-                    'name': '谢谢参与奖',
-                    'proportion': 65,
-                    'amount': 0
-                },
-                {
-                    'name': '一等奖',
-                    'proportion': 10,
-                    'amount': 5
-                },
-                {
-                    'name': '二等奖',
-                    'proportion': 23,
-                    'amount': 2
-                },
-            ]
+            'total_prize': award_data['total_prize'],
+            'total_num': award_data['total_num'],
+            'amount_unit': award_data['amount_unit'],
+            'prize': prize
         }
     }
-    subject = Subject.get_instance(request.session)
     products = ProductService.get_product_list()
     if products and products.get('code') == 0:
         for product in products.get('data'):
