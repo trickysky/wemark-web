@@ -117,11 +117,14 @@ def product_by_id(request, product_id):
 
 def award(request):
     if request.method == 'POST':
+        info = get_user_info(request)
         body = request.POST
         r = AwardSettingService.update_award_setting(
+            activity_id=info['id'],
             total_prize=float(body.get('total_prize')),
-            award_rate=float(body.get('award_rate')),
-            min_prize=float(body.get('min_prize')),
-            max_prize=float(body.get('max_prize'))
+            total_num=int(body.get('total_num')),
+            amount_unit=int(body.get('amount_unit')),
+            proportion=body.get('proportion'),
+            prize_amount=body.get('prize_amount'),
         )
         return JsonResponse(r)

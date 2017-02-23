@@ -274,25 +274,35 @@ class AwardSettingService(object):
         return data
 
     @staticmethod
-    def update_award_setting(total_prize=None, award_rate=None, min_prize=None, max_prize=None):
+    def update_award_setting(activity_id, owner=None, wishing=None, act_name=None, remark=None, total_num=1,
+                             scene_id=None, amount_unit=None, proportion=None, prize_amount=None, total_prize=None):
         try:
-            count = AwardSetting.objects.all().count()
-            if not 0 == count:
-                award_setting = AwardSetting.objects.get()
-                award_setting.total_prize = int(total_prize * 100)
-                award_setting.rate = int(award_rate * 100)
-                award_setting.min_prize = int(min_prize * 100)
-                award_setting.max_prize = int(max_prize * 100)
-            else:
-                award_setting = AwardSetting(total_prize=int(total_prize * 100),
-                                             rate=int(award_rate * 100),
-                                             min_prize=int(min_prize * 100),
-                                             max_prize=int(max_prize * 100))
-            award_setting.save()
-            return {
-                'code': 0,
-                'msg': 'update award setting complete'
+            url = '%s/lottery/update-settings' % LOTTERY_HOST
+            params = {
+                'id': activity_id,
+                'owner': owner,
+                'wishing': wishing,
+                'act_name': act_name,
+                'remark': remark,
+                'total_num': total_num,
+                'scene_id': scene_id,
+                'amount_unit': amount_unit,
+                'proportion': proportion,
+                'prize_amount': prize_amount,
+                'total_prize': total_prize,
             }
+            params = utils.clean_params(params)
+            r = requests.get(url, params).json()
+            if r['code'] == 0:
+                return {
+                    'code': 0,
+                    'msg': 'update award setting complete'
+                }
+            else:
+                return {
+                    'code': 1,
+                    'msg': 'update award setting error'
+                }
         except Exception as e:
             print e
             return {

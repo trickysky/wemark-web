@@ -405,13 +405,46 @@ $award_setting.find('.tab-footer .confirm').bind('click', function () {
     var prize_amount = $award_detail.find('input').filter('.prize').map(function () {
         return $(this).val();
     });
-    var prize_unit = $award_detail.find('select').map(function () {
+    var prize_unit_list = $award_detail.find('select').map(function () {
         return $(this).val();
     });
-    var prize_proportion = $award_detail.find('input').filter('.proportion').map(function () {
+    var proportion = $award_detail.find('input').filter('.proportion').map(function () {
         return $(this).val();
     });
+    var amount_unit = parseInt(prize_unit_list[0]);
+    //noinspection JSDuplicatedDeclaration
     for (var i=0;i<prize_amount.length;i++) {
-        prize_amount[i] *= prize_unit[i]
+        prize_amount[i] *= prize_unit_list[i];
+        amount_unit = Math.min(amount_unit, parseInt(prize_unit_list[i]));
     }
+    //noinspection JSDuplicatedDeclaration
+    for (var i=0;i<prize_amount.length;i++) {
+        prize_amount[i] /= amount_unit
+    }
+    function objToArr(obj) {
+        var arr=[];
+        for (var i=0; i<obj.length; i++) {
+            arr.push(obj[i])
+        }
+        return arr
+    }
+    $(this).html('发送中<i class="fa fa-spinner fa-pulse fa-fw"></i>');
+    $(this).attr('disabled', true);
+    $.ajax({
+        url: '/s/award',
+        method: 'POST',
+        data: {
+            'total_prize': total_prize,
+            'total_num': total_num,
+            'prize_amount': objToArr(prize_amount).join(),
+            'amount_unit': amount_unit,
+            'proportion': objToArr(proportion).join()
+        },
+        success: function (data) {
+            location.reload()
+        },
+        error: function (xml, e) {
+
+        }
+    });
 });
